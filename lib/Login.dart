@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -7,14 +10,50 @@ class Login extends StatefulWidget {
 }
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
   void dispose() {
+    _idController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
+
+  Future<void> _login() async {
+    final id = _idController.text;
+    final password = _passwordController.text;
+
+    final  url = Uri.parse('http://localhost:5050/api/Student/login');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'id': id, 'password': password}),
+      );
+
+      if (response.statusCode == 200) {
+        // Login successful, navigate to next page
+        Navigator.pushNamed(context, '/firstPage');
+      } else {
+        // Login failed, show error message
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Login Failed'),
+            content: Text('Invalid ID or password'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +76,7 @@ class _LoginState extends State<Login> {
                 width: 200,
               ),
               TextFormField(
+                controller: _idController,
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -101,9 +141,9 @@ class _LoginState extends State<Login> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pushNamed(context, '/firstPage');
-                  }
+                   if (_formKey.currentState!.validate()) {
+                     _login();
+                   }
                 },
                 child: Text("Log in")
               ),

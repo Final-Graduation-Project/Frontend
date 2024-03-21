@@ -24,6 +24,7 @@ final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "student digital guide",
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
     scaffoldBackgroundColor: color4,
     primaryColor: color1,
@@ -36,7 +37,7 @@ final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
         '/signup': (context) => Signup(),
         '/contactus' : (context) => const ContactUs(),
         '/validate' : (context) => const Validate(),
-        'firstPage' : (context) => const firstPage()
+        '/firstPage' : (context) => const firstPage()
       },
     );
   }
