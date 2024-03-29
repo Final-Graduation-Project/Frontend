@@ -21,9 +21,11 @@ class _SignupState extends State<Signup> {
 
   bool _passwordVisible = false;
   bool _lastNameEnabled = false;
+  bool _emailEnabled = false;
   bool _universityIDEnabled = false;
   bool _passwordEnabled = false;
   bool _passwordMatch = false;
+  bool _majorEnabled = false; // Define _majorEnabled and set initial value to false
 
   final List<String> majors = [
     "Arabic Language and Literature",
@@ -125,6 +127,9 @@ class _SignupState extends State<Signup> {
                 SizedBox(height: 16),
                 buildFirstNameField(),
                 SizedBox(height: 16),
+              
+                buildEmailField(),
+                SizedBox(height: 16),
                 buildMajorField(),
                 SizedBox(height: 16),
                 buildUniversityIDField(),
@@ -188,7 +193,9 @@ class _SignupState extends State<Signup> {
       keyboardType: TextInputType.text,
       enabled: _lastNameEnabled,
       onChanged: (value) {
-        // Update the state based on last name input if needed
+        setState(() {
+          _emailEnabled = value.isNotEmpty;
+        });
       },
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -206,7 +213,35 @@ class _SignupState extends State<Signup> {
     );
   }
 
-  Widget buildMajorField() {
+  TextFormField buildEmailField() {
+    return TextFormField(
+      controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
+      enabled: _emailEnabled,
+      onChanged: (value) {
+        setState(() {
+          _majorEnabled = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+').hasMatch(value);
+        });
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please enter your email";
+        }
+        if (!RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+').hasMatch(value)) {
+          return "Please enter a valid email";
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: "Email",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        prefixIcon: Icon(Icons.email),
+      ),
+    );
+  }
+Widget buildMajorField() {
     return Autocomplete<String>(
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '') {
@@ -219,15 +254,15 @@ class _SignupState extends State<Signup> {
       onSelected: (String selection) {
         setState(() {
           _selectedMajor = selection;
-          _universityIDEnabled = true; // Enable the next field based on the selection
+          _universityIDEnabled = true;
         });
       },
       fieldViewBuilder: (
-          BuildContext context,
-          TextEditingController fieldController,
-          FocusNode fieldFocusNode,
-          VoidCallback onFieldSubmitted,
-          ) {
+        BuildContext context,
+        TextEditingController fieldController,
+        FocusNode fieldFocusNode,
+        VoidCallback onFieldSubmitted,
+      ) {
         return TextFormField(
           controller: fieldController,
           focusNode: fieldFocusNode,
