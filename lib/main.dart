@@ -6,9 +6,6 @@ import 'package:flutter_application_1/aboutus.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
-import 'package:flutter_application_1/EventPage.dart';
-
-
 
 
 
@@ -44,7 +41,7 @@ final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
         '/contactus' : (context) => const ContactUs(),
         '/validate' : (context) => const Validate(),
         '/firstPage' : (context) => const FirstPage(),
-        '/EventPage': (context) => EventPage(),
+        '/Eve': (context) => EventPage(),
       },
     );
   }
