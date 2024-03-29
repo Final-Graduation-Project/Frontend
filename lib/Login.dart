@@ -21,6 +21,7 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
+  // ignore: unused_element
   Future<void> _login() async {
     final id = _idController.text;
     final password = _passwordController.text;
@@ -141,8 +142,9 @@ class _LoginState extends State<Login> {
               ),
               ElevatedButton(
                 onPressed: () {
-                   if (_formKey.currentState!.validate()) {
-                     _login();
+                   if (_formKey.currentState!.validate()) { 
+                      Navigator.pushNamed(context, '/firstPage');
+                      
                    }
                 },
                 child: Text("Log in")
