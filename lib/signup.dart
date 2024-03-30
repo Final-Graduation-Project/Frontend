@@ -1,6 +1,8 @@
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Signup extends StatefulWidget {
   Signup({Key? key}) : super(key: key);
@@ -107,6 +109,49 @@ class _SignupState extends State<Signup> {
     "Leadership and Civic Engagement"
   ];
 
+  Future<void> _signUp() async {
+    final name = _firstNameController.text + ' ' + _lastNameController.text;
+    final email = _emailController.text;
+    final major = _selectedMajor;
+    final universityID = _universityIDController.text;
+    final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
+
+    final url = Uri.parse('http://localhost:5050/api/Student/AddStudent');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'id': universityID,
+        'email': email,
+        'password': password,
+        'confpassword': confirmPassword,
+        'name': name,
+        'phone': '591234567',
+        'universityMajor': major,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Sign-up successful, navigate to next page
+      Navigator.pushNamed(context, '/validate');
+    } else {
+      // Sign-up failed, show error message
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Sign Up Failed'),
+          content: Text(response.body),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -387,7 +432,7 @@ Widget buildMajorField() {
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             // Implement your sign-up logic here
-            Navigator.pushNamed(context, '/validate');
+            _signUp();
           }
         },
         child: Text("Validate your email !"),
