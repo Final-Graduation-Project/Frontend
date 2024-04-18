@@ -41,7 +41,7 @@ final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
         '/contactus' : (context) => const ContactUs(),
         '/validate' : (context) => const Validate(),
         '/firstPage' : (context) => const FirstPage(),
-        '/Eve': (context) => EventPage(),
+        '/EventPage': (context) => EventPage(),
       },
     );
   }
