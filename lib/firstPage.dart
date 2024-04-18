@@ -14,7 +14,7 @@ class _FirstPageState extends State<FirstPage> {
                backgroundColor: Color(0xFFB4D4FF),
 
       appBar: AppBar(
-               backgroundColor: Color(0xFF176B87),
+               backgroundColor: Color(0xFFEEF5FF),
 
         title: Text('Welcome to Student Digital Guide'),
         actions: <Widget>[
@@ -38,12 +38,12 @@ class _FirstPageState extends State<FirstPage> {
           children: [
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Color(0xFF176B87),
+                color: Color(0xFFEEF5FF),
               ),
               child: Text(
                 'features we Provide ',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 24,
                 ),
               ),
