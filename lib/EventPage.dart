@@ -11,7 +11,7 @@ class Event {
   String? location;
   String? imagePath;
   TimeOfDay? time;
-
+//aa
   Event({required this.date, required this.title, this.location, this.imagePath, this.time});
 
   Map<String, dynamic> toJson() => {
