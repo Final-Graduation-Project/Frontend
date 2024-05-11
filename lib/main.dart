@@ -7,21 +7,17 @@ import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
 
-
-
 void main() {
   runApp(Mainpage());
 }
 
 class Mainpage extends StatelessWidget {
- final Color color1 = Color(0xFF176B87); // Dark Blue
-final Color color2 = Color(0xFFB4D4FF); // Lighter Blue
-final Color color3 = Color(0xFF86B6F6); // Even Lighter Blue
-final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
-
+  final Color color1 = Color(0xFF176B87); // Dark Blue
+  final Color color2 = Color(0xFFB4D4FF); // Lighter Blue
+  final Color color3 = Color(0xFF86B6F6); // Even Lighter Blue
+  final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
 
   Mainpage({Key? key}) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -29,23 +25,24 @@ final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
       title: "student digital guide",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-    scaffoldBackgroundColor: color4,
-    primaryColor: color1,
-    hintColor: color3,
-  ),
+        scaffoldBackgroundColor: color4,
+        primaryColor: color1,
+        hintColor: color3,
+      ),
       routes: {
-        '/': (context) => Home(), 
+        '/': (context) => Home(),
         '/login': (context) => const Login(),
-        '/aboutus': (context) => const  AboutUs(),
+        '/aboutus': (context) => const AboutUs(),
         '/signup': (context) => Signup(),
-        '/contactus' : (context) => const ContactUs(),
-        '/validate' : (context) => const Validate(),
-        '/firstPage' : (context) => const FirstPage(),
-        '/EventPage': (context) => EventPage(),
+        '/contactus': (context) => const ContactUs(),
+        '/validate': (context) => const Validate(),
+        '/firstPage': (context) => const FirstPage(),
+        '/Eve': (context) => EventPage(),
       },
     );
   }
 }
+
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -54,7 +51,8 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
-        leading: Image.asset('images/studentdigitalguidelogo.png', height: 40, width: 40),
+        leading: Image.asset('images/studentdigitalguidelogo.png',
+            height: 40, width: 40),
         title: Text("Student Digital Guide"),
         actions: <Widget>[
           TextButton(
@@ -75,7 +73,8 @@ class Home extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Image.asset("images/studentdigitalguidelogo.png", height: 200, width: 200),
+            child: Image.asset("images/studentdigitalguidelogo.png",
+                height: 200, width: 200),
           ),
           SizedBox(height: 24),
           Text(
