@@ -6,6 +6,9 @@ import 'package:flutter_application_1/aboutus.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
+ import 'package:flutter_application_1/chatPage.dart';
+import 'package:flutter_application_1/grouppage.dart';
+
 
 void main() {
   runApp(Mainpage());
@@ -38,7 +41,10 @@ class Mainpage extends StatelessWidget {
         '/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
-      },
+        '/Chat' : (context) =>  chatPage(),
+        '/groups': (context) => grouppage(),
+
+          },
     );
   }
 }

@@ -54,17 +54,62 @@ class _FirstPageState extends State<FirstPage> {
               title: Text('Event Calendar'),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/EventPage');
-                
-                // Navigate to event calendar page
+                Navigator.pushNamed(context, '/Eve');
               },
             ),
-            // Add more ListTile widgets for additional options
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.chat),
+              title: Text('Chat'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/Chat');
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.group),
+              title: Text('Groups'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/groups');
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.contact_mail),
+              title: Text('Contact Us'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/contactus');
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.info),
+              title: Text('About Us'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/aboutus');
+              },
+            ),
           ],
         ),
       ),
       body: Column(
-        children: [
+        children: [ 
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/Chat');
+            },
+            child: Text("Chat"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/groups');
+            },
+            child: Text("Groups"),
+          ),
         ],
       ),
     );
