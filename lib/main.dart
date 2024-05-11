@@ -3,9 +3,12 @@ import 'package:flutter_application_1/EventPage.dart';
 import 'package:flutter_application_1/Login.dart';
 import 'package:flutter_application_1/Validate.dart';
 import 'package:flutter_application_1/aboutus.dart';
+import 'package:flutter_application_1/cahtbot.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
+import 'package:flutter_application_1/map.dart';
+
 
 void main() {
   runApp(Mainpage());
@@ -38,6 +41,8 @@ class Mainpage extends StatelessWidget {
         '/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
+        '/universitymap': (context) => const map(),
+        '/chatbot': (context) => ChatBot(),
       },
     );
   }
@@ -115,7 +120,7 @@ class Home extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/universitymap');
+          Navigator.pushNamed(context, '/chatbot');
         },
         child: Icon(Icons.map),
       ),
