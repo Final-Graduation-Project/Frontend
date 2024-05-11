@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mime/mime.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -79,6 +81,121 @@ class _EventPageState extends State<EventPage> {
     await prefs.setString('events', eventsJson);
   }
 
+  List<XFile>? _mediaFileList;
+
+  void _setImageFileListFromFile(XFile? value) {
+    _mediaFileList = value == null ? null : <XFile>[value];
+  }
+
+  dynamic _pickImageError;
+  bool isVideo = false;
+
+  String? _retrieveDataError;
+
+  Future<void> _onImageButtonPressed(
+    ImageSource source, {
+    required BuildContext context,
+  }) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+      );
+      setState(() {
+        _setImageFileListFromFile(pickedFile);
+      });
+    } catch (e) {
+      setState(() {
+        _pickImageError = e;
+      });
+    }
+  }
+
+// The widget that displays the image
+  Widget _previewImages() {
+    final Text? retrieveError = _getRetrieveErrorWidget();
+    if (retrieveError != null) {
+      return retrieveError;
+    }
+    if (_mediaFileList != null) {
+      final String? mime = lookupMimeType(_mediaFileList![0].path);
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(100),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color.fromARGB(255, 30, 30, 30),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          width: 50,
+          height: 50,
+          child: Semantics(
+            label: 'image_picker_example_picked_image',
+            // for web browsers, can be ignored
+            child: kIsWeb
+                ? Image.network(_mediaFileList![0].path)
+                : (mime == null || mime.startsWith('image/')
+                    ?
+                    // The image is a file on the device, this is what we are interested in
+                    // you can wrap this with a Container and add decoration accordingly
+                    Image.file(
+                        File(_mediaFileList![0].path),
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return const Center(
+                              child: Text('This image type is not supported'));
+                        },
+                      )
+                    : Container()),
+          ),
+        ),
+      );
+    } else if (_pickImageError != null) {
+      return Text(
+        'Pick image error: $_pickImageError',
+        textAlign: TextAlign.center,
+      );
+    } else {
+      return const Text(
+        'You have not yet picked an image.',
+        textAlign: TextAlign.center,
+      );
+    }
+  }
+
+  Widget _handlePreview() {
+    return _previewImages();
+  }
+
+  Text? _getRetrieveErrorWidget() {
+    if (_retrieveDataError != null) {
+      final Text result = Text(_retrieveDataError!);
+      _retrieveDataError = null;
+      return result;
+    }
+    return null;
+  }
+
+  Future<void> retrieveLostData() async {
+    final LostDataResponse response = await _picker.retrieveLostData();
+    if (response.isEmpty) {
+      return;
+    }
+    if (response.file != null) {
+      isVideo = false;
+      setState(() {
+        if (response.files == null) {
+          _setImageFileListFromFile(response.file);
+        } else {
+          _mediaFileList = response.files;
+        }
+      });
+    } else {
+      _retrieveDataError = response.exception!.code;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,7 +272,44 @@ class _EventPageState extends State<EventPage> {
               itemBuilder: (context, index) {
                 final event = _visibleEvents()[index];
                 return ListTile(
-                  title: Text(event.title),
+                  title: Row(
+                    children: [
+                      Center(
+                        child: !kIsWeb &&
+                                defaultTargetPlatform == TargetPlatform.android
+                            ? FutureBuilder<void>(
+                                future: retrieveLostData(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<void> snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                    case ConnectionState.waiting:
+                                      return const Text(
+                                        'You have not yet picked an image.',
+                                        textAlign: TextAlign.center,
+                                      );
+                                    case ConnectionState.done:
+                                      return _handlePreview();
+                                    case ConnectionState.active:
+                                      if (snapshot.hasError) {
+                                        return Text(
+                                          'Pick image/video error: ${snapshot.error}}',
+                                          textAlign: TextAlign.center,
+                                        );
+                                      } else {
+                                        return const Text(
+                                          'You have not yet picked an image.',
+                                          textAlign: TextAlign.center,
+                                        );
+                                      }
+                                  }
+                                },
+                              )
+                            : _handlePreview(),
+                      ),
+                      Text(event.title),
+                    ],
+                  ),
                   subtitle: _buildEventSubtitle(event),
                   onTap: () {},
                   trailing: Row(

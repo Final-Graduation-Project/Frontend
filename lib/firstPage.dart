@@ -57,7 +57,24 @@ class _FirstPageState extends State<FirstPage> {
                 // Navigate to event calendar page
               },
             ),
-            // Add more ListTile widgets for additional options
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.contact_mail),
+              title: Text('Contact Us'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/contactus');
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.info),
+              title: Text('About Us'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/aboutus');
+              },
+            ),
           ],
         ),
       ),
