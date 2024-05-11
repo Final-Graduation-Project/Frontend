@@ -11,11 +11,9 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-               backgroundColor: Color(0xFFB4D4FF),
-
+      backgroundColor: Color(0xFFB4D4FF),
       appBar: AppBar(
-               backgroundColor: Color(0xFFEEF5FF),
-
+        backgroundColor: Color(0xFFEEF5FF),
         title: Text('Welcome to Student Digital Guide'),
         actions: <Widget>[
           IconButton(
@@ -55,7 +53,7 @@ class _FirstPageState extends State<FirstPage> {
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/EventPage');
-                
+
                 // Navigate to event calendar page
               },
             ),
@@ -64,8 +62,7 @@ class _FirstPageState extends State<FirstPage> {
         ),
       ),
       body: Column(
-        children: [
-        ],
+        children: [],
       ),
     );
   }

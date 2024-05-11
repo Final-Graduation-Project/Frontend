@@ -12,24 +12,31 @@ class Event {
   String? imagePath;
   TimeOfDay? time;
 //aa
-  Event({required this.date, required this.title, this.location, this.imagePath, this.time});
+  Event(
+      {required this.date,
+      required this.title,
+      this.location,
+      this.imagePath,
+      this.time});
 
   Map<String, dynamic> toJson() => {
-    'date': date.toIso8601String(),
-    'title': title,
-    'location': location,
-    'imagePath': imagePath,
-    'hour': time?.hour,
-    'minute': time?.minute,
-  };
+        'date': date.toIso8601String(),
+        'title': title,
+        'location': location,
+        'imagePath': imagePath,
+        'hour': time?.hour,
+        'minute': time?.minute,
+      };
 
   static Event fromJson(Map<String, dynamic> json) => Event(
-    date: DateTime.parse(json['date']),
-    title: json['title'],
-    location: json['location'],
-    imagePath: json['imagePath'],
-    time: json['hour'] != null ? TimeOfDay(hour: json['hour'], minute: json['minute']) : null,
-  );
+        date: DateTime.parse(json['date']),
+        title: json['title'],
+        location: json['location'],
+        imagePath: json['imagePath'],
+        time: json['hour'] != null
+            ? TimeOfDay(hour: json['hour'], minute: json['minute'])
+            : null,
+      );
 }
 
 class EventPage extends StatefulWidget {
@@ -58,14 +65,17 @@ class _EventPageState extends State<EventPage> {
     final String? eventsJson = prefs.getString('events');
     if (eventsJson != null) {
       setState(() {
-        _events = (json.decode(eventsJson) as List).map((e) => Event.fromJson(e as Map<String, dynamic>)).toList();
+        _events = (json.decode(eventsJson) as List)
+            .map((e) => Event.fromJson(e as Map<String, dynamic>))
+            .toList();
       });
     }
   }
 
   Future<void> _saveEvents() async {
     final prefs = await SharedPreferences.getInstance();
-    final String eventsJson = json.encode(_events.map((e) => e.toJson()).toList());
+    final String eventsJson =
+        json.encode(_events.map((e) => e.toJson()).toList());
     await prefs.setString('events', eventsJson);
   }
 
@@ -73,7 +83,7 @@ class _EventPageState extends State<EventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         backgroundColor: Color(0xFFB4D4FF),
+        backgroundColor: Color(0xFFB4D4FF),
         elevation: 0,
         titleSpacing: 0,
         title: Row(
@@ -165,7 +175,7 @@ class _EventPageState extends State<EventPage> {
                           setState(() {
                             _events.removeAt(_events.indexOf(event));
                           });
-                          _saveEvents();  // Save changes to the persistent storage
+                          _saveEvents(); // Save changes to the persistent storage
                         },
                       ),
                     ],
@@ -186,9 +196,11 @@ class _EventPageState extends State<EventPage> {
   List<Event> _visibleEvents() {
     return _events.where((event) {
       if (_calendarFormat == CalendarFormat.week) {
-        return event.date.difference(_focusedDay).inDays.abs() < 7 && event.date.weekday == _focusedDay.weekday;
+        return event.date.difference(_focusedDay).inDays.abs() < 7 &&
+            event.date.weekday == _focusedDay.weekday;
       } else if (_calendarFormat == CalendarFormat.twoWeeks) {
-        return event.date.difference(_focusedDay).inDays.abs() < 14 && event.date.weekday == _focusedDay.weekday;
+        return event.date.difference(_focusedDay).inDays.abs() < 14 &&
+            event.date.weekday == _focusedDay.weekday;
       } else {
         return event.date.month == _focusedDay.month;
       }
@@ -238,8 +250,10 @@ class _EventPageState extends State<EventPage> {
   }
 
   void _showAddEventDialog({bool isEdit = false, Event? editEvent}) {
-    final TextEditingController titleController = TextEditingController(text: isEdit ? editEvent?.title : '');
-    final TextEditingController locationController = TextEditingController(text: isEdit ? editEvent?.location : '');
+    final TextEditingController titleController =
+        TextEditingController(text: isEdit ? editEvent?.title : '');
+    final TextEditingController locationController =
+        TextEditingController(text: isEdit ? editEvent?.location : '');
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -282,12 +296,15 @@ class _EventPageState extends State<EventPage> {
                     });
                   }
                 },
-                child: Text(_selectedTime == null ? "Select Time" : 'Time: ${_selectedTime!.format(context)}'),
+                child: Text(_selectedTime == null
+                    ? "Select Time"
+                    : 'Time: ${_selectedTime!.format(context)}'),
               ),
               SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
-                  final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                  final XFile? image =
+                      await _picker.pickImage(source: ImageSource.gallery);
                   if (image != null) {
                     setState(() {
                       if (isEdit) {
@@ -323,7 +340,7 @@ class _EventPageState extends State<EventPage> {
                 ));
               }
               Navigator.pop(context);
-              _saveEvents();  // Persist data after adding/updating an event
+              _saveEvents(); // Persist data after adding/updating an event
               setState(() {});
             },
           ),
