@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:intl/intl.dart';
 
 class ChatBot extends StatefulWidget {
   @override
@@ -11,9 +11,8 @@ class _ChatBotState extends State<ChatBot> {
   final List<ChatMessage> _messages = <ChatMessage>[];
   final TextEditingController _textController = TextEditingController();
 
-  static const String dialogflowToken = 'YOUR_DIALOGFLOW_TOKEN';
-  static const String dialogflowUrl =
-      'https://dialogflow.googleapis.com/v2/projects/YOUR_PROJECT_ID/agent/sessions/session-id:detectIntent';
+  static const apiKey = "AIzaSyDz8eKOlC7M0H6CQuwFWxpoL0SRnibD-aw";
+  final model = GenerativeModel(model: 'gemini-pro', apiKey: apiKey);
 
   void _handleSubmitted(String text) async {
     _textController.clear();
@@ -25,7 +24,7 @@ class _ChatBotState extends State<ChatBot> {
       _messages.insert(0, message);
     });
 
-    String response = await _getDialogFlowResponse(text);
+    String response = await _getGenerativeAIResponse(text);
 
     ChatMessage botReply = ChatMessage(
       text: response,
@@ -36,27 +35,14 @@ class _ChatBotState extends State<ChatBot> {
     });
   }
 
-  Future<String> _getDialogFlowResponse(String query) async {
-    final response = await http.post(
-      Uri.parse(dialogflowUrl),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({
-        'queryInput': {
-          'text': {
-            'text': query,
-            'languageCode': 'en',
-          },
-        }
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(response.body);
-      return data['queryResult']['fulfillmentText'];
-    } else {
-      return 'Error communicating with chatbot';
+  Future<String> _getGenerativeAIResponse(String query) async {
+    try {
+      final content = [Content.text(query)];
+      final response = await model.generateContent(content);
+      return response.text ?? 'No response from the AI';
+    } catch (error) {
+      print('Error generating content: $error');
+      return 'Error: Unable to generate response';
     }
   }
 
@@ -129,9 +115,16 @@ class ChatMessage extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10.0),
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       alignment: isUserMessage ? Alignment.topRight : Alignment.topLeft,
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 16.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isUserMessage ? Colors.blue[100] : Colors.grey[200],
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        padding: EdgeInsets.all(10.0),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16.0),
+        ),
       ),
     );
   }
