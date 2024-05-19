@@ -7,6 +7,9 @@ import 'package:flutter_application_1/cahtbot.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
+import 'package:flutter_application_1/map.dart';
+import 'package:flutter_application_1/proposal.dart';
+
 
 void main() {
   runApp(Mainpage());
@@ -39,6 +42,9 @@ class Mainpage extends StatelessWidget {
         '/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
+        '/chatbot': (context) => ChatBot(),
+        '/map':(context) => map(),
+        '/proposal': (context) => Proposal(),
       },
     );
   }
@@ -116,7 +122,7 @@ class Home extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/chatbot');
+          Navigator.pushNamed(context, '/map');
         },
         child: Icon(Icons.map),
       ),

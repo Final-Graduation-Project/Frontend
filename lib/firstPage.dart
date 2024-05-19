@@ -57,6 +57,25 @@ class _FirstPageState extends State<FirstPage> {
                 Navigator.pushNamed(context, '/Eve');
               },
             ),
+            // for chatbot 
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.person),
+              title: Text('Chatbot'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/chatbot');
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.post_add),
+              title: Text('Proposal'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/proposal');
+              },
+            ),
             ListTile(
               contentPadding: EdgeInsets.all(20),
               leading: Icon(Icons.chat),
