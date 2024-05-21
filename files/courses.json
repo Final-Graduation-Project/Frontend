@@ -1,0 +1,3800 @@
+[
+  {
+    "name of course": "ACCA8600",
+    "sec": 1,
+    "name of instructor": "Saher Mohammad Abdallah Aqel",
+    "number of students": "0 / 10",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ACCT130",
+    "sec": 1,
+    "name of instructor": "Bashar Shukri Hanna Al Qara'",
+    "number of students": "5 / 120",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "O.Abdulhadi051"
+  },
+  {
+    "name of course": "ACCT230",
+    "sec": 1,
+    "name of instructor": "Bashar Shukri Hanna Al Qara'",
+    "number of students": "13 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "O.Abdulhadi051"
+  },
+  {
+    "name of course": "ACCT230",
+    "sec": 2,
+    "name of instructor": "Karim Sani Nasib Al-Bitar",
+    "number of students": "4 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen152"
+  },
+  {
+    "name of course": "ACCT331",
+    "sec": 1,
+    "name of instructor": "Huthayfa N. I. Jabari",
+    "number of students": "26 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "O.Abdulhadi152"
+  },
+  {
+    "name of course": "ACCT331",
+    "sec": 2,
+    "name of instructor": "Huthayfa N. I. Jabari",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "O.Abdulhadi152"
+  },
+  {
+    "name of course": "ACCT332",
+    "sec": 1,
+    "name of instructor": "Jamal Fadel Daoud Fawadleh",
+    "number of students": "12 / 120",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "O.Abdulhadi051"
+  },
+  {
+    "name of course": "ACCT3331",
+    "sec": 1,
+    "name of instructor": "Lina Elias Bandaly Fawadleh",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "15:20 - 16:30",
+    "place": "O.Abdulhadi151"
+  },
+  {
+    "name of course": "ACCT334",
+    "sec": 1,
+    "name of instructor": "Zeyad Fawaz Fouzi Munawer",
+    "number of students": "31 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "O.Abdulhadi052"
+  },
+  {
+    "name of course": "ACCT335",
+    "sec": 1,
+    "name of instructor": "Zeyad Fawaz Fouzi Munawer",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "O.Abdulhadi254"
+  },
+  {
+    "name of course": "ACCT433",
+    "sec": 1,
+    "name of instructor": "Karim Sani Nasib Al-Bitar",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "O.Abdulhadi153"
+  },
+  {
+    "name of course": "ARAB135",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "3 / 40",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen116"
+  },
+  {
+    "name of course": "ARAB136",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "11 / 40",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Bamieh104"
+  },
+  {
+    "name of course": "ARAB136",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "7 / 40",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen252"
+  },
+  {
+    "name of course": "ARAB136",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "5 / 40",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "A.Shaheen206"
+  },
+  {
+    "name of course": "ARAB2320",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen252"
+  },
+  {
+    "name of course": "ARAB2390",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen262"
+  },
+  {
+    "name of course": "ARAB331",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen266"
+  },
+  {
+    "name of course": "ARAB331",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen112"
+  },
+  {
+    "name of course": "ARAB331",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen150"
+  },
+  {
+    "name of course": "ARAB332",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Aggad336"
+  },
+  {
+    "name of course": "ARCH367",
+    "sec": 1,
+    "name of instructor": "Issam K. H. Halayqa",
+    "number of students": "2 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "BIOL111",
+    "sec": 1,
+    "name of instructor": "Mahmoud Abdul-Rahman Husein Srour",
+    "number of students": "3 / 20",
+    "days": "T, R",
+    "time": "08:00 - 10:40",
+    "place": "SCI160"
+  },
+  {
+    "name of course": "BIOL131",
+    "sec": 1,
+    "name of instructor": "Mahmoud Abdul-Rahman Husein Srour",
+    "number of students": "0 / 120",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "SCI120"
+  },
+  {
+    "name of course": "BUSA130",
+    "sec": 1,
+    "name of instructor": "Rania Yaser Qostande Jaber",
+    "number of students": "2 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi001"
+  },
+  {
+    "name of course": "BUSA130",
+    "sec": 2,
+    "name of instructor": "Rania Yaser Qostande Jaber",
+    "number of students": "0 / 120",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Al-Juraysi001"
+  },
+  {
+    "name of course": "BUSA230",
+    "sec": 1,
+    "name of instructor": "Maisa Yacoub Naoum Burbar",
+    "number of students": "19 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Sh.Shaheen105"
+  },
+  {
+    "name of course": "BUSA230",
+    "sec": 2,
+    "name of instructor": "Maisa Yacoub Naoum Burbar",
+    "number of students": "8 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi001"
+  },
+  {
+    "name of course": "BUSA232",
+    "sec": 1,
+    "name of instructor": "Nojoud Subhi Shukri Habash",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Al-Juraysi225"
+  },
+  {
+    "name of course": "BUSA238",
+    "sec": 1,
+    "name of instructor": "Mohand M. B. Tuffaha",
+    "number of students": "2 / 30",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi223"
+  },
+  {
+    "name of course": "BUSA238",
+    "sec": 2,
+    "name of instructor": "Abdelrahman Naser Ali Hamarsha",
+    "number of students": "6 / 30",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "Al-Juraysi121"
+  },
+  {
+    "name of course": "BUSA330",
+    "sec": 1,
+    "name of instructor": "Niveen Labib Botrus Eid",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Al-Juraysi325"
+  },
+  {
+    "name of course": "BUSA332",
+    "sec": 1,
+    "name of instructor": "Nojoud Subhi Shukri Habash",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi323"
+  },
+  {
+    "name of course": "BUSA333",
+    "sec": 1,
+    "name of instructor": "Rania Yaser Qostande Jaber",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "Al-Juraysi221"
+  },
+  {
+    "name of course": "BUSA336",
+    "sec": 1,
+    "name of instructor": "Mohand M. B. Tuffaha",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi002"
+  },
+  {
+    "name of course": "BUSA433",
+    "sec": 1,
+    "name of instructor": "Nojoud Subhi Shukri Habash",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi325"
+  },
+  {
+    "name of course": "BUSA436",
+    "sec": 1,
+    "name of instructor": "Niveen Labib Botrus Eid",
+    "number of students": "14 / 30",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi325"
+  },
+  {
+    "name of course": "BUSA632",
+    "sec": 1,
+    "name of instructor": "Tareq Mohammad Tallat Abdulfatah Ashour",
+    "number of students": "0 / 25",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "Al-Juraysi322"
+  },
+  {
+    "name of course": "BUSA638",
+    "sec": 1,
+    "name of instructor": "Mohand M. B. Tuffaha",
+    "number of students": "0 / 25",
+    "days": "T, R",
+    "time": "14:00 - 16:50",
+    "place": "Al-Juraysi222"
+  },
+  {
+    "name of course": "BUSA739",
+    "sec": 1,
+    "name of instructor": "Amal Wasef Mousa Nazzal",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "14:15 - 16:55",
+    "place": "O.Abdulhadi253"
+  },
+  {
+    "name of course": "BUSA739",
+    "sec": 1,
+    "name of instructor": "Diyama Khaled Khamees Abu Laban",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "15:00 - 17:50",
+    "place": "Al-Juraysi322"
+  },
+  {
+    "name of course": "labCHEM112",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "0 / 20",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "SCI361"
+  },
+  {
+    "name of course": "CHEM132",
+    "sec": 1,
+    "name of instructor": "Mohammed H. M. Aljabari",
+    "number of students": "0 / 120",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "SCI213"
+  },
+  {
+    "name of course": "CHEM143",
+    "sec": 1,
+    "name of instructor": "Diab T. D. Qadah",
+    "number of students": "9 / 120",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "SCI120"
+  },
+  {
+    "name of course": "labCHEM143",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "5 / 40",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "SCI003"
+  },
+  {
+    "name of course": "labCHEM143",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "4 / 40",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "SCI003"
+  },
+  {
+    "name of course": "CHEM221",
+    "sec": 1,
+    "name of instructor": "Adi Abdul Latif Yousef Qamhieh",
+    "number of students": "9 / 120",
+    "days": "T, R",
+    "time": "11:00 - 11:50",
+    "place": "SCI114"
+  },
+  {
+    "name of course": "labCHEM221",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "1 / 18",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "SCI355"
+  },
+  {
+    "name of course": "labCHEM221",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "8 / 18",
+    "days": "T, R",
+    "time": "08:00 - 10:40",
+    "place": "SCI357"
+  },
+  {
+    "name of course": "CHEM230",
+    "sec": 1,
+    "name of instructor": "Ghassan Awad Ahmad Albarghouti",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "SCI215"
+  },
+  {
+    "name of course": "CHEM234",
+    "sec": 1,
+    "name of instructor": "Saleh Mohammad Sulaiman Sulaiman",
+    "number of students": "26 / 0",
+    "days": "M, W",
+    "time": "10:00 - 11:40",
+    "place": "Aggad221"
+  },
+  {
+    "name of course": "labCHEM234",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "15 / 0",
+    "days": "M, W",
+    "time": "13:00 - 16:30",
+    "place": "SCI358"
+  },
+  {
+    "name of course": "labCHEM234",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "11 / 0",
+    "days": "T, R",
+    "time": "08:00 - 11:30",
+    "place": "SCI358"
+  },
+  {
+    "name of course": "labCHEM234",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "0 / 0",
+    "days": "T, R",
+    "time": "13:00 - 16:30",
+    "place": "SCI357"
+  },
+  {
+    "name of course": "CHEM4120",
+    "sec": 1,
+    "name of instructor": "Saleh Mohammad Sulaiman Sulaiman",
+    "number of students": "0 / 15",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "COMP111",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "1 / 27",
+    "days": "T, R",
+    "time": "08:00 - 09:40",
+    "place": "Masri402"
+  },
+  {
+    "name of course": "COMP111",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "3 / 27",
+    "days": "M, W",
+    "time": "14:00 - 15:40",
+    "place": "Masri402"
+  },
+  {
+    "name of course": "COMP122",
+    "sec": 1,
+    "name of instructor": "Mohammad Y. M. Alkhanafseh",
+    "number of students": "3 / 108",
+    "days": "M, W",
+    "time": "13:00 - 13:50",
+    "place": "Masri109"
+  },
+  {
+    "name of course": "labCOMP122",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "3 / 27",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri307"
+  },
+  {
+    "name of course": "labCOMP122",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "0 / 27",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri305"
+  },
+  {
+    "name of course": "COMP132",
+    "sec": 1,
+    "name of instructor": "Mohammad Y. M. Alkhanafseh",
+    "number of students": "3 / 46",
+    "days": "M, W",
+    "time": "10:00 - 11:40",
+    "place": "Masri306"
+  },
+  {
+    "name of course": "labCOMP132",
+    "sec": 1,
+    "name of instructor": "Mohammad Y. M. Alkhanafseh",
+    "number of students": "3 / 27",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri405"
+  },
+  {
+    "name of course": "COMP133",
+    "sec": 1,
+    "name of instructor": "Samer Mas'Oud Ahmad Zein",
+    "number of students": "3 / 46",
+    "days": "M, T, W, R",
+    "time": "14:00 - 14:50",
+    "place": "Masri110"
+  },
+  {
+    "name of course": "labCOMP133",
+    "sec": 1,
+    "name of instructor": "Samer Mas'Oud Ahmad Zein",
+    "number of students": "1 / 27",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri307"
+  },
+  {
+    "name of course": "labCOMP133",
+    "sec": 2,
+    "name of instructor": "Samer Mas'Oud Ahmad Zein",
+    "number of students": "2 / 27",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri307"
+  },
+  {
+    "name of course": "COMP1331",
+    "sec": 1,
+    "name of instructor": "Abdallah Haidar Mohammad Karakra",
+    "number of students": "3 / 46",
+    "days": "M, W",
+    "time": "09:00 - 10:40",
+    "place": "Masri109"
+  },
+  {
+    "name of course": "COMP1331",
+    "sec": 2,
+    "name of instructor": "Karmel F. M. Shehadeh",
+    "number of students": "0 / 46",
+    "days": "M, W",
+    "time": "08:00 - 09:50",
+    "place": "Masri306"
+  },
+  {
+    "name of course": "labCOMP1331",
+    "sec": 1,
+    "name of instructor": "Abdallah Haidar Mohammad Karakra",
+    "number of students": "3 / 27",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri403"
+  },
+  {
+    "name of course": "labCOMP1331",
+    "sec": 2,
+    "name of instructor": "Abdallah Haidar Mohammad Karakra",
+    "number of students": "0 / 27",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri403"
+  },
+  {
+    "name of course": "labCOMP1331",
+    "sec": 3,
+    "name of instructor": "Karmel F. M. Shehadeh",
+    "number of students": "0 / 27",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri405"
+  },
+  {
+    "name of course": "COMP2310",
+    "sec": 1,
+    "name of instructor": "Mohammed H. S. Helal",
+    "number of students": "1 / 46",
+    "days": "T, R",
+    "time": "08:00 - 09:40",
+    "place": "Masri306"
+  },
+  {
+    "name of course": "labCOMP2310",
+    "sec": 1,
+    "name of instructor": "Mohammed H. S. Helal",
+    "number of students": "1 / 27",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri402"
+  },
+  {
+    "name of course": "COMP2311",
+    "sec": 1,
+    "name of instructor": "Mohammed H. S. Helal",
+    "number of students": "0 / 46",
+    "days": "M, W",
+    "time": "08:00 - 09:50",
+    "place": "Masri404"
+  },
+  {
+    "name of course": "labCOMP2311",
+    "sec": 1,
+    "name of instructor": "Mohammed H. S. Helal",
+    "number of students": "0 / 27",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri402"
+  },
+  {
+    "name of course": "COMP233",
+    "sec": 1,
+    "name of instructor": "Radi A. R. Jarrar",
+    "number of students": "8 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "Masri109"
+  },
+  {
+    "name of course": "COMP233",
+    "sec": 2,
+    "name of instructor": "Radi A. R. Jarrar",
+    "number of students": "11 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri302"
+  },
+  {
+    "name of course": "COMP233",
+    "sec": 3,
+    "name of instructor": "Radi A. R. Jarrar",
+    "number of students": "10 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Masri110"
+  },
+  {
+    "name of course": "COMP233",
+    "sec": 4,
+    "name of instructor": "Yousef W. S. Sabbah",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "Masri106"
+  },
+  {
+    "name of course": "COMP311",
+    "sec": 1,
+    "name of instructor": "Karmel F. M. Shehadeh",
+    "number of students": "2 / 20",
+    "days": "T, R",
+    "time": "08:00 - 10:40",
+    "place": "Masri405"
+  },
+  {
+    "name of course": "COMP311",
+    "sec": 2,
+    "name of instructor": "Karmel F. M. Shehadeh",
+    "number of students": "6 / 20",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri405"
+  },
+  {
+    "name of course": "COMP3300",
+    "sec": 1,
+    "name of instructor": "Sobhi Ghassen Sobhi Ahmed",
+    "number of students": "9 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "COMP3300",
+    "sec": 2,
+    "name of instructor": "Sobhi Ghassen Sobhi Ahmed",
+    "number of students": "0 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "COMP3300",
+    "sec": 3,
+    "name of instructor": "Sobhi Ghassen Sobhi Ahmed",
+    "number of students": "0 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "COVA3240",
+    "sec": 1,
+    "name of instructor": "Mohammed S. M. Khalil",
+    "number of students": "1 / 12",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "CSEC2320",
+    "sec": 1,
+    "name of instructor": "Yousef W. S. Sabbah",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:20",
+    "place": "Masri504"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 1,
+    "name of instructor": "Suhaila Hicham Fadl Abdel Latif",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi027"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 2,
+    "name of instructor": "Suhaila Hicham Fadl Abdel Latif",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Bamieh104"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 3,
+    "name of instructor": "Basil Abdelrazeq Yaseen Farraj",
+    "number of students": "15 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Bamieh103"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 4,
+    "name of instructor": "Wasim Abdelqader Mohammed Abu Fasheh",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen262"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 5,
+    "name of instructor": "Yasser H. Y. Khanger",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen102"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 6,
+    "name of instructor": "Basil Abdelrazeq Yaseen Farraj",
+    "number of students": "20 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Bamieh103"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 7,
+    "name of instructor": "Basil Abdelrazeq Yaseen Farraj",
+    "number of students": "13 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Bamieh103"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 8,
+    "name of instructor": "Qasam Theeb Qassim \"Haj Mohammad\"",
+    "number of students": "7 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen152"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 9,
+    "name of instructor": "Qasam Theeb Qassim \"Haj Mohammad\"",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen202"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 10,
+    "name of instructor": "Qasam Theeb Qassim \"Haj Mohammad\"",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen152"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 11,
+    "name of instructor": "Rami Fawzi Issa Salameh",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen064"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 12,
+    "name of instructor": "Yasser H. Y. Khanger",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen206"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 13,
+    "name of instructor": "Rami Fawzi Issa Salameh",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen216"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 14,
+    "name of instructor": "Wasim Abdelqader Mohammed Abu Fasheh",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "A.Shaheen112"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 15,
+    "name of instructor": "Yasser H. Y. Khanger",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen112"
+  },
+  {
+    "name of course": "CULS331",
+    "sec": 16,
+    "name of instructor": "Bashir Rizeqallah Abd Alraziq Doha",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen112"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 1,
+    "name of instructor": "Rana Adeeb Abdullah Kherawish",
+    "number of students": "33 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "PNH301"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 2,
+    "name of instructor": "Rana Adeeb Abdullah Kherawish",
+    "number of students": "21 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "PNH301"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 3,
+    "name of instructor": "Huda Ribhi Hassan Awad",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Bamieh102"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 4,
+    "name of instructor": "Huda Ribhi Hassan Awad",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen252"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 5,
+    "name of instructor": "Huda Ribhi Hassan Awad",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Bamieh204"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 6,
+    "name of instructor": "Raed Taleb Bader Bader",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen202"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 7,
+    "name of instructor": "Raed Taleb Bader Bader",
+    "number of students": "21 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen262"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 8,
+    "name of instructor": "Rana Adeeb Abdullah Kherawish",
+    "number of students": "7 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "PNH301"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 9,
+    "name of instructor": "Rami Fawzi Issa Salameh",
+    "number of students": "15 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "A.Shaheen262"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 10,
+    "name of instructor": "Raed Taleb Bader Bader",
+    "number of students": "10 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Khoury105"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 11,
+    "name of instructor": "Sa'D Fathi Said Nimer",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen216"
+  },
+  {
+    "name of course": "CULS332",
+    "sec": 12,
+    "name of instructor": "Sa'D Fathi Said Nimer",
+    "number of students": "9 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen116"
+  },
+  {
+    "name of course": "DSGN3340",
+    "sec": 1,
+    "name of instructor": "Dennis Z. Y. Sobeh",
+    "number of students": "5 / 15",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "DSGN3340",
+    "sec": 2,
+    "name of instructor": "Dennis Z. Y. Sobeh",
+    "number of students": "1 / 15",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "DSGN3370",
+    "sec": 1,
+    "name of instructor": "Omar Yousef Ibrahim Nasser",
+    "number of students": "1 / 60",
+    "days": "M",
+    "time": "10:00 - 11:40",
+    "place": "Aweidah305"
+  },
+  {
+    "name of course": "labDSGN3370",
+    "sec": 1,
+    "name of instructor": "Omar Yousef Ibrahim Nasser",
+    "number of students": "1 / 20",
+    "days": "T, W, R",
+    "time": "11:00 - 14:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "DSIN3240",
+    "sec": 1,
+    "name of instructor": "Nihal L. H. Shamieh",
+    "number of students": "0 / 12",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ECON131",
+    "sec": 1,
+    "name of instructor": "Mohammad Nassar Ahmad Amreyeh",
+    "number of students": "5 / 120",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "O.Abdulhadi052"
+  },
+  {
+    "name of course": "ECON132",
+    "sec": 1,
+    "name of instructor": "Mohanad Oudah Mohammed Ismael",
+    "number of students": "3 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Sh.Shaheen205"
+  },
+  {
+    "name of course": "ECON233",
+    "sec": 1,
+    "name of instructor": "Mohammad Nassar Ahmad Amreyeh",
+    "number of students": "0 / 100",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Masri109"
+  },
+  {
+    "name of course": "ECON235",
+    "sec": 1,
+    "name of instructor": "Najibeh Mohammad Saleh Morar",
+    "number of students": "25 / 25",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi123"
+  },
+  {
+    "name of course": "ECON235",
+    "sec": 2,
+    "name of instructor": "Mohanad Oudah Mohammed Ismael",
+    "number of students": "1 / 25",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi122"
+  },
+  {
+    "name of course": "ECON235",
+    "sec": 3,
+    "name of instructor": "Sameera M. I. Awawda",
+    "number of students": "25 / 25",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi125"
+  },
+  {
+    "name of course": "ECON235",
+    "sec": 4,
+    "name of instructor": "Sameera M. I. Awawda",
+    "number of students": "25 / 25",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Al-Juraysi123"
+  },
+  {
+    "name of course": "ECON3311",
+    "sec": 1,
+    "name of instructor": "Mohammad Nassar Ahmad Amreyeh",
+    "number of students": "19 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "O.Abdulhadi152"
+  },
+  {
+    "name of course": "ECON3321",
+    "sec": 1,
+    "name of instructor": "Tareq Mohummad Abdul_Rahim Sadeq",
+    "number of students": "17 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "O.Abdulhadi152"
+  },
+  {
+    "name of course": "ECON338",
+    "sec": 1,
+    "name of instructor": "Tareq Mohummad Abdul_Rahim Sadeq",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "O.Abdulhadi151"
+  },
+  {
+    "name of course": "ECON739",
+    "sec": 1,
+    "name of instructor": "Mohanad Oudah Mohammed Ismael",
+    "number of students": "1 / 40",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "O.Abdulhadi153"
+  },
+  {
+    "name of course": "EDUC2360",
+    "sec": 1,
+    "name of instructor": "Mousa Mohammed Mousa Khaldi",
+    "number of students": "0 / 40",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Bamieh201"
+  },
+  {
+    "name of course": "EDUC331",
+    "sec": 1,
+    "name of instructor": "Hasan Mahmoud Awad Abdelkareem",
+    "number of students": "1 / 25",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Bamieh106"
+  },
+  {
+    "name of course": "EDUC334",
+    "sec": 1,
+    "name of instructor": "Mousa Mohammed Mousa Khaldi",
+    "number of students": "3 / 40",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "Bamieh205"
+  },
+  {
+    "name of course": "EDUC431",
+    "sec": 1,
+    "name of instructor": "Abdallah Ibrahim Atiyeh Bsharat",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Bamieh201"
+  },
+  {
+    "name of course": "EDUC621",
+    "sec": 1,
+    "name of instructor": "Ola 'M.Monther' Rafic Khalili",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "12:00 - 13:40",
+    "place": "Bamieh206"
+  },
+  {
+    "name of course": "EDUC839",
+    "sec": 1,
+    "name of instructor": "Abdallah Ibrahim Atiyeh Bsharat",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "Bamieh104"
+  },
+  {
+    "name of course": "EDUC860",
+    "sec": 1,
+    "name of instructor": "Anwar Ahmad Mohammad Abdel Razeq",
+    "number of students": "0 / 1",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "EDUC860",
+    "sec": 2,
+    "name of instructor": "Anwar Ahmad Mohammad Abdel Razeq",
+    "number of students": "0 / 1",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "EDUC860",
+    "sec": 3,
+    "name of instructor": "Refa' Jamal A.Alhafeez Al-Ramahi",
+    "number of students": "0 / 1",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "EDUC9207",
+    "sec": 1,
+    "name of instructor": "Anwar Ahmad Mohammad Abdel Razeq",
+    "number of students": "1 / 20",
+    "days": "M, W",
+    "time": "14:00 - 15:50",
+    "place": "Bamieh304"
+  },
+  {
+    "name of course": "ENAR4300",
+    "sec": 1,
+    "name of instructor": "Manal Ahmad Mohammad Al Bishawi",
+    "number of students": "15 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENAR4300",
+    "sec": 2,
+    "name of instructor": "Manal Ahmad Mohammad Al Bishawi",
+    "number of students": "0 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENCE2320",
+    "sec": 1,
+    "name of instructor": "Jamal-Aldin Hisham Mohammad Zalatimo",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:40",
+    "place": "Aggad332"
+  },
+  {
+    "name of course": "ENCE2330",
+    "sec": 1,
+    "name of instructor": "Nizar Abdul-Hamid Yousef Assi",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:20",
+    "place": "Aggad332"
+  },
+  {
+    "name of course": "ENCE3170",
+    "sec": 1,
+    "name of instructor": "Mustafa Shaban Mas'Oud Abed Musa",
+    "number of students": "4 / 20",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "Aggad136/2"
+  },
+  {
+    "name of course": "ENCE3170",
+    "sec": 2,
+    "name of instructor": "Khaled Adeeb Zaki Abaza",
+    "number of students": "8 / 20",
+    "days": "M, W",
+    "time": "08:00 - 10:50",
+    "place": "Aggad136/2"
+  },
+  {
+    "name of course": "ENCE3270",
+    "sec": 1,
+    "name of instructor": "Mustafa Shaban Mas'Oud Abed Musa",
+    "number of students": "13 / 45",
+    "days": "M, W",
+    "time": "11:00 - 12:50",
+    "place": "Aggad415"
+  },
+  {
+    "name of course": "ENCE4300",
+    "sec": 1,
+    "name of instructor": "Khaled Adeeb Zaki Abaza",
+    "number of students": "0 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENCE4300",
+    "sec": 2,
+    "name of instructor": "Saheem Kamel Abdullah Murshid",
+    "number of students": "9 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENCE5383",
+    "sec": 1,
+    "name of instructor": "Omar Rabah Raghib Zimmo",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:40",
+    "place": "Aggad407"
+  },
+  {
+    "name of course": "ENCS2110",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "4 / 18",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "Masri107"
+  },
+  {
+    "name of course": "ENCS2110",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "18 / 18",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri107"
+  },
+  {
+    "name of course": "ENCS2110",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "7 / 18",
+    "days": "T, R",
+    "time": "08:00 - 10:40",
+    "place": "Masri107"
+  },
+  {
+    "name of course": "ENCS2110",
+    "sec": 4,
+    "name of instructor": "",
+    "number of students": "18 / 18",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri107"
+  },
+  {
+    "name of course": "ENCS2110",
+    "sec": 5,
+    "name of instructor": "",
+    "number of students": "10 / 18",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri107"
+  },
+  {
+    "name of course": "ENCS2340",
+    "sec": 1,
+    "name of instructor": "Aziz Mohammed Ahmad Qaroush",
+    "number of students": "22 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri202"
+  },
+  {
+    "name of course": "ENCS2340",
+    "sec": 2,
+    "name of instructor": "Abdallatif S. A. Abuissa",
+    "number of students": "8 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Masri302"
+  },
+  {
+    "name of course": "ENCS2380",
+    "sec": 1,
+    "name of instructor": "Ismail Mohammad Mousa Khater",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "Masri106"
+  },
+  {
+    "name of course": "ENCS3130",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "32 / 20",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "Masri407"
+  },
+  {
+    "name of course": "ENCS3130",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "26 / 20",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri407"
+  },
+  {
+    "name of course": "ENCS3130",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "26 / 20",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri407"
+  },
+  {
+    "name of course": "ENCS3310",
+    "sec": 1,
+    "name of instructor": "Ayman Ali Mohammad Hroub",
+    "number of students": "18 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "Masri504"
+  },
+  {
+    "name of course": "ENCS3320",
+    "sec": 1,
+    "name of instructor": "Ahmed I. A. Shawahna",
+    "number of students": "15 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Masri406"
+  },
+  {
+    "name of course": "ENCS3320",
+    "sec": 2,
+    "name of instructor": "Ibrahim Ahmed Abdallah Nemer",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "Masri202"
+  },
+  {
+    "name of course": "ENCS336",
+    "sec": 1,
+    "name of instructor": "Abualseoud Ahmad Abualseoud Hanani",
+    "number of students": "18 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri204"
+  },
+  {
+    "name of course": "ENCS3390",
+    "sec": 1,
+    "name of instructor": "Abdel Salam Muhammad Khader Sayyad",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Masri204"
+  },
+  {
+    "name of course": "ENCS4110",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "4 / 18",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri207"
+  },
+  {
+    "name of course": "ENCS4110",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "7 / 18",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri207"
+  },
+  {
+    "name of course": "ENCS4110",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "11 / 18",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri207"
+  },
+  {
+    "name of course": "ENCS4130",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "11 / 16",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "Masri503"
+  },
+  {
+    "name of course": "ENCS4130",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "4 / 16",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri503"
+  },
+  {
+    "name of course": "ENCS4130",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "9 / 16",
+    "days": "M, W",
+    "time": "08:00 - 10:40",
+    "place": "Masri503"
+  },
+  {
+    "name of course": "ENCS4300",
+    "sec": 1,
+    "name of instructor": "Mohammed Sami Abdul Karim Hussein",
+    "number of students": "24 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENCS4300",
+    "sec": 2,
+    "name of instructor": "Mohammed Sami Abdul Karim Hussein",
+    "number of students": "2 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENCS4300",
+    "sec": 3,
+    "name of instructor": "Mohammed Sami Abdul Karim Hussein",
+    "number of students": "0 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENCS4310",
+    "sec": 1,
+    "name of instructor": "Alhareth M. T. Zyoud",
+    "number of students": "31 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENCS5121",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "0 / 16",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "WKS215"
+  },
+  {
+    "name of course": "ENCS5140",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "6 / 18",
+    "days": "T, R",
+    "time": "14:00 - 16:50",
+    "place": "Masri506"
+  },
+  {
+    "name of course": "ENCS5141",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "4 / 18",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "Masri407"
+  },
+  {
+    "name of course": "ENCS5150",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "8 / 18",
+    "days": "M, W",
+    "time": "11:00 - 13:50",
+    "place": "WKS215"
+  },
+  {
+    "name of course": "ENEE2101",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "4 / 18",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri206"
+  },
+  {
+    "name of course": "ENEE2103",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "9 / 18",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Masri203"
+  },
+  {
+    "name of course": "ENEE2103",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "5 / 18",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "Masri203"
+  },
+  {
+    "name of course": "ENEE2103",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "9 / 18",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Masri203"
+  },
+  {
+    "name of course": "ENEE2103",
+    "sec": 4,
+    "name of instructor": "",
+    "number of students": "1 / 18",
+    "days": "M, W",
+    "time": "08:00 - 10:40",
+    "place": "Masri203"
+  },
+  {
+    "name of course": "ENEE2103",
+    "sec": 5,
+    "name of instructor": "",
+    "number of students": "9 / 18",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Masri203"
+  },
+  {
+    "name of course": "ENEE2304",
+    "sec": 1,
+    "name of instructor": "Ali Hasan Moath Abdo",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri502"
+  },
+  {
+    "name of course": "ENEE2307",
+    "sec": 1,
+    "name of instructor": "Mohammad Khaleel Issa Jubran",
+    "number of students": "20 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Masri108"
+  },
+  {
+    "name of course": "ENEE2307",
+    "sec": 2,
+    "name of instructor": "Jaser Abdel Mon'En Fayiz Sa'Ed",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri504"
+  },
+  {
+    "name of course": "ENEE2311",
+    "sec": 1,
+    "name of instructor": "Muhammad Sharif Mustafa Abu-Khaizaran",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri304"
+  },
+  {
+    "name of course": "ENEE2312",
+    "sec": 1,
+    "name of instructor": "Mahran S. R. Quraan",
+    "number of students": "45 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Masri106"
+  },
+  {
+    "name of course": "ENEE2312",
+    "sec": 2,
+    "name of instructor": "Jamal Othman Hosen Seyam",
+    "number of students": "13 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "Masri110"
+  },
+  {
+    "name of course": "ENEE2312",
+    "sec": 3,
+    "name of instructor": "Ashraf Sulieman Awad Al-Rimawi",
+    "number of students": "12 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Bamieh201"
+  },
+  {
+    "name of course": "ENEE2360",
+    "sec": 1,
+    "name of instructor": "Nasser Abdel Jaleel Muhammad Ismail",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri106"
+  },
+  {
+    "name of course": "ENEE2360",
+    "sec": 2,
+    "name of instructor": "Mohammad Jehad Mohammad A'Ta Husni Al Ju'Beh",
+    "number of students": "35 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:35",
+    "place": "Masri406"
+  },
+  {
+    "name of course": "ENEE3309",
+    "sec": 1,
+    "name of instructor": "Wasel Tahsin Ahmad Ghanem",
+    "number of students": "7 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masri108"
+  },
+  {
+    "name of course": "ENEE4113",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "6 / 15",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "Aggad341"
+  },
+  {
+    "name of course": "ENEE4113",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "1 / 15",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "Aggad341"
+  },
+  {
+    "name of course": "ENEE4113",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "15 / 15",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "Aggad341"
+  },
+  {
+    "name of course": "ENEE4113",
+    "sec": 4,
+    "name of instructor": "",
+    "number of students": "5 / 15",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "Aggad341"
+  },
+  {
+    "name of course": "ENEE4113",
+    "sec": 5,
+    "name of instructor": "",
+    "number of students": "1 / 15",
+    "days": "M, W",
+    "time": "08:00 - 10:40",
+    "place": "Aggad341"
+  },
+  {
+    "name of course": "ENEE4300",
+    "sec": 1,
+    "name of instructor": "Mahran S. R. Quraan",
+    "number of students": "1 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENEE4403",
+    "sec": 1,
+    "name of instructor": "Mahran S. R. Quraan",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 14:00",
+    "place": "Masri404"
+  },
+  {
+    "name of course": "ENGC1400",
+    "sec": 1,
+    "name of instructor": "Ahmad Shukri Ahmad Shayeb",
+    "number of students": "4 / 30",
+    "days": "M, T, W, R",
+    "time": "12:00 - 13:40",
+    "place": "A.Shaheen016"
+  },
+  {
+    "name of course": "ENGC1400",
+    "sec": 2,
+    "name of instructor": "Ahmad Shukri Ahmad Shayeb",
+    "number of students": "2 / 30",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:40",
+    "place": "A.Shaheen216"
+  },
+  {
+    "name of course": "ENGC1400",
+    "sec": 3,
+    "name of instructor": "Saeb Diab Ali Samara Qawwas",
+    "number of students": "1 / 30",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:40",
+    "place": "A.Shaheen256"
+  },
+  {
+    "name of course": "ENGC1400",
+    "sec": 4,
+    "name of instructor": "Haya Abdulrahman Abdulrahman Abuhussein",
+    "number of students": "4 / 30",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENGC2400",
+    "sec": 1,
+    "name of instructor": "Rabah Fahed Ahmad 'A.Ahmad'",
+    "number of students": "19 / 30",
+    "days": "M, T, W, R",
+    "time": "12:00 - 13:40",
+    "place": "O.Abdulhadi154"
+  },
+  {
+    "name of course": "ENGC2400",
+    "sec": 2,
+    "name of instructor": "Ruba Abdul_Latif Mustafa Khalaf",
+    "number of students": "9 / 30",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:40",
+    "place": "Al-Juraysi321"
+  },
+  {
+    "name of course": "ENGC2400",
+    "sec": 3,
+    "name of instructor": "Saeb Diab Ali Samara Qawwas",
+    "number of students": "7 / 30",
+    "days": "M, T, W, R",
+    "time": "12:00 - 13:40",
+    "place": "A.Shaheen212"
+  },
+  {
+    "name of course": "ENGC2400",
+    "sec": 4,
+    "name of instructor": "Rabah Fahed Ahmad 'A.Ahmad'",
+    "number of students": "23 / 30",
+    "days": "M, T, W, R",
+    "time": "10:00 - 11:40",
+    "place": "SCI217"
+  },
+  {
+    "name of course": "ENGC2400",
+    "sec": 5,
+    "name of instructor": "Haya Abdulrahman Abdulrahman Abuhussein",
+    "number of students": "31 / 30",
+    "days": "M, T, W, R",
+    "time": "12:20 - 14:00",
+    "place": "Al-Juraysi223"
+  },
+  {
+    "name of course": "ENGC2401",
+    "sec": 1,
+    "name of instructor": "Ruba Abdul_Latif Mustafa Khalaf",
+    "number of students": "3 / 30",
+    "days": "M, T, W, R",
+    "time": "12:00 - 13:40",
+    "place": "Bamieh205"
+  },
+  {
+    "name of course": "ENGC2401",
+    "sec": 2,
+    "name of instructor": "Adnan Ibrahim Abdallah Abuayyash",
+    "number of students": "5 / 30",
+    "days": "M, T, W, R",
+    "time": "10:00 - 11:40",
+    "place": "SCI112"
+  },
+  {
+    "name of course": "ENGC2401",
+    "sec": 3,
+    "name of instructor": "Adnan Ibrahim Abdallah Abuayyash",
+    "number of students": "4 / 30",
+    "days": "M, T, W, R",
+    "time": "12:20 - 14:00",
+    "place": "A.Shaheen064"
+  },
+  {
+    "name of course": "ENGL235",
+    "sec": 1,
+    "name of instructor": "Maen Hussam Abdlatife Saa",
+    "number of students": "4 / 35",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen206"
+  },
+  {
+    "name of course": "ENGL236",
+    "sec": 1,
+    "name of instructor": "Maen Hussam Abdlatife Saa",
+    "number of students": "5 / 35",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen262"
+  },
+  {
+    "name of course": "ENGL237",
+    "sec": 1,
+    "name of instructor": "Wael Abed Lafi Abdeen",
+    "number of students": "2 / 35",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "A.Shaheen266"
+  },
+  {
+    "name of course": "ENGL238",
+    "sec": 1,
+    "name of instructor": "Laila K. I Shikaki",
+    "number of students": "3 / 35",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen256"
+  },
+  {
+    "name of course": "ENGL331",
+    "sec": 1,
+    "name of instructor": "Lloyd Howard James Precious",
+    "number of students": "3 / 35",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen262"
+  },
+  {
+    "name of course": "ENGL336",
+    "sec": 1,
+    "name of instructor": "Wael Abed Lafi Abdeen",
+    "number of students": "5 / 35",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen266"
+  },
+  {
+    "name of course": "ENGL339",
+    "sec": 1,
+    "name of instructor": "Laila K. I Shikaki",
+    "number of students": "4 / 25",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen062"
+  },
+  {
+    "name of course": "ENGL435",
+    "sec": 1,
+    "name of instructor": "Lloyd Howard James Precious",
+    "number of students": "2 / 35",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen266"
+  },
+  {
+    "name of course": "ENMC4300",
+    "sec": 1,
+    "name of instructor": "Allan S. E. Tubaileh",
+    "number of students": "1 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENME120",
+    "sec": 1,
+    "name of instructor": "Ibrahim Mohammad Othman Hammad",
+    "number of students": "0 / 120",
+    "days": "M, W",
+    "time": "10:00 - 10:50",
+    "place": "Aggad415"
+  },
+  {
+    "name of course": "labENME120",
+    "sec": 1,
+    "name of instructor": "Ibrahim Mohammad Othman Hammad",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "WKS105"
+  },
+  {
+    "name of course": "ENME1210",
+    "sec": 1,
+    "name of instructor": "Allan S. E. Tubaileh",
+    "number of students": "0 / 120",
+    "days": "T, R",
+    "time": "11:00 - 11:50",
+    "place": "Aggad336"
+  },
+  {
+    "name of course": "labENME1210",
+    "sec": 1,
+    "name of instructor": "Allan S. E. Tubaileh",
+    "number of students": "0 / 25",
+    "days": "T, R",
+    "time": "08:00 - 10:40",
+    "place": "Aggad342"
+  },
+  {
+    "name of course": "ENME3100",
+    "sec": 1,
+    "name of instructor": "Ibrahim Mohammad Othman Hammad",
+    "number of students": "2 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENME4300",
+    "sec": 1,
+    "name of instructor": "Ibrahim Mohammad Othman Hammad",
+    "number of students": "3 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "ENPL4300",
+    "sec": 1,
+    "name of instructor": "Salem Abdul Latif Abdul Karim Thawaba",
+    "number of students": "0 / 35",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "FINN1300",
+    "sec": 1,
+    "name of instructor": "Seri Mohammad Jamil Khalil Ghanem",
+    "number of students": "7 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Sh.Shaheen205"
+  },
+  {
+    "name of course": "FINN2300",
+    "sec": 1,
+    "name of instructor": "Fairouz Sa'Eed Mouhamed Darwish",
+    "number of students": "3 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen162"
+  },
+  {
+    "name of course": "FINN2300",
+    "sec": 2,
+    "name of instructor": "Jawana Abed Al-Hadi Odeh Awwad",
+    "number of students": "21 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "O.Abdulhadi051"
+  },
+  {
+    "name of course": "FINN2300",
+    "sec": 3,
+    "name of instructor": "Seri Mohammad Jamil Khalil Ghanem",
+    "number of students": "48 / 120",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Sh.Shaheen205"
+  },
+  {
+    "name of course": "FINN2300",
+    "sec": 4,
+    "name of instructor": "Muniece Abdelrahman Ameen Alfar",
+    "number of students": "38 / 120",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Sh.Shaheen105"
+  },
+  {
+    "name of course": "FINN233",
+    "sec": 1,
+    "name of instructor": "Jawana Abed Al-Hadi Odeh Awwad",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Al-Juraysi321"
+  },
+  {
+    "name of course": "FINN2331",
+    "sec": 1,
+    "name of instructor": "Fairouz Sa'Eed Mouhamed Darwish",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi227"
+  },
+  {
+    "name of course": "FINN234",
+    "sec": 1,
+    "name of instructor": "Habib I. H. Hinn",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi223"
+  },
+  {
+    "name of course": "FINN3302",
+    "sec": 1,
+    "name of instructor": "Diyama Khaled Khamees Abu Laban",
+    "number of students": "3 / 25",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi121"
+  },
+  {
+    "name of course": "FINN3302",
+    "sec": 2,
+    "name of instructor": "Muniece Abdelrahman Ameen Alfar",
+    "number of students": "5 / 25",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi125"
+  },
+  {
+    "name of course": "FINN3302",
+    "sec": 3,
+    "name of instructor": "Muniece Abdelrahman Ameen Alfar",
+    "number of students": "4 / 25",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi122"
+  },
+  {
+    "name of course": "FINN333",
+    "sec": 1,
+    "name of instructor": "Diyama Khaled Khamees Abu Laban",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Al-Juraysi323"
+  },
+  {
+    "name of course": "FINN338",
+    "sec": 1,
+    "name of instructor": "Fairouz Sa'Eed Mouhamed Darwish",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Al-Juraysi323"
+  },
+  {
+    "name of course": "FINN3392",
+    "sec": 1,
+    "name of instructor": "Habib I. H. Hinn",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi221"
+  },
+  {
+    "name of course": "FINN437",
+    "sec": 1,
+    "name of instructor": "Jawana Abed Al-Hadi Odeh Awwad",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Al-Juraysi225"
+  },
+  {
+    "name of course": "GENS131",
+    "sec": 1,
+    "name of instructor": "Abdallah Taha Suleiman Abu Taha",
+    "number of students": "1 / 150",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "SCI240"
+  },
+  {
+    "name of course": "GENS220",
+    "sec": 1,
+    "name of instructor": "Munther Hikmat Mohummad Metani",
+    "number of students": "4 / 50",
+    "days": "M, W",
+    "time": "09:20 - 11:00",
+    "place": "O.Abdulhadi151"
+  },
+  {
+    "name of course": "GEOG210",
+    "sec": 1,
+    "name of instructor": "Mohammad Tayseer Ahmad Kittaneh",
+    "number of students": "3 / 45",
+    "days": "M, W",
+    "time": "12:20 - 13:10",
+    "place": "A.Shaheen116"
+  },
+  {
+    "name of course": "GEOG210",
+    "sec": 2,
+    "name of instructor": "Khalil Abdullah Mutawe' Amro",
+    "number of students": "0 / 45",
+    "days": "T, R",
+    "time": "11:00 - 11:50",
+    "place": "A.Shaheen202"
+  },
+  {
+    "name of course": "GEOG210",
+    "sec": 3,
+    "name of instructor": "Khalil Abdullah Mutawe' Amro",
+    "number of students": "1 / 45",
+    "days": "M, W",
+    "time": "11:00 - 11:50",
+    "place": "A.Shaheen202"
+  },
+  {
+    "name of course": "GEOG230",
+    "sec": 1,
+    "name of instructor": "Khalil Abdullah Mutawe' Amro",
+    "number of students": "1 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen162"
+  },
+  {
+    "name of course": "GEOG338",
+    "sec": 1,
+    "name of instructor": "Mohammad Tayseer Ahmad Kittaneh",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen252"
+  },
+  {
+    "name of course": "GEOI4310",
+    "sec": 1,
+    "name of instructor": "Abdullah Said Naji Herzallah",
+    "number of students": "7 / 32",
+    "days": "M, W",
+    "time": "08:00 - 09:40",
+    "place": "A.Shaheen202"
+  },
+  {
+    "name of course": "labGEOI4310",
+    "sec": 1,
+    "name of instructor": "Abdullah Said Naji Herzallah",
+    "number of students": "2 / 16",
+    "days": "M, W",
+    "time": "11:00 - 13:50",
+    "place": "A.Shaheen232"
+  },
+  {
+    "name of course": "labGEOI4310",
+    "sec": 2,
+    "name of instructor": "Abdullah Said Naji Herzallah",
+    "number of students": "5 / 16",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "A.Shaheen232"
+  },
+  {
+    "name of course": "GOVS7344",
+    "sec": 1,
+    "name of instructor": "Salem Abdul Latif Abdul Karim Thawaba",
+    "number of students": "0 / 25",
+    "days": "T, R",
+    "time": "14:00 - 16:50",
+    "place": "ALSADIK204"
+  },
+  {
+    "name of course": "GOVS801",
+    "sec": 1,
+    "name of instructor": "Ayman Elias Yousef Zaru",
+    "number of students": "0 / 10",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "HIST133",
+    "sec": 1,
+    "name of instructor": "Amer Najeeb Mousa Barakat",
+    "number of students": "1 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen216"
+  },
+  {
+    "name of course": "HIST135",
+    "sec": 1,
+    "name of instructor": "Amer Najeeb Mousa Barakat",
+    "number of students": "0 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen102"
+  },
+  {
+    "name of course": "HIST231",
+    "sec": 1,
+    "name of instructor": "Musa Abdelmuti Isaa Sroor",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "A.Shaheen216"
+  },
+  {
+    "name of course": "HLTH723",
+    "sec": 1,
+    "name of instructor": "Aisha Abdel Munem Omran Shalash",
+    "number of students": "0 / 25",
+    "days": "T, R",
+    "time": "09:20 - 11:10",
+    "place": "Khoury226"
+  },
+  {
+    "name of course": "INED2341",
+    "sec": 1,
+    "name of instructor": "Khader Mahmoud Ahmad Rasras",
+    "number of students": "2 / 45",
+    "days": "M, W",
+    "time": "08:00 - 10:50",
+    "place": "Bamieh105"
+  },
+  {
+    "name of course": "INED3321",
+    "sec": 1,
+    "name of instructor": "Hasan Mahmoud Awad Abdelkareem",
+    "number of students": "1 / 45",
+    "days": "M, W",
+    "time": "08:00 - 10:40",
+    "place": "Bamieh204"
+  },
+  {
+    "name of course": "INED4322",
+    "sec": 1,
+    "name of instructor": "Suhair Moustafa Mohammad Morar",
+    "number of students": "2 / 45",
+    "days": "T, R",
+    "time": "11:00 - 13:50",
+    "place": "Bamieh106"
+  },
+  {
+    "name of course": "INED4327",
+    "sec": 1,
+    "name of instructor": "Kifah M. A. Baniowda",
+    "number of students": "3 / 45",
+    "days": "T, R",
+    "time": "14:00 - 16:50",
+    "place": "Bamieh106"
+  },
+  {
+    "name of course": "INRE3360",
+    "sec": 1,
+    "name of instructor": "Ibrahim Sameeh Ibrahim Rabai'Ah",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:20",
+    "place": "N/A"
+  },
+  {
+    "name of course": "INRE4310",
+    "sec": 1,
+    "name of instructor": "Lourdes B. A. Habash",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "JURI130",
+    "sec": 1,
+    "name of instructor": "Mohammed Ibrahim Mohammed Alqaisi",
+    "number of students": "2 / 69",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK103"
+  },
+  {
+    "name of course": "JURI131",
+    "sec": 1,
+    "name of instructor": "Diab Mohammad Diab Alshikh",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:40",
+    "place": "ALSADIK202"
+  },
+  {
+    "name of course": "JURI132",
+    "sec": 1,
+    "name of instructor": "Rinad Kamal Al-Deen Hasan Abdallah",
+    "number of students": "5 / 69",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "ALSADIK102"
+  },
+  {
+    "name of course": "JURI134",
+    "sec": 1,
+    "name of instructor": "Fayez Mohummad Ahmad Ibkairat",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "ALSADIK302"
+  },
+  {
+    "name of course": "JURI230",
+    "sec": 1,
+    "name of instructor": "Rinad Kamal Al-Deen Hasan Abdallah",
+    "number of students": "10 / 160",
+    "days": "M, T, W, R",
+    "time": "08:00 - 08:50",
+    "place": "Bamieh002"
+  },
+  {
+    "name of course": "subJURI230",
+    "sec": 1,
+    "name of instructor": "Tasneem I. A. Kahala",
+    "number of students": "9 / 45",
+    "days": "M, W",
+    "time": "09:00 - 09:50",
+    "place": "ALSADIK305"
+  },
+  {
+    "name of course": "subJURI230",
+    "sec": 2,
+    "name of instructor": "Tasneem I. A. Kahala",
+    "number of students": "1 / 45",
+    "days": "T, R",
+    "time": "10:00 - 10:50",
+    "place": "ALSADIK305"
+  },
+  {
+    "name of course": "subJURI230",
+    "sec": 3,
+    "name of instructor": "Tasneem I. A. Kahala",
+    "number of students": "0 / 45",
+    "days": "M, W",
+    "time": "10:00 - 10:50",
+    "place": "ALSADIK305"
+  },
+  {
+    "name of course": "JURI2311",
+    "sec": 1,
+    "name of instructor": "Tasneem I. A. Kahala",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "ALSADIK102"
+  },
+  {
+    "name of course": "JURI232",
+    "sec": 1,
+    "name of instructor": "Ahmad Ali Hussain Khaled",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "ALSADIK103"
+  },
+  {
+    "name of course": "JURI234",
+    "sec": 1,
+    "name of instructor": "Fayez Mohummad Ahmad Ibkairat",
+    "number of students": "10 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:20",
+    "place": "ALSADIK409"
+  },
+  {
+    "name of course": "JURI2341",
+    "sec": 1,
+    "name of instructor": "Mustafa Hussein Mahmoud Abdul Baqi",
+    "number of students": "6 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "ALSADIK102"
+  },
+  {
+    "name of course": "JURI238",
+    "sec": 1,
+    "name of instructor": "Tammam Kamal Mousa Shair",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "ALSADIK409"
+  },
+  {
+    "name of course": "JURI320",
+    "sec": 1,
+    "name of instructor": "Mahmoud Mohammad Mahmoud Abu Sawi",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 08:50",
+    "place": "ALSADIK408"
+  },
+  {
+    "name of course": "JURI3311",
+    "sec": 1,
+    "name of instructor": "Hussein Ahed Hussein Ayaseh",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK202"
+  },
+  {
+    "name of course": "JURI334",
+    "sec": 1,
+    "name of instructor": "Mustafa Hussein Mahmoud Abdul Baqi",
+    "number of students": "7 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "ALSADIK202"
+  },
+  {
+    "name of course": "JURI338",
+    "sec": 1,
+    "name of instructor": "Jamal Abduljalil Yousif Abu Salem",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "ALSADIK406"
+  },
+  {
+    "name of course": "JURI339",
+    "sec": 1,
+    "name of instructor": "Hussein Ahed Hussein Ayaseh",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "ALSADIK406"
+  },
+  {
+    "name of course": "JURI420",
+    "sec": 1,
+    "name of instructor": "Fayez Mohummad Ahmad Ibkairat",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "14:15 - 15:55",
+    "place": "ALSADIK305"
+  },
+  {
+    "name of course": "JURI421",
+    "sec": 1,
+    "name of instructor": "Hussein Ahed Hussein Ayaseh",
+    "number of students": "4 / 45",
+    "days": "T, R",
+    "time": "14:00 - 15:40",
+    "place": "ALSADIK203"
+  },
+  {
+    "name of course": "JURI4211",
+    "sec": 1,
+    "name of instructor": "Mohammed Ibrahim Mohammed Alqaisi",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:10",
+    "place": "ALSADIK408"
+  },
+  {
+    "name of course": "JURI4212",
+    "sec": 1,
+    "name of instructor": "Hussein Ahed Hussein Ayaseh",
+    "number of students": "2 / 45",
+    "days": "M, W",
+    "time": "14:00 - 15:40",
+    "place": "ALSADIK103"
+  },
+  {
+    "name of course": "JURI431",
+    "sec": 1,
+    "name of instructor": "Mahmoud Mohammad Mahmoud Abu Sawi",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "ALSADIK408"
+  },
+  {
+    "name of course": "JURI4311",
+    "sec": 1,
+    "name of instructor": "Amir M. M. Khalil",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK203"
+  },
+  {
+    "name of course": "JURI439",
+    "sec": 1,
+    "name of instructor": "Mustafa Hussein Mahmoud Abdul Baqi",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "ALSADIK409"
+  },
+  {
+    "name of course": "JURI4393",
+    "sec": 1,
+    "name of instructor": "Diab Mohammad Diab Alshikh",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK302"
+  },
+  {
+    "name of course": "JURI730",
+    "sec": 1,
+    "name of instructor": "Diab Mohammad Diab Alshikh",
+    "number of students": "0 / 25",
+    "days": "T, R",
+    "time": "14:00 - 16:50",
+    "place": "ALSADIK304"
+  },
+  {
+    "name of course": "JURI7326",
+    "sec": 1,
+    "name of instructor": "Mohammed Ibrahim Mohammed Alqaisi",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "ALSADIK307"
+  },
+  {
+    "name of course": "JURI7332",
+    "sec": 1,
+    "name of instructor": "Amir M. M. Khalil",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "ALSADIK304"
+  },
+  {
+    "name of course": "JURI7366",
+    "sec": 1,
+    "name of instructor": "Ahmad Ali Hussain Khaled",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "ALSADIK407"
+  },
+  {
+    "name of course": "MATH1321",
+    "sec": 1,
+    "name of instructor": "Muna Khaled Khaleel Abu Alhalawa",
+    "number of students": "12 / 160",
+    "days": "M, W",
+    "time": "09:00 - 10:40",
+    "place": "SCI120"
+  },
+  {
+    "name of course": "subMATH1321",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "1 / 45",
+    "days": "M, W",
+    "time": "14:00 - 14:50",
+    "place": "SCI115"
+  },
+  {
+    "name of course": "subMATH1321",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "7 / 45",
+    "days": "M, W",
+    "time": "13:00 - 13:50",
+    "place": "SCI115"
+  },
+  {
+    "name of course": "subMATH1321",
+    "sec": 3,
+    "name of instructor": "",
+    "number of students": "4 / 45",
+    "days": "T, R",
+    "time": "09:20 - 10:10",
+    "place": "SCI116"
+  },
+  {
+    "name of course": "MATH1351",
+    "sec": 1,
+    "name of instructor": "Amer Rida Hasan Ja'Far",
+    "number of students": "0 / 160",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "N/A"
+  },
+  {
+    "name of course": "MATH1411",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "1 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "SCI240"
+  },
+  {
+    "name of course": "subMATH1411",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "0 / 45",
+    "days": "M, W",
+    "time": "12:20 - 13:10",
+    "place": "SCI240"
+  },
+  {
+    "name of course": "subMATH1411",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "1 / 45",
+    "days": "T, R",
+    "time": "12:20 - 13:10",
+    "place": "SCI240"
+  },
+  {
+    "name of course": "MATH2311",
+    "sec": 1,
+    "name of instructor": "Abdelrahim S. A. Mousa",
+    "number of students": "2 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "SCI215"
+  },
+  {
+    "name of course": "MATH234",
+    "sec": 1,
+    "name of instructor": "Mohammad Ali Deib Saleh",
+    "number of students": "8 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "SCI214"
+  },
+  {
+    "name of course": "MATH234",
+    "sec": 2,
+    "name of instructor": "Ala Ata Abdelhady Talahmeh",
+    "number of students": "21 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "SCI116"
+  },
+  {
+    "name of course": "MATH234",
+    "sec": 3,
+    "name of instructor": "Mohammad Ali Deib Saleh",
+    "number of students": "5 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "SCI215"
+  },
+  {
+    "name of course": "MATH2351",
+    "sec": 1,
+    "name of instructor": "Muna Khaled Khaleel Abu Alhalawa",
+    "number of students": "32 / 120",
+    "days": "T, R",
+    "time": "10:00 - 11:40",
+    "place": "SCI120"
+  },
+  {
+    "name of course": "subMATH2351",
+    "sec": 1,
+    "name of instructor": "Muna Khaled Khaleel Abu Alhalawa",
+    "number of students": "4 / 45",
+    "days": "T, R",
+    "time": "09:00 - 09:50",
+    "place": "SCI214"
+  },
+  {
+    "name of course": "subMATH2351",
+    "sec": 2,
+    "name of instructor": "Muna Khaled Khaleel Abu Alhalawa",
+    "number of students": "28 / 45",
+    "days": "M, W",
+    "time": "11:00 - 11:50",
+    "place": "SCI213"
+  },
+  {
+    "name of course": "subMATH2351",
+    "sec": 3,
+    "name of instructor": "Muna Khaled Khaleel Abu Alhalawa",
+    "number of students": "0 / 45",
+    "days": "M, W",
+    "time": "12:20 - 13:10",
+    "place": "SCI214"
+  },
+  {
+    "name of course": "MATH330",
+    "sec": 1,
+    "name of instructor": "Abdelrahim S. A. Mousa",
+    "number of students": "10 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "SCI216"
+  },
+  {
+    "name of course": "MATH330",
+    "sec": 2,
+    "name of instructor": "Abdelrahim S. A. Mousa",
+    "number of students": "9 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "SCI213"
+  },
+  {
+    "name of course": "MATH331",
+    "sec": 1,
+    "name of instructor": "Ala Ata Abdelhady Talahmeh",
+    "number of students": "16 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "SCI216"
+  },
+  {
+    "name of course": "MATH331",
+    "sec": 2,
+    "name of instructor": "Ala Ata Abdelhady Talahmeh",
+    "number of students": "29 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "SCI216"
+  },
+  {
+    "name of course": "MCLS731",
+    "sec": 1,
+    "name of instructor": "Mahmoud Abdul-Rahman Husein Srour",
+    "number of students": "0 / 25",
+    "days": "M, W",
+    "time": "14:00 - 16:50",
+    "place": "PNH201"
+  },
+  {
+    "name of course": "MDJO230",
+    "sec": 1,
+    "name of instructor": "Nasser Aldden J. K. Khasib",
+    "number of students": "0 / 120",
+    "days": "T, R",
+    "time": "11:00 - 12:40",
+    "place": "Masrouji016"
+  },
+  {
+    "name of course": "subMDJO230",
+    "sec": 1,
+    "name of instructor": "Nasser Aldden J. K. Khasib",
+    "number of students": "0 / 45",
+    "days": "M, W",
+    "time": "11:00 - 11:50",
+    "place": "Masrouji016"
+  },
+  {
+    "name of course": "MDJO332",
+    "sec": 1,
+    "name of instructor": "Saleh Badawi Audeh Allah Masharqeh",
+    "number of students": "2 / 30",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masrouji014"
+  },
+  {
+    "name of course": "MDJO335",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masrouji023"
+  },
+  {
+    "name of course": "MDJO336",
+    "sec": 1,
+    "name of instructor": "Belal A. S. Doufesh",
+    "number of students": "0 / 40",
+    "days": "M, T, W, R",
+    "time": "08:00 - 08:50",
+    "place": "Masrouji023"
+  },
+  {
+    "name of course": "labMDJO336",
+    "sec": 1,
+    "name of instructor": "Belal A. S. Doufesh",
+    "number of students": "0 / 20",
+    "days": "T, R",
+    "time": "09:00 - 11:40",
+    "place": "Masrouji111"
+  },
+  {
+    "name of course": "labMDJO336",
+    "sec": 2,
+    "name of instructor": "Belal A. S. Doufesh",
+    "number of students": "0 / 20",
+    "days": "M, W",
+    "time": "09:00 - 11:40",
+    "place": "Masrouji111"
+  },
+  {
+    "name of course": "MDJO4120",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "3 / 15",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "MDJO4120",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "0 / 15",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "MDJO439",
+    "sec": 1,
+    "name of instructor": "Belal A. S. Doufesh",
+    "number of students": "1 / 45",
+    "days": "T, R",
+    "time": "13:00 - 14:40",
+    "place": "Masrouji016"
+  },
+  {
+    "name of course": "labMDJO439",
+    "sec": 1,
+    "name of instructor": "Belal A. S. Doufesh",
+    "number of students": "1 / 25",
+    "days": "M, W",
+    "time": "13:00 - 15:40",
+    "place": "Masrouji111"
+  },
+  {
+    "name of course": "MDJO439",
+    "sec": 1,
+    "name of instructor": "Nasser Aldden J. K. Khasib",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Masrouji016"
+  },
+  {
+    "name of course": "MKET130",
+    "sec": 1,
+    "name of instructor": "Suzan Jamal Mousa Shkukani",
+    "number of students": "29 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "Aggad225"
+  },
+  {
+    "name of course": "MKET230",
+    "sec": 1,
+    "name of instructor": "Suzan Jamal Mousa Shkukani",
+    "number of students": "6 / 120",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "Aggad225"
+  },
+  {
+    "name of course": "NURS133",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "PNH105"
+  },
+  {
+    "name of course": "NURS222",
+    "sec": 1,
+    "name of instructor": "Imad Tawfiq Mohammad Asmar",
+    "number of students": "9 / 69",
+    "days": "M, W",
+    "time": "12:20 - 14:00",
+    "place": "PNH104"
+  },
+  {
+    "name of course": "NURS222",
+    "sec": 2,
+    "name of instructor": "Omar Hasan Abdulghani Almahmoud",
+    "number of students": "6 / 69",
+    "days": "T, R",
+    "time": "10:00 - 11:40",
+    "place": "PNH104"
+  },
+  {
+    "name of course": "NURS3370",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "2 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "NURS3370",
+    "sec": 2,
+    "name of instructor": "",
+    "number of students": "0 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "NURS4471",
+    "sec": 1,
+    "name of instructor": "Khalid Samer Ahmad Yaseen",
+    "number of students": "1 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "NURS4471",
+    "sec": 2,
+    "name of instructor": "Khalid Samer Ahmad Yaseen",
+    "number of students": "0 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "NUTD3100",
+    "sec": 1,
+    "name of instructor": "Safaa M. A. Muhanna",
+    "number of students": "5 / 45",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "NUTD436",
+    "sec": 1,
+    "name of instructor": "",
+    "number of students": "1 / 6",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHAR3201",
+    "sec": 1,
+    "name of instructor": "Ruba N. M. Shaheen",
+    "number of students": "0 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHAR3201",
+    "sec": 2,
+    "name of instructor": "Ruba N. M. Shaheen",
+    "number of students": "0 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHAR3201",
+    "sec": 3,
+    "name of instructor": "Mohammed I. A. Enaia",
+    "number of students": "9 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHAR4101",
+    "sec": 1,
+    "name of instructor": "Hosniyeh Emad Thiab Ladadweh",
+    "number of students": "25 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHAR4101",
+    "sec": 2,
+    "name of instructor": "Raed Mohammad Yousef Madia",
+    "number of students": "6 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHAR4101",
+    "sec": 3,
+    "name of instructor": "Raed Mohammad Yousef Madia",
+    "number of students": "0 / 25",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED120",
+    "sec": 1,
+    "name of instructor": "Rafi Hussien Mahmoud Asfour",
+    "number of students": "2 / 35",
+    "days": "T, R",
+    "time": "12:20 - 14:00",
+    "place": "Bamieh203"
+  },
+  {
+    "name of course": "PHED122",
+    "sec": 1,
+    "name of instructor": "Khaled Ali Mahmoud Mallouh",
+    "number of students": "0 / 25",
+    "days": "M, T, W, R",
+    "time": "10:00 - 10:50",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED1250",
+    "sec": 1,
+    "name of instructor": "Tareq Gazi Ayesh Raja",
+    "number of students": "0 / 40",
+    "days": "T, R",
+    "time": "12:20 - 14:00",
+    "place": "Bamieh203"
+  },
+  {
+    "name of course": "PHED227",
+    "sec": 1,
+    "name of instructor": "Reem Mustafa Mohammad Hamad",
+    "number of students": "4 / 15",
+    "days": "M, W",
+    "time": "09:00 - 10:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED227",
+    "sec": 2,
+    "name of instructor": "Waleed Mohammad Hassan Shaheen",
+    "number of students": "2 / 15",
+    "days": "T, R",
+    "time": "10:00 - 11:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED227",
+    "sec": 3,
+    "name of instructor": "Waleed Mohammad Hassan Shaheen",
+    "number of students": "1 / 15",
+    "days": "T, R",
+    "time": "08:00 - 09:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED327",
+    "sec": 1,
+    "name of instructor": "Reem Mustafa Mohammad Hamad",
+    "number of students": "1 / 15",
+    "days": "M, W",
+    "time": "11:00 - 12:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED327",
+    "sec": 2,
+    "name of instructor": "Waleed Mohammad Hassan Shaheen",
+    "number of students": "0 / 15",
+    "days": "T, R",
+    "time": "12:00 - 13:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED425",
+    "sec": 1,
+    "name of instructor": "Khaled Ali Mahmoud Mallouh",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "12:00 - 12:50",
+    "place": "Bamieh105"
+  },
+  {
+    "name of course": "PHED4270",
+    "sec": 1,
+    "name of instructor": "Rafi Hussien Mahmoud Asfour",
+    "number of students": "1 / 25",
+    "days": "T, R",
+    "time": "08:00 - 09:40",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PHED431",
+    "sec": 1,
+    "name of instructor": "Tareq Gazi Ayesh Raja",
+    "number of students": "0 / 25",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Bamieh106"
+  },
+  {
+    "name of course": "PHYS111",
+    "sec": 1,
+    "name of instructor": "Abdallah Salahedin Saleh Sayyed Ahmad",
+    "number of students": "2 / 24",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "SCI259"
+  },
+  {
+    "name of course": "PHYS111",
+    "sec": 2,
+    "name of instructor": "Abdallah Salahedin Saleh Sayyed Ahmad",
+    "number of students": "3 / 24",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "SCI259"
+  },
+  {
+    "name of course": "PHYS111",
+    "sec": 3,
+    "name of instructor": "Abdallah Salahedin Saleh Sayyed Ahmad",
+    "number of students": "2 / 24",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "SCI259"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 1,
+    "name of instructor": "Khalid Fathi Abdalrazzaq Eid",
+    "number of students": "1 / 18",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "SCI253"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 2,
+    "name of instructor": "Sarah H. M. Najar",
+    "number of students": "3 / 18",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "SCI253"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 3,
+    "name of instructor": "Isma'El Mohummad Daoud Badran",
+    "number of students": "0 / 18",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "SCI253"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 4,
+    "name of instructor": "Zafer M. A. Hawash",
+    "number of students": "18 / 18",
+    "days": "M, W",
+    "time": "11:00 - 13:40",
+    "place": "SCI263"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 5,
+    "name of instructor": "Khalid Fathi Abdalrazzaq Eid",
+    "number of students": "5 / 18",
+    "days": "M, W",
+    "time": "14:00 - 16:40",
+    "place": "SCI263"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 6,
+    "name of instructor": "Sarah H. M. Najar",
+    "number of students": "2 / 18",
+    "days": "M, W",
+    "time": "08:00 - 10:40",
+    "place": "SCI253"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 7,
+    "name of instructor": "Ghassan Fakhri Saleh Abbas",
+    "number of students": "18 / 18",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "SCI263"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 8,
+    "name of instructor": "Sarah H. M. Najar",
+    "number of students": "1 / 18",
+    "days": "T, R",
+    "time": "14:00 - 16:40",
+    "place": "SCI263"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 9,
+    "name of instructor": "Ghassan Fakhri Saleh Abbas",
+    "number of students": "18 / 18",
+    "days": "T, R",
+    "time": "08:00 - 10:40",
+    "place": "SCI253"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 10,
+    "name of instructor": "",
+    "number of students": "4 / 18",
+    "days": "T, R",
+    "time": "11:00 - 13:40",
+    "place": "SCI253"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 11,
+    "name of instructor": "Khalid Fathi Abdalrazzaq Eid",
+    "number of students": "4 / 18",
+    "days": "M, W",
+    "time": "08:00 - 10:40",
+    "place": "SCI263"
+  },
+  {
+    "name of course": "PHYS112",
+    "sec": 12,
+    "name of instructor": "Zafer M. A. Hawash",
+    "number of students": "7 / 18",
+    "days": "T, R",
+    "time": "08:00 - 10:40",
+    "place": "SCI263"
+  },
+  {
+    "name of course": "PHYS132",
+    "sec": 1,
+    "name of instructor": "Abdalaziz A. A. Shawabka",
+    "number of students": "31 / 160",
+    "days": "T, R",
+    "time": "08:00 - 09:40",
+    "place": "SCI120"
+  },
+  {
+    "name of course": "PHYS132",
+    "sec": 2,
+    "name of instructor": "Zafer M. A. Hawash",
+    "number of students": "8 / 160",
+    "days": "T, R",
+    "time": "11:00 - 12:40",
+    "place": "Bamieh002"
+  },
+  {
+    "name of course": "subPHYS132",
+    "sec": 1,
+    "name of instructor": "Abdalaziz A. A. Shawabka",
+    "number of students": "2 / 45",
+    "days": "M, W",
+    "time": "08:00 - 08:50",
+    "place": "SCI115"
+  },
+  {
+    "name of course": "subPHYS132",
+    "sec": 2,
+    "name of instructor": "Abdalaziz A. A. Shawabka",
+    "number of students": "28 / 45",
+    "days": "T, R",
+    "time": "10:00 - 10:50",
+    "place": "SCI214"
+  },
+  {
+    "name of course": "subPHYS132",
+    "sec": 3,
+    "name of instructor": "Abdallah Salahedin Saleh Sayyed Ahmad",
+    "number of students": "1 / 45",
+    "days": "M, W",
+    "time": "09:00 - 09:50",
+    "place": "SCI113"
+  },
+  {
+    "name of course": "subPHYS132",
+    "sec": 4,
+    "name of instructor": "Abdalaziz A. A. Shawabka",
+    "number of students": "4 / 45",
+    "days": "M, W",
+    "time": "11:00 - 11:50",
+    "place": "SCI114"
+  },
+  {
+    "name of course": "subPHYS132",
+    "sec": 5,
+    "name of instructor": "Zafer M. A. Hawash",
+    "number of students": "4 / 45",
+    "days": "T, R",
+    "time": "14:00 - 14:50",
+    "place": "SCI114"
+  },
+  {
+    "name of course": "PHYS141",
+    "sec": 1,
+    "name of instructor": "Isma'El Mohummad Daoud Badran",
+    "number of students": "0 / 120",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "SCI240"
+  },
+  {
+    "name of course": "subPHYS141",
+    "sec": 1,
+    "name of instructor": "Isma'El Mohummad Daoud Badran",
+    "number of students": "0 / 45",
+    "days": "T, R",
+    "time": "09:20 - 10:10",
+    "place": "SCI113"
+  },
+  {
+    "name of course": "subPHYS141",
+    "sec": 2,
+    "name of instructor": "Isma'El Mohummad Daoud Badran",
+    "number of students": "0 / 45",
+    "days": "M, W",
+    "time": "09:20 - 10:10",
+    "place": "SCI115"
+  },
+  {
+    "name of course": "POLS231",
+    "sec": 1,
+    "name of instructor": "Imad Hassan Musa Ghayathah",
+    "number of students": "1 / 69",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "ALSADIK203"
+  },
+  {
+    "name of course": "POLS234",
+    "sec": 1,
+    "name of instructor": "Imad Hassan Musa Ghayathah",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "ALSADIK203"
+  },
+  {
+    "name of course": "POLS235",
+    "sec": 1,
+    "name of instructor": "Lourdes B. A. Habash",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK406"
+  },
+  {
+    "name of course": "POLS236",
+    "sec": 1,
+    "name of instructor": "Hani Mahmoud Abed Mousa",
+    "number of students": "4 / 69",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "ALSADIK103"
+  },
+  {
+    "name of course": "POLS334",
+    "sec": 1,
+    "name of instructor": "Hani Mahmoud Abed Mousa",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "ALSADIK305"
+  },
+  {
+    "name of course": "POLS435",
+    "sec": 1,
+    "name of instructor": "Hani Mahmoud Abed Mousa",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK102"
+  },
+  {
+    "name of course": "PSYC231",
+    "sec": 1,
+    "name of instructor": "Maurice F. B. Backleh",
+    "number of students": "3 / 120",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen102"
+  },
+  {
+    "name of course": "PSYC236",
+    "sec": 1,
+    "name of instructor": "Maurice F. B. Backleh",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen256"
+  },
+  {
+    "name of course": "PUBA130",
+    "sec": 1,
+    "name of instructor": "Mohammad Wajeeh Mohammad Hanini",
+    "number of students": "0 / 160",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "Bamieh002"
+  },
+  {
+    "name of course": "PUBA135",
+    "sec": 1,
+    "name of instructor": "Ismail Salama Ismail Iriqat",
+    "number of students": "0 / 25",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK305"
+  },
+  {
+    "name of course": "PUBA232",
+    "sec": 1,
+    "name of instructor": "Jehad Yousif Abd-Alrahman Alayasa",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "ALSADIK408"
+  },
+  {
+    "name of course": "PUBA234",
+    "sec": 1,
+    "name of instructor": "Omar Mohammad As'Ad Rahal",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "Bamieh106"
+  },
+  {
+    "name of course": "PUBA331",
+    "sec": 1,
+    "name of instructor": "Jehad Yousif Abd-Alrahman Alayasa",
+    "number of students": "4 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "ALSADIK202"
+  },
+  {
+    "name of course": "PUBA3391",
+    "sec": 1,
+    "name of instructor": "Mohammed Abdel-Qader Mohammed Abu Zayed/Qoud",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "08:00 - 09:10",
+    "place": "ALSADIK302"
+  },
+  {
+    "name of course": "PUBA3391",
+    "sec": 2,
+    "name of instructor": "Mohammed Abdel-Qader Mohammed Abu Zayed/Qoud",
+    "number of students": "0 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:20",
+    "place": "ALSADIK102"
+  },
+  {
+    "name of course": "PUBA3392",
+    "sec": 1,
+    "name of instructor": "Mohammed Abdel-Qader Mohammed Abu Zayed/Qoud",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "ALSADIK103"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 1,
+    "name of instructor": "Mohammad Wajeeh Mohammad Hanini",
+    "number of students": "3 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 2,
+    "name of instructor": "Mohammad Wajeeh Mohammad Hanini",
+    "number of students": "0 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 3,
+    "name of instructor": "Mayyada Ismae'L Hasan Badawi",
+    "number of students": "1 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 4,
+    "name of instructor": "Mayyada Ismae'L Hasan Badawi",
+    "number of students": "0 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 5,
+    "name of instructor": "Nour Hatem Ahmad Mattour",
+    "number of students": "0 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 6,
+    "name of instructor": "Nour Hatem Ahmad Mattour",
+    "number of students": "2 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 7,
+    "name of instructor": "Ismail Salama Ismail Iriqat",
+    "number of students": "6 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA411",
+    "sec": 8,
+    "name of instructor": "Ismail Salama Ismail Iriqat",
+    "number of students": "0 / 20",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "PUBA4301",
+    "sec": 1,
+    "name of instructor": "Nabil Louis Ne'Matallah Odeh",
+    "number of students": "1 / 45",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:20",
+    "place": "ALSADIK408"
+  },
+  {
+    "name of course": "PUBA431",
+    "sec": 1,
+    "name of instructor": "Jehad Yousif Abd-Alrahman Alayasa",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "ALSADIK203"
+  },
+  {
+    "name of course": "SOCI131",
+    "sec": 1,
+    "name of instructor": "Bader Mohummad Mahmuod \"Abdalrahman Alaraj\"",
+    "number of students": "5 / 120",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen150"
+  },
+  {
+    "name of course": "SPAU3110",
+    "sec": 1,
+    "name of instructor": "Adnan Monther Shehadeh Shihabi",
+    "number of students": "3 / 7",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "SPAU3110",
+    "sec": 2,
+    "name of instructor": "Walaa R. I. Srour",
+    "number of students": "0 / 7",
+    "days": "N/A",
+    "time": "N/A",
+    "place": "N/A"
+  },
+  {
+    "name of course": "SPAU4250",
+    "sec": 1,
+    "name of instructor": "Adnan Monther Shehadeh Shihabi",
+    "number of students": "8 / 8",
+    "days": "M, T, W, R",
+    "time": "08:00 - 11:30",
+    "place": "N/A"
+  },
+  {
+    "name of course": "STAT2361",
+    "sec": 1,
+    "name of instructor": "Farah Gh. S. Omar",
+    "number of students": "4 / 80",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "S.Abdulhadi380"
+  },
+  {
+    "name of course": "STAT2361",
+    "sec": 2,
+    "name of instructor": "Farah Gh. S. Omar",
+    "number of students": "3 / 80",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "S.Abdulhadi380"
+  },
+  {
+    "name of course": "TRAN330",
+    "sec": 1,
+    "name of instructor": "Mohammed S. K. Zaid",
+    "number of students": "1 / 30",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen256"
+  },
+  {
+    "name of course": "TRAN331",
+    "sec": 1,
+    "name of instructor": "Mohammed S. K. Zaid",
+    "number of students": "7 / 30",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen266"
+  },
+  {
+    "name of course": "TRAN334",
+    "sec": 1,
+    "name of instructor": "Majdi Jehad Ahmad Abu_Zahra",
+    "number of students": "2 / 30",
+    "days": "M, T, W, R",
+    "time": "14:00 - 15:10",
+    "place": "A.Shaheen206"
+  },
+  {
+    "name of course": "TRAN433",
+    "sec": 1,
+    "name of instructor": "Mahmoud Ahmad Mohammad Abdel Fattah - Ismail",
+    "number of students": "1 / 25",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen064"
+  },
+  {
+    "name of course": "TRAN433",
+    "sec": 2,
+    "name of instructor": "Mahmoud Ahmad Mohammad Abdel Fattah - Ismail",
+    "number of students": "13 / 25",
+    "days": "M, T, W, R",
+    "time": "11:00 - 12:10",
+    "place": "A.Shaheen062"
+  },
+  {
+    "name of course": "TRAN435",
+    "sec": 1,
+    "name of instructor": "Majdi Jehad Ahmad Abu_Zahra",
+    "number of students": "6 / 30",
+    "days": "M, T, W, R",
+    "time": "09:20 - 10:30",
+    "place": "A.Shaheen112"
+  },
+  {
+    "name of course": "WOMS231",
+    "sec": 1,
+    "name of instructor": "Faten Tawfiq Masoud Shahwan",
+    "number of students": "3 / 45",
+    "days": "M, T, W, R",
+    "time": "12:20 - 13:30",
+    "place": "A.Shaheen206"
+  }
+]
