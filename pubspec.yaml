@@ -36,4 +36,5 @@ flutter:
     - images/ziad.jpg
     - images/fadi.jpg
     - images/birziet.jpg
+    - files/courses.json
 

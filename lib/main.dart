@@ -10,6 +10,8 @@ import 'package:flutter_application_1/signup.dart';
 import 'package:flutter_application_1/map.dart';
 import 'package:flutter_application_1/proposal.dart';
 
+import 'course.dart';
+
 
 void main() {
   runApp(Mainpage());
@@ -45,6 +47,7 @@ class Mainpage extends StatelessWidget {
         '/chatbot': (context) => ChatBot(),
         '/map':(context) => map(),
         '/proposal': (context) => Proposal(),
+        '/course': (context) => CourseSearchScreen(),
       },
     );
   }
