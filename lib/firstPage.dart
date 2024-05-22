@@ -52,7 +52,29 @@ class _FirstPageState extends State<FirstPage> {
               title: Text('Event Calendar'),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/EventPage');
+                Navigator.pushNamed(context, '/Eve');
+
+                // Navigate to event calendar page
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.calendar_month),
+              title: Text('Chat Page'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/Chatpage');
+
+                // Navigate to event calendar page
+              },
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.all(20),
+              leading: Icon(Icons.calendar_month),
+              title: Text('Group Page'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(context, '/GroupPage');
 
                 // Navigate to event calendar page
               },

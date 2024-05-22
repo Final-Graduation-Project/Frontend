@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/ChatScreen.dart';
 import 'package:flutter_application_1/EventPage.dart';
+import 'package:flutter_application_1/Grouppage.dart';
 import 'package:flutter_application_1/Login.dart';
 import 'package:flutter_application_1/Validate.dart';
 import 'package:flutter_application_1/aboutus.dart';
 import 'package:flutter_application_1/cahtbot.dart';
+import 'package:flutter_application_1/chatPage.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
@@ -39,6 +42,10 @@ class Mainpage extends StatelessWidget {
         '/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
+        '/Chatpage': (context) => chatPage(
+              userId: 2,
+            ),
+        '/GroupPage': (context) => grouppage(),
       },
     );
   }

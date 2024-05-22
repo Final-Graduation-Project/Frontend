@@ -1,19 +1,21 @@
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
 class node {
   String name;
   double x;
   double y;
   node(this.name, this.x, this.y);
 }
+
 class map extends StatefulWidget {
   const map({Key? key}) : super(key: key);
 
   @override
   _mapstate createState() => _mapstate();
 }
+
 class _mapstate extends State<map> {
   final Color color1 = Color(0xFF176B87); // Dark Blue
   final Color color2 = Color(0xFFB4D4FF); // Lighter Blue
@@ -24,7 +26,6 @@ class _mapstate extends State<map> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
         title: "student digital guide",
         home: MyHomePage(),
@@ -33,17 +34,18 @@ class _mapstate extends State<map> {
           scaffoldBackgroundColor: color4,
           primaryColor: color1,
           hintColor: color3,
-        )
-    );
+        ));
   }
 }
+
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
-        leading: Image.asset('images/studentdigitalguidelogo.png', height: 40, width: 40),
+        leading: Image.asset('images/studentdigitalguidelogo.png',
+            height: 40, width: 40),
         title: Text("Student Digital Guide"),
         actions: <Widget>[
           TextButton(
@@ -92,6 +94,7 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
+
 class MapPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -105,7 +108,8 @@ class MapPane extends StatelessWidget {
         builder: (context, constraints) {
           // Calculate the scale factor based on the map image size
           double imageWidth = 800; // Update with actual width of your map image
-          double imageHeight = 600; // Update with actual height of your map image
+          double imageHeight =
+              600; // Update with actual height of your map image
 
           double scaleX = constraints.maxWidth / imageWidth;
           double scaleY = constraints.maxHeight / imageHeight;
@@ -115,7 +119,7 @@ class MapPane extends StatelessWidget {
             node("building1", 100, 100),
             node("building2", 200, 400),
             node("building3", 300, 300),
-            node("test",250,300),
+            node("test", 250, 300),
           ];
 
           // Create a list of Positioned widgets based on nodes
@@ -157,7 +161,6 @@ class MapPane extends StatelessWidget {
   }
 }
 
-
 class RightSide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -176,6 +179,7 @@ class RightSide extends StatelessWidget {
     );
   }
 }
+
 class PathBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -326,8 +330,8 @@ class Buttons extends StatelessWidget {
       ],
     );
   }
-
 }
+
 class _BuildingPoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -341,4 +345,3 @@ class _BuildingPoint extends StatelessWidget {
     );
   }
 }
-
