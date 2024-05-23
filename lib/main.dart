@@ -10,6 +10,10 @@ import 'package:flutter_application_1/chatPage.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
+import 'package:flutter_application_1/map.dart';
+import 'package:flutter_application_1/proposal.dart';
+
+import 'course.dart';
 
 void main() {
   runApp(Mainpage());
@@ -42,10 +46,6 @@ class Mainpage extends StatelessWidget {
         '/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
-        '/Chatpage': (context) => chatPage(
-              userId: 2,
-            ),
-        '/GroupPage': (context) => grouppage(),
       },
     );
   }
@@ -123,7 +123,7 @@ class Home extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/chatbot');
+          Navigator.pushNamed(context, '/map');
         },
         child: Icon(Icons.map),
       ),

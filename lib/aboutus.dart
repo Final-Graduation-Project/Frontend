@@ -5,79 +5,99 @@ class AboutUs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use MediaQuery to make sizes responsive
     final screenWidth = MediaQuery.of(context).size.width;
-    final padding = EdgeInsets.all(screenWidth > 600 ? 24 : 16); // Adjust padding based on screen width
-    final margin = EdgeInsets.symmetric(horizontal: screenWidth > 600 ? 20 : 10, vertical: 20);
-    final textSize = screenWidth > 600 ? 24 : 20; // Adjust text size based on screen width
+    final padding = EdgeInsets.all(screenWidth > 600 ? 16 : 8); // Smaller padding
+    final margin = EdgeInsets.symmetric(horizontal: screenWidth > 600 ? 16 : 8, vertical: 10); // Smaller margin
+    final textSize = screenWidth > 600 ? 20 : 16; // Smaller text size
+    final featureTextSize = screenWidth > 600 ? 18 : 14; // Smaller feature text size
 
     return Scaffold(
       appBar: AppBar(
         title: Text("About Us"),
-        backgroundColor: Color(0xFFB4D4FF),
+        backgroundColor: Color(0xFF176B87),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              "images/studentdigitalguidelogo.png",
-              height: screenWidth > 600 ? 400 : 200, // Adjust image size based on screen width
-              width: screenWidth > 600 ? 400 : 200,
-            ),
-            Container(
-              margin: margin,
-              padding: padding,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(0xFF176B87),
-                ),
-                borderRadius: BorderRadius.circular(10),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset(
+                "images/studentdigitalguidelogo.png",
+                height: screenWidth > 600 ? 300 : 150, // Smaller image size
+                width: screenWidth > 600 ? 300 : 150,
               ),
-              child: Text(
-                "SDG: is a digital platform that streamlines interaction between university components and creates an interactive environment that connects all university components. This project aims to create a comprehensive digital platform that improves communication and interaction among students, the student council, teaching staff, and the university administration.",
-                style: TextStyle(
-                  fontSize: textSize.toDouble(),
-                  color: Color.fromARGB(255, 10, 74, 95),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            // Another bordered box for interesting features
-            Container(
-              margin: margin,
-              padding: padding,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(0xFF176B87),
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Interesting Features:",
-                    style: TextStyle(
-                      fontSize: textSize.toDouble(),
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 10, 74, 95),
+              Container(
+                margin: margin,
+                padding: padding,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 5,
+                      offset: Offset(0, 2),
                     ),
+                  ],
+                  border: Border.all(
+                    color: Color(0xFF176B87),
                   ),
-                  SizedBox(height: 10),
-                  ..._buildFeatureList(screenWidth), // Generate feature list
-                ],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  "SDG is a digital platform that streamlines interaction between university components and creates an interactive environment that connects all university components. This project aims to create a comprehensive digital platform that improves communication and interaction among students, the student council, teaching staff, and the university administration.",
+                  style: TextStyle(
+                    fontSize: textSize.toDouble(),
+                    color: Color.fromARGB(255, 10, 74, 95),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-            ),
-          ],
+              Container(
+                margin: margin,
+                padding: padding,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 5,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Color(0xFF176B87),
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Interesting Features:",
+                      style: TextStyle(
+                        fontSize: textSize.toDouble(),
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 10, 74, 95),
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _buildFeatureList(screenWidth),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  // Helper function to generate feature texts with appropriate styling based on screen width
   List<Widget> _buildFeatureList(double screenWidth) {
-    final featureTextSize = screenWidth > 600 ? 20 : 16; // Adjust feature text size based on screen width
+    final featureTextSize = screenWidth > 600 ? 18 : 14; // Smaller feature text size
     List<String> features = [
       "1. Event viewing",
       "2. Proposal submission",
@@ -85,15 +105,18 @@ class AboutUs extends StatelessWidget {
       "4. Schedule of faculty office hours",
       "5. Interactive university map",
       "6. Live chat support",
-      "7. Straightforward communication channels between students and the Student Council",
+      "7. Communication channels between students and the Student Council",
     ];
 
     return features
-        .map((feature) => Text(
-              feature,
-              style: TextStyle(
-                fontSize: featureTextSize.toDouble(),
-                color: Color.fromARGB(255, 10, 74, 95),
+        .map((feature) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Text(
+                feature,
+                style: TextStyle(
+                  fontSize: featureTextSize.toDouble(),
+                  color: Color.fromARGB(255, 10, 74, 95),
+                ),
               ),
             ))
         .toList();

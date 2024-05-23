@@ -431,7 +431,7 @@ Widget buildMajorField() {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            // Implement your sign-up logic here
+                   // Implement your sign-up logic here
             _signUp();
           }
         },
