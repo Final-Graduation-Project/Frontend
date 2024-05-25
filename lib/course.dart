@@ -33,24 +33,33 @@ class Course {
 }
 
 class OfficeHour {
-  final String nameOfInstructor;
-  final String days;
-  final String time;
-  final String place;
+  final int officeHourId;
+  final int teacherId;
+  final String teacherFreeDay;
+  final String teacherStartFreeTime;
+  final String teacherEndFreeTime;
+  final String buildingName;
+  final String roomNumber;
 
   OfficeHour({
-    required this.nameOfInstructor,
-    required this.days,
-    required this.time,
-    required this.place,
+    required this.officeHourId,
+    required this.teacherId,
+    required this.teacherFreeDay,
+    required this.teacherStartFreeTime,
+    required this.teacherEndFreeTime,
+    required this.buildingName,
+    required this.roomNumber,
   });
 
   factory OfficeHour.fromJson(Map<String, dynamic> json) {
     return OfficeHour(
-      nameOfInstructor: json['name of instructor'],
-      days: json['days'],
-      time: json['time'],
-      place: json['place'],
+      officeHourId: json['officeHourid'],
+      teacherId: json['teacherid'],
+      teacherFreeDay: json['tehcherFreeDay'],
+      teacherStartFreeTime: json['tehcerstartFreeTime'],
+      teacherEndFreeTime: json['tehcerEndFreeTime'],
+      buildingName: json['buildingName'],
+      roomNumber: json['rommNumber'],
     );
   }
 }
@@ -82,14 +91,20 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
   }
 
   Future<void> _fetchOfficeHours(String instructor) async {
-    final response = await http.get(Uri.parse(''));
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      setState(() {
-        _filteredOfficeHours = data.map((json) => OfficeHour.fromJson(json)).toList();
-      });
-    } else {
-      throw Exception('Failed to load office hours');
+    try {
+      final response = await http.get(Uri.parse('http://localhost:5050/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
+      if (response.statusCode == 200) {
+        print('Response body: ${response.body}');
+        final Map<String, dynamic> data = json.decode(response.body);
+        setState(() {
+          _filteredOfficeHours = [OfficeHour.fromJson(data)];
+        });
+      } else {
+        throw Exception('Failed to load office hours. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching office hours: $e');
+      throw Exception('Error fetching office hours');
     }
   }
 
@@ -196,13 +211,15 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
                 itemBuilder: (context, index) {
                   final officeHour = _filteredOfficeHours[index];
                   return ListTile(
-                    title: Text('Instructor: ${officeHour.nameOfInstructor}', style: TextStyle(fontSize: 18)),
+                    title: Text('Instructor: ${_controller.text}', style: TextStyle(fontSize: 18)),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Days: ${officeHour.days}', style: TextStyle(fontSize: 16)),
-                        Text('Time: ${officeHour.time}', style: TextStyle(fontSize: 16)),
-                        Text('Place: ${officeHour.place}', style: TextStyle(fontSize: 16)),
+                        Text('Days: ${officeHour.teacherFreeDay}', style: TextStyle(fontSize: 16)),
+                        Text('Start Time: ${officeHour.teacherStartFreeTime}', style: TextStyle(fontSize: 16)),
+                        Text('End Time: ${officeHour.teacherEndFreeTime}', style: TextStyle(fontSize: 16)),
+                        Text('Building: ${officeHour.buildingName}', style: TextStyle(fontSize: 16)),
+                        Text('Room: ${officeHour.roomNumber}', style: TextStyle(fontSize: 16)),
                       ],
                     ),
                     isThreeLine: true,
