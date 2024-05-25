@@ -1,43 +1,42 @@
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class node {
+class Node {
   String name;
   double x;
   double y;
-  node(this.name, this.x, this.y);
+  Node(this.name, this.x, this.y);
 }
+
 class map extends StatefulWidget {
   const map({Key? key}) : super(key: key);
 
   @override
-  _mapstate createState() => _mapstate();
+  _MapAppState createState() => _MapAppState();
 }
-class _mapstate extends State<map> {
+
+class _MapAppState extends State<map> {
   final Color color1 = Color(0xFF176B87); // Dark Blue
   final Color color2 = Color(0xFFB4D4FF); // Lighter Blue
   final Color color3 = Color(0xFF86B6F6); // Even Lighter Blue
   final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
 
-  // ignore: unused_element
-
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-        title: "student digital guide",
-        home: MyHomePage(),
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: color4,
-          primaryColor: color1,
-          hintColor: color3,
-        )
+      title: "Student Digital Guide",
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        scaffoldBackgroundColor: color4,
+        primaryColor: color1,
+        hintColor: color3,
+      ),
     );
   }
 }
+
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -63,12 +62,12 @@ class MyHomePage extends StatelessWidget {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth < 600) {
-            // For small screens, arrange map at the top and other content below
+          if (constraints.maxWidth < 700) {
             return Column(
               children: [
                 Expanded(
                   child: MapPane(),
+                  flex: 2,
                 ),
                 Expanded(
                   child: RightSide(),
@@ -76,11 +75,11 @@ class MyHomePage extends StatelessWidget {
               ],
             );
           } else {
-            // For larger screens, display map and other content side by side
             return Row(
               children: [
                 Expanded(
                   child: MapPane(),
+                  flex: 2,
                 ),
                 Expanded(
                   child: RightSide(),
@@ -93,71 +92,90 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-class MapPane extends StatelessWidget {
+
+class MapPane extends StatefulWidget {
+  @override
+  _MapPaneState createState() => _MapPaneState();
+}
+
+class _MapPaneState extends State<MapPane> {
+  Offset? _tapPosition;
+  double? normalizedX;
+  double? normalizedY;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.purple, width: 3.0),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          // Calculate the scale factor based on the map image size
-          double imageWidth = 800; // Update with actual width of your map image
-          double imageHeight = 600; // Update with actual height of your map image
+    return GestureDetector(
+      onTapDown: (TapDownDetails details) {
+        RenderBox box = context.findRenderObject() as RenderBox;
+        Offset localOffset = box.globalToLocal(details.globalPosition);
 
-          double scaleX = constraints.maxWidth / imageWidth;
-          double scaleY = constraints.maxHeight / imageHeight;
+        setState(() {
+          _tapPosition = localOffset;
+          normalizedX = localOffset.dx / box.size.width;
+          normalizedY = localOffset.dy / box.size.height;
+          print("Normalized X: $normalizedX, Normalized Y: $normalizedY");
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Example of placing points at specified coordinates on the map image
+            List<Node> nodes = [
+              Node("it", 0.4895833333333333, 0.21526129046229603),
+              Node("building2", 0.2, 0.4)
+            ];
 
-          // Example of placing points at specified coordinates on the map image
-          List<node> nodes = [
-            node("building1", 100, 100),
-            node("building2", 200, 400),
-            node("building3", 300, 300),
-            node("test",250,300),
-          ];
+            // Create a list of Positioned widgets based on nodes
+            List<Widget> positionedWidgets = [];
 
-          // Create a list of Positioned widgets based on nodes
-          List<Widget> positionedWidgets = [];
+            // Loop through nodes and create Positioned widgets for each building
+            for (var node in nodes) {
+              // Calculate the left and top positions based on node coordinates and scaling factors
+              double left = node.x * constraints.maxWidth;
+              double top = node.y * constraints.maxHeight;
 
-          // Loop through nodes and create Positioned widgets for each building
-          for (var node in nodes) {
-            // Calculate the left and top positions based on node coordinates and scaling factors
-            double left = node.x * scaleX;
-            double top = node.y * scaleY;
+              // Create a Positioned widget for the building point
+              positionedWidgets.add(
+                Positioned(
+                  left: left,
+                  top: top,
+                  child: _BuildingPoint(),
+                ),
+              );
+            }
 
-            // Create a Positioned widget for the building point
-            positionedWidgets.add(
-              Positioned(
-                left: left,
-                top: top,
-                child: _BuildingPoint(),
-              ),
+            // Return a Stack widget to overlay the map image with building points
+            return Stack(
+              children: [
+                // Map image as the background, scaled to fit the container
+                Image.asset(
+                  "images/birziet.jpg",
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight,
+                  //fit: BoxFit.contain,
+                ),
+                // Overlay the building points on top of the map image
+                ...positionedWidgets,
+                if (_tapPosition != null)
+                  Positioned(
+                    left: _tapPosition!.dx,
+                    top: _tapPosition!.dy,
+                    child: Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: 24.0,
+                    ),
+                  ),
+              ],
             );
-          }
-
-          // Return a Stack widget to overlay the map image with building points
-          return Stack(
-            children: [
-              // Map image as the background, scaled to fit the container
-              Image.asset(
-                "images/birziet.jpg",
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                fit: BoxFit.contain,
-              ),
-              // Overlay the building points on top of the map image
-              ...positionedWidgets,
-            ],
-          );
-        },
+          },
+        ),
       ),
     );
   }
 }
-
 
 class RightSide extends StatelessWidget {
   @override
@@ -177,6 +195,7 @@ class RightSide extends StatelessWidget {
     );
   }
 }
+
 class PathBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -211,7 +230,7 @@ class PathTable extends StatelessWidget {
     return Container(
       height: 150.0,
       child: ListView.builder(
-        itemCount: 5, // Replace with actual number of rows
+        itemCount: 5,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text('From'),
@@ -238,7 +257,7 @@ class TotalDistance extends StatelessWidget {
           ),
         ),
         Text(
-          '100 m', // Replace with actual total distance
+          '100 m',
           style: TextStyle(
             fontSize: 16.0,
             color: Colors.black,
@@ -265,14 +284,12 @@ class SrcDestBox extends StatelessWidget {
             ),
             SizedBox(width: 10.0),
             DropdownButton<String>(
-              // Implement DropdownButton based on Flutter's DropdownButton
               onChanged: (value) {},
               items: [
                 DropdownMenuItem(
                   child: Text('Building 1'),
                   value: 'Building 1',
                 ),
-                // Add more DropdownMenuItem widgets for each building
               ],
             ),
           ],
@@ -289,14 +306,12 @@ class SrcDestBox extends StatelessWidget {
             ),
             SizedBox(width: 10.0),
             DropdownButton<String>(
-              // Implement DropdownButton based on Flutter's DropdownButton
               onChanged: (value) {},
               items: [
                 DropdownMenuItem(
                   child: Text('Building 2'),
                   value: 'Building 2',
                 ),
-                // Add more DropdownMenuItem widgets for each building
               ],
             ),
           ],
@@ -327,8 +342,8 @@ class Buttons extends StatelessWidget {
       ],
     );
   }
-
 }
+
 class _BuildingPoint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
