@@ -197,62 +197,66 @@ class _ProposalState extends State<Proposal> {
     }
   }
 
-  Widget _buildProposalCard(Map<String, dynamic> proposal) {
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text('${proposal['type']} by ${proposal['id']}'),
-            subtitle: Text(proposal['committee']),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(proposal['text']),
-          ),
-          if (proposal['type'] == 'Vote') ...[
-            for (var option in proposal['options'])
-              RadioListTile<String>(
-                title: Text(option.trim()),
-                value: option.trim(),
-                groupValue: _selectedVoteOption,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedVoteOption = value;
-                    proposal['votes'] += 1;
-                  });
-                },
-              ),
-            Text('Total Votes: ${proposal['votes'] ?? 0}')
-          ] else ...[
-            _buildCommentsSection(proposal)
-          ],
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  setState(() {
-                    _proposals.remove(proposal);
-                  });
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.check),
-                onPressed: () {
-                  setState(() {
-                    proposal['accepted'] = true;
-                    widget.onProposalAccepted(proposal);
-                    _proposals.remove(proposal);
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+ Widget _buildProposalCard(Map<String, dynamic> proposal) {
+  if (proposal['type'] == null || proposal['id'] == null || proposal['committee'] == null) {
+    return SizedBox(); // Return an empty widget if any essential data is null
   }
+  
+  return Card(
+    child: Column(
+      children: [
+        ListTile(
+          title: Text('${proposal['type']} by ${proposal['id']}'),
+          subtitle: Text(proposal['committee']),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(proposal['text'] ?? ''), // Add a null check for 'text'
+        ),
+        if (proposal['type'] == 'Vote') ...[
+          for (var option in proposal['options'])
+            RadioListTile<String>(
+              title: Text(option.trim()),
+              value: option.trim(),
+              groupValue: _selectedVoteOption,
+              onChanged: (value) {
+                setState(() {
+                  _selectedVoteOption = value;
+                  proposal['votes'] += 1;
+                });
+              },
+            ),
+          Text('Total Votes: ${proposal['votes'] ?? 0}')
+        ] else ...[
+          _buildCommentsSection(proposal)
+        ],
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                setState(() {
+                  _proposals.remove(proposal);
+                });
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.check),
+              onPressed: () {
+                setState(() {
+                  proposal['accepted'] = true;
+                  widget.onProposalAccepted(proposal);
+                  _proposals.remove(proposal);
+                });
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildCommentsSection(Map<String, dynamic> proposal) {
     return Column(
@@ -298,45 +302,50 @@ class _ProposalState extends State<Proposal> {
     );
   }
 
-  void _submitProposal() {
-    if (_idController.text.length == 7 &&
-        _selectedCommittee != null &&
-        _questionController.text.isNotEmpty &&
-        _proposalType != null &&
-        (_proposalType != 'Vote' ||
-            _optionControllers.every((controller) => controller.text.isNotEmpty))) {
-      setState(() {
-        List<String> options = _proposalType == 'Vote'
-            ? _optionControllers.map((controller) => controller.text).toList()
-            : [];
-        _proposals.add({
-          'type': _proposalType,
-          'text': _questionController.text,
-          'options': options,
-          'committee': _selectedCommittee,
-          'id': _idController.text,
-          'votes': 0,
-          'comments': [],
-          'accepted': false,
-        });
-        _questionController.clear();
-        _idController.clear();
-        _selectedCommittee = null;
-        _proposalType = null;
-        _optionControllers.clear();
-        _optionControllers.add(TextEditingController());
-        _optionControllers.add(TextEditingController());
-      });
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Proposal submitted successfully!')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please complete all fields correctly')),
-      );
-    }
+ void _submitProposal() {
+  print("_proposalType: $_proposalType");
+  print("_selectedCommittee: $_selectedCommittee");
+
+  if (_idController.text.length == 7 &&
+      _selectedCommittee != null &&
+      _questionController.text.isNotEmpty &&
+      _proposalType != null &&
+      (_proposalType != 'Vote' ||
+          _optionControllers.every((controller) => controller.text.isNotEmpty))) {
+    setState(() {
+      List<String> options = _proposalType == 'Vote'
+          ? _optionControllers.map((controller) => controller.text).toList()
+          : [];
+      Map<String, dynamic> proposal = {
+        'type': _proposalType!,
+        'question': _questionController.text,
+        'options': options,
+        'committee': _selectedCommittee!,
+        'id': _idController.text,
+        'votes': 0,
+        'comments': [],
+        'accepted': false,
+      };
+      _proposals.add(proposal);
+      widget.onProposalAccepted(proposal); // Pass the proposal data to the callback
+      _questionController.clear();
+      _idController.clear();
+      _selectedCommittee = null;
+      _proposalType = null;
+      _optionControllers.clear();
+      _optionControllers.add(TextEditingController());
+      _optionControllers.add(TextEditingController());
+    });
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Proposal submitted successfully!')),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Please complete all fields correctly')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'proposal.dart';
+import 'package:flutter_application_1/proposal.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -10,10 +10,28 @@ class FirstPage extends StatefulWidget {
 
 class _FirstPageState extends State<FirstPage> {
   List<Map<String, dynamic>> _acceptedProposals = [];
+  Set<String> _userVotes = {}; // Track user votes
 
   void addAcceptedProposal(Map<String, dynamic> proposal) {
     setState(() {
+      print('Adding accepted proposal: $proposal');
       _acceptedProposals.add(proposal);
+    });
+  }
+
+  void toggleVote(int index, String userId) {
+    setState(() {
+      if (_userVotes.contains('$index$userId')) {
+        _userVotes.remove('$index$userId'); // Remove existing vote
+      } else {
+        _userVotes.add('$index$userId'); // Add new vote
+      }
+    });
+  }
+
+  void addComment(int index, String comment, String userId) {
+    setState(() {
+      _acceptedProposals[index]['comments'].add({'id': userId, 'text': comment});
     });
   }
 
@@ -24,25 +42,25 @@ class _FirstPageState extends State<FirstPage> {
       appBar: AppBar(
         backgroundColor: Color(0xFFEEF5FF),
         title: Text('Welcome to Student Digital Guide'),
-        actions: <Widget>[
+        actions: [
           IconButton(
-            onPressed: () {
-              // Handle search action
-            },
             icon: Icon(Icons.search),
+            onPressed: () {
+              // Implement search functionality
+            },
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/');
+              Navigator.pushNamed(context, '/logout');
             },
-            child: Text("Log Out"),
+            child: Text("Log Out", style: TextStyle(color: Colors.black)),
           ),
         ],
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
-          children: [
+          children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
                 color: Color(0xFFEEF5FF),
@@ -56,83 +74,49 @@ class _FirstPageState extends State<FirstPage> {
               ),
             ),
             ListTile(
-              contentPadding: EdgeInsets.all(20),
-              leading: Icon(Icons.calendar_month),
+              leading: Icon(Icons.calendar_today),
               title: Text('Event Calendar'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/Eve');
-              },
+              onTap: () => Navigator.pushNamed(context, '/Eve'),
             ),
             ListTile(
-              contentPadding: EdgeInsets.all(20),
-              leading: Icon(Icons.person),
-              title: Text('Chatbot'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/chatbot');
-              },
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.all(20),
               leading: Icon(Icons.chat),
-              title: Text('Chat'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/chat');
-              },
-              //course 
-            
+              title: Text('Chatbot'),
+              onTap: () => Navigator.pushNamed(context, '/chatbot'),
             ),
-             ListTile(
-              contentPadding: EdgeInsets.all(20),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Chat'),
+              onTap: () => Navigator.pushNamed(context, '/chat'),
+            ),
+            ListTile(
               leading: Icon(Icons.post_add),
               title: Text('Proposal'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/proposal');
-              },
+              onTap: () => Navigator.pushNamed(context, '/proposal'),
             ),
             ListTile(
-              contentPadding: EdgeInsets.all(20),
               leading: Icon(Icons.book),
               title: Text('Courses'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/course');
-              },
+              onTap: () => Navigator.pushNamed(context, '/course'),
             ),
             ListTile(
-              contentPadding: EdgeInsets.all(20),
               leading: Icon(Icons.group),
               title: Text('Groups'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/groups');
-              },
+              onTap: () => Navigator.pushNamed(context, '/groups'),
             ),
             ListTile(
-              contentPadding: EdgeInsets.all(20),
               leading: Icon(Icons.contact_mail),
               title: Text('Contact Us'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/contactus');
-              },
+              onTap: () => Navigator.pushNamed(context, '/contact'),
             ),
             ListTile(
-              contentPadding: EdgeInsets.all(20),
               leading: Icon(Icons.info),
               title: Text('About Us'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/aboutus');
-              },
+              onTap: () => Navigator.pushNamed(context, '/about'),
             ),
           ],
         ),
-        ),
-   body: Column(
+      ),
+      body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -165,101 +149,99 @@ class _FirstPageState extends State<FirstPage> {
               itemCount: _acceptedProposals.length,
               itemBuilder: (context, index) {
                 final proposal = _acceptedProposals[index];
-                return ProposalCard(proposal: proposal);
+                return ProposalCard(
+                  proposal: proposal,
+                  hasVoted: _userVotes.contains('$index'), // Check if user has voted
+                  onVote: () => toggleVote(index, 'userId'), // Replace 'userId' with actual user ID
+                  onComment: (comment) => addComment(index, comment, 'userId'), // Replace 'userId' with actual user ID
+                );
               },
             ),
           ),
-        ],
-      ),
-    ); 
-    
-  }
-}
-
-class ProposalCard extends StatelessWidget {
-  final Map<String, dynamic> proposal;
-
-  const ProposalCard({Key? key, required this.proposal}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text('${proposal['type']} by ${proposal['id']}'),
-            subtitle: Text(proposal['committee']),
-            trailing: Text(proposal['text']),
-          ),
-          CommentsSection(proposal: proposal),
         ],
       ),
     );
   }
 }
 
-class CommentsSection extends StatefulWidget {
-  final Map<String, dynamic> proposal;
+class ProposalCard extends StatelessWidget {
+  final Map<String, dynamic>? proposal; // Change the type to allow null
+  final bool hasVoted;
+  final Function() onVote;
+  final Function(String) onComment;
 
-  const CommentsSection({Key? key, required this.proposal}) : super(key: key);
-
-  @override
-  _CommentsSectionState createState() => _CommentsSectionState();
-}
-
-class _CommentsSectionState extends State<CommentsSection> {
-  TextEditingController _commentController = TextEditingController();
+  const ProposalCard({
+    Key? key,
+    required this.proposal,
+    required this.hasVoted,
+    required this.onVote,
+    required this.onComment,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: widget.proposal['comments'].length,
-          itemBuilder: (context, index) {
-            final comment = widget.proposal['comments'][index];
-            return ListTile(
-              title: Text(comment['id']),
-              subtitle: Text(comment['text']),
-            );
-          },
-        ),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _commentController,
-                decoration: InputDecoration(
-                  labelText: 'Add a comment',
-                  border: OutlineInputBorder(),
+    TextEditingController _commentController = TextEditingController();
+
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(proposal?['text'] ?? 'Question missing'), // Null check added here
+            subtitle: Text(proposal?['id']?.toString() ?? 'ID missing'), // Null check added here
+          ),
+          if (proposal != null && proposal!.containsKey('options')) // Null check added here
+            Column(
+              children: proposal!['options'].map<Widget>((option) {
+                return ListTile(
+                  title: Text(option),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.thumb_up),
+                        onPressed: hasVoted ? null : onVote, // Disable voting if already voted
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          if (proposal != null && proposal!.containsKey('comments')) // Null check added here
+            Column(
+              children: proposal!['comments'].map<Widget>((comment) {
+                return ListTile(
+                  title: Text(comment['text']), // Assuming the key for comment text is 'text'
+                  subtitle: Text('User ID: ${comment['id']}'), // Assuming the key for user ID is 'id'
+                );
+              }).toList(),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _commentController,
+                    decoration: InputDecoration(
+                      labelText: 'Add a comment',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                 ),
-                onSubmitted: (text) {
-                  setState(() {
-                    widget.proposal['comments'].add({
-                      'id': 'currentUser', // Replace with actual user ID
-                      'text': text,
-                    });
-                  });
-                },
-              ),
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: () {
+                    if (_commentController.text.isNotEmpty) {
+                      onComment(_commentController.text);
+                      _commentController.clear();
+                    }
+                  },
+                ),
+              ],
             ),
-            IconButton(
-              icon: Icon(Icons.send),
-              onPressed: () {
-                setState(() {
-                  widget.proposal['comments'].add({
-                    'id': 'currentUser', // Replace with actual user ID
-                    'text': _commentController.text,
-                  });
-                  _commentController.clear();
-                });
-              },
-            ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
