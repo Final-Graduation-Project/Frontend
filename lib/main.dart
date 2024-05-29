@@ -125,7 +125,7 @@ class Home extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/course');
+          Navigator.pushNamed(context, '/map');
         },
         child: Icon(Icons.map),
       ),
