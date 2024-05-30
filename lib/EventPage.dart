@@ -49,6 +49,7 @@ class EventPage extends StatefulWidget {
 }
 
 class _EventPageState extends State<EventPage> {
+
   List<Event> _events = [];
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -59,6 +60,7 @@ class _EventPageState extends State<EventPage> {
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
     _loadEvents();
   }
 
@@ -79,6 +81,13 @@ class _EventPageState extends State<EventPage> {
     final String eventsJson =
         json.encode(_events.map((e) => e.toJson()).toList());
     await prefs.setString('events', eventsJson);
+  }
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if(role==null){
+      Navigator.pushNamed(context, '/login');
+    }
   }
 
   List<XFile>? _mediaFileList;

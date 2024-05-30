@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -21,9 +22,8 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-  // ignore: unused_element
   Future<void> _login() async {
-    final id = _idController.text;
+    final id = int.tryParse(_idController.text);
     final password = _passwordController.text;
 
     final  url = Uri.parse('http://localhost:5050/api/Student/login');
@@ -34,15 +34,19 @@ class _LoginState extends State<Login> {
       );
 
       if (response.statusCode == 200) {
+        final user = json.decode(response.body);
+        print(user.toString());
+        await _storeUserDetailsInSession(user);
         // Login successful, navigate to next page
         Navigator.pushNamed(context, '/firstPage');
       } else {
+        print(response.body);
         // Login failed, show error message
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text('Login Failed'),
-            content: Text('Invalid ID or password'),
+            content: Text(response.body),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -54,7 +58,16 @@ class _LoginState extends State<Login> {
       }
 
   }
+  Future<void> _storeUserDetailsInSession(Map<String, dynamic> userDetails) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Store user details in shared preferences
+    await prefs.setString('userId', userDetails['Id']);
+    await prefs.setString('userName', userDetails['Name']);
+    await prefs.setString('userEmail', userDetails['Email']);
+    await prefs.setString('userPhone', userDetails['Phone']);
+    await prefs.setString('userRole', userDetails['Role']);
 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,9 +155,8 @@ class _LoginState extends State<Login> {
               ),
               ElevatedButton(
                 onPressed: () {
-                   if (_formKey.currentState!.validate()) { 
-                      Navigator.pushNamed(context, '/firstPage');
-                      
+                   if (_formKey.currentState!.validate()) {
+                    _login();
                    }
                 },
                 child: Text("Log in")

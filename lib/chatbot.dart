@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatBot extends StatefulWidget {
   @override
@@ -8,7 +9,17 @@ class ChatBot extends StatefulWidget {
 }
 
 class _ChatBotState extends State<ChatBot> {
-  final List<ChatMessage> _messages = <ChatMessage>[];
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+  final List<ChatMessage> _messages = <ChatMessage>[
+    ChatMessage(
+      text: "Hi, I am here to help you.",
+      isUserMessage: false,
+    )
+  ];
   final TextEditingController _textController = TextEditingController();
 
   static const apiKey = "AIzaSyDz8eKOlC7M0H6CQuwFWxpoL0SRnibD-aw";
@@ -22,16 +33,22 @@ class _ChatBotState extends State<ChatBot> {
     );
     setState(() {
       _messages.insert(0, message);
+      _messages.insert(0, ChatMessage(
+        text: "I am looking for the best answer for you, please wait.......",
+        isUserMessage: false,
+      ));
     });
 
     String response = await _getGenerativeAIResponse(text);
 
-    ChatMessage botReply = ChatMessage(
-      text: response,
-      isUserMessage: false,
-    );
     setState(() {
-      _messages.insert(0, botReply);
+      // Remove the "Please wait..." message
+      _messages.removeAt(0);
+      // Add the bot's response
+      _messages.insert(0, ChatMessage(
+        text: response,
+        isUserMessage: false,
+      ));
     });
   }
 
@@ -45,10 +62,16 @@ class _ChatBotState extends State<ChatBot> {
       return 'Error: Unable to generate response';
     }
   }
-
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if(role==null){
+      Navigator.pushNamed(context, '/login');
+    }
+  }
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
         elevation: 0,
@@ -56,9 +79,7 @@ class _ChatBotState extends State<ChatBot> {
         title: Row(
           children: [
             SizedBox(width: 10),
-            Text('ChatBot ')
-
-            
+            Text('ChatBot')
           ],
         ),
       ),
@@ -122,7 +143,6 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-     
       margin: EdgeInsets.symmetric(vertical: 10.0),
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       alignment: isUserMessage ? Alignment.topRight : Alignment.topLeft,

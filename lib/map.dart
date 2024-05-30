@@ -168,10 +168,7 @@ class _MapPaneState extends State<MapPane> {
                   fit: BoxFit.cover,
                 ),
                 ...positionedWidgets,
-                if (_pathNodes.isNotEmpty)
-                  CustomPaint(
-                    painter: PathPainter(_pathNodes, constraints.maxWidth, constraints.maxHeight),
-                  ),
+
               ],
             );
           },
@@ -186,38 +183,37 @@ class _MapPaneState extends State<MapPane> {
   }
 
   void updatePath(List<Node> pathNodes) {
-    setState(() {
-      _pathNodes = pathNodes;
-    });
-  }
+      _pathNodes = pathNodes;}
 }
 
 class PathPainter extends CustomPainter {
-  final List<Node> nodes;
-  final double width;
-  final double height;
+  final List<Node> pathNodes;
 
-  PathPainter(this.nodes, this.width, this.height);
+  PathPainter({required this.pathNodes});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.red
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke;
+    print("ziad");
+    if (pathNodes.length < 2) return;
 
-    if (nodes.isNotEmpty) {
-      final path = Path();
-      path.moveTo(nodes[0].x * width, nodes[0].y * height);
-      for (var i = 1; i < nodes.length; i++) {
-        path.lineTo(nodes[i].x * width, nodes[i].y * height);
-      }
-      canvas.drawPath(path, paint);
+    Paint linePaint = Paint()
+      ..color = Colors.red // Color of the line
+      ..strokeWidth = 2.0 // Width of the line
+      ..style = PaintingStyle.stroke; // Style of the line (stroke)
+
+    Path path = Path();
+    path.moveTo(pathNodes[0].x * size.width, pathNodes[0].y * size.height);
+    for (int i = 1; i < pathNodes.length; i++) {
+      path.lineTo(pathNodes[i].x * size.width, pathNodes[i].y * size.height);
     }
+
+    canvas.drawPath(path, linePaint);
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
 }
 class HoverableBuildingPoint extends StatefulWidget {
   final Node node;
@@ -256,7 +252,7 @@ class _HoverableBuildingPointState extends State<HoverableBuildingPoint> {
               width: 10.0,
               height: 10.0,
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: _isHovered ? Colors.green : Colors.red, // Change color based on hover
                 shape: BoxShape.circle,
               ),
             ),
@@ -328,7 +324,32 @@ class _RightSideState extends State<RightSide> {
     "البوك ستور",
     "A.Shaheen",
   ];
-
+  List<Node> nodes = [
+    Node("AL.Juraysi", 0.8304687738418579, 0.43378863241920135),
+    Node("SCI", 0.530468761920929, 0.6974465629757611),
+    Node("Aggad", 0.28046876192092896, 0.6178741497800614),
+    Node("N.Shaheen", 0.749218761920929, 0.5228622698518756),
+    Node("Bahrain", 0.37109375, 0.15250596261669032),
+    Node("Khoury", 0.41484376788139343, 0.14519003354577845),
+    Node("Masruji", 0.36593751192092896, 0.11837292554308696),
+    Node("PNH", 0.2671875059604645, 0.1402541715664235),
+    Node("Aweidah", 0.1437500397364299, 0.21051074630160102),
+    Node("GYM", 0.26031251788139343, 0.2803919470197427),
+    Node("Masri", 0.477083412806193, 0.03967934387567095),
+    Node("Bamieh", 0.48593738079071, 0.1330047610323133),
+    Node("Alsadik", 0.46593738079071, 0.19625893259873678),
+    Node("IOL", 0.45781251788139343, 0.36590262536355154),
+    Node("KNH", 0.52734375, 0.4896081209380495),
+    Node("Alghanim", 0.6343750357627869, 0.4872328148788059),
+    Node("NSA", 0.35625001788139343, 0.07155582886669418),
+    Node("المجمع", 0.39765626192092896, 0.48010689670107504),
+    Node("العمادة", 0.4007812440395355, 0.38628269245510843),
+    Node("الرئاسة", 0.620312511920929, 0.292458442903947),
+    Node("العيادة", 0.6640625, 0.601247052670551),
+    Node("zane", 0.47921876192092896, 0.0924941053411019),
+    Node("البوك ستور", 0.4164062440395355, 0.2983966853994586),
+    Node("A.Shaheen", 0.3215625, 0.22119953295780764)
+  ];
   Future<void> _findPath() async {
     if (_selectedFrom != null && _selectedTo != null) {
       final response = await http.get(
@@ -338,9 +359,19 @@ class _RightSideState extends State<RightSide> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
-          _path = data['path'].join(' -> ');
+          _path = _selectedFrom! +" -> "+data['path'].join(' -> ');
           _distance = data['distance'];
+          List<Node> pathNodes = [];
+          List<String> path = _path.split(' -> ');
+          for (var node in nodes) {
+            if (path.contains(node.name)) {
+              pathNodes.add(node);
+            }
+          }
+
+          PathPainter(pathNodes: pathNodes);
         });
+
       } else {
         setState(() {
           _path = "Error: Unable to find path.";

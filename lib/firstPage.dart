@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/proposal.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -12,6 +14,11 @@ class _FirstPageState extends State<FirstPage> {
   List<Map<String, dynamic>> _acceptedProposals = [];
   Set<String> _userVotes = {}; // Track user votes
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
   void addAcceptedProposal(Map<String, dynamic> proposal) {
     setState(() {
       print('Adding accepted proposal: $proposal');
@@ -34,9 +41,51 @@ class _FirstPageState extends State<FirstPage> {
       _acceptedProposals[index]['comments'].add({'id': userId, 'text': comment});
     });
   }
+  Future<void> clearSpecificPreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+  Future<void> _logout() async {
+    final url = Uri.parse('http://localhost:5050/api/Student/logout');
+    final response = await http.get(
+      url,
+      headers: {'accept': '*/*'},
+    );
 
+    if (response.statusCode == 200) {
+      // Logout successful, navigate to login page or show a success message
+      print('Logout successful');
+      clearSpecificPreference();
+      Navigator.pushNamed(context, '/loginPage');  // Adjust the route name to your login page
+    } else {
+      print(response.body);
+      // Logout failed, show error message
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Logout Failed'),
+          content: Text(response.body),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if(role==null){
+      Navigator.pushNamed(context, '/login');
+    }
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color(0xFFB4D4FF),
       appBar: AppBar(
@@ -51,7 +100,8 @@ class _FirstPageState extends State<FirstPage> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/logout');
+              _logout();
+              Navigator.pushNamed(context, '/login');
             },
             child: Text("Log Out", style: TextStyle(color: Colors.black)),
           ),

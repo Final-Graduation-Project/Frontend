@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firstPage.dart';
 
 class Proposal extends StatefulWidget {
@@ -13,6 +14,11 @@ class Proposal extends StatefulWidget {
 class _ProposalState extends State<Proposal> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _questionController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
   final List<TextEditingController> _optionControllers = [
     TextEditingController(),
     TextEditingController()
@@ -34,6 +40,7 @@ class _ProposalState extends State<Proposal> {
     'لجنة الكافتيريات',
     'اللجنة الاجتماعية',
     'اللجنة الصحية',
+    'لجنة العلاقات العامة',
     'الجميع',
   ];
 
@@ -49,7 +56,13 @@ class _ProposalState extends State<Proposal> {
     _commentController.dispose();
     super.dispose();
   }
-
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if(role==null){
+      Navigator.pushNamed(context, '/login');
+    }
+  }
   void _showProposalDialog(BuildContext context) {
     showDialog(
       context: context,
