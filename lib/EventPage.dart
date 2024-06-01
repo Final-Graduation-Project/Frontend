@@ -90,6 +90,14 @@ class _EventPageState extends State<EventPage> {
     }
   }
 
+  Future<String?> _getRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if(role=="student"){
+
+    }
+    return role;
+  }
   List<XFile>? _mediaFileList;
 
   void _setImageFileListFromFile(XFile? value) {
@@ -228,12 +236,17 @@ class _EventPageState extends State<EventPage> {
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             calendarFormat: _calendarFormat,
-            onDaySelected: (selectedDay, focusedDay) {
+            onDaySelected: (selectedDay, focusedDay) async {
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
-              _showAddEventDialog(isEdit: false);
+              if(await _getRole()=="student" || await _getRole()==null){
+                return;
+              }
+              else {
+                _showAddEventDialog(isEdit: false);
+              }
             },
             onFormatChanged: (format) {
               setState(() {
@@ -279,8 +292,9 @@ class _EventPageState extends State<EventPage> {
           Expanded(
             child: ListView.builder(
               itemCount: _visibleEvents().length,
-              itemBuilder: (context, index) {
+              itemBuilder: (context, index)  {
                 final event = _visibleEvents()[index];
+
                 return ListTile(
                   title: Row(
                     children: [ Center(
@@ -319,40 +333,48 @@ class _EventPageState extends State<EventPage> {
                       Text(event.title),
                     ],
                   ),
+
                   subtitle: _buildEventSubtitle(event),
                   onTap: () {},
-                  trailing: Row(
-                  
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          _selectedDay = event.date;
-                          _selectedTime = event.time;
-                          _showAddEventDialog(isEdit: true, editEvent: event);
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            _events.removeAt(_events.indexOf(event));
-                          });
-                          _saveEvents(); // Save changes to the persistent storage
-                        },
-                      ),
-                    ],
+                  trailing: FutureBuilder<String?>(
+                    future: _getRole(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return SizedBox.shrink();
+                      }
+                      if (snapshot.hasError || snapshot.data == "student" || snapshot.data == null) {
+                        return SizedBox.shrink();
+                      }
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              _selectedDay = event.date;
+                              _selectedTime = event.time;
+                              _showAddEventDialog(isEdit: true, editEvent: event);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () {
+                              setState(() {
+                                _events.removeAt(_events.indexOf(event));
+                              });
+                              _saveEvents(); // Save changes to the persistent storage
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 );
               },
             ),
           ),
-          
-         ],
+        ],
       ),
-
     );
   }
 
