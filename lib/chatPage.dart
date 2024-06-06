@@ -1,41 +1,112 @@
-// chatPage.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_application_1/ChatScreen.dart';
 
-class chatPage extends StatefulWidget {
-  const chatPage({Key? key, this.userId}) : super(key: key);
-
-  final int? userId;
+class ChatPage extends StatefulWidget {
+  const ChatPage({Key? key}) : super(key: key);
 
   @override
-  State<chatPage> createState() => _ChatPageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<chatPage> {
+class _ChatPageState extends State<ChatPage> {
   TextEditingController idController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   List<dynamic> users = [];
+  List<dynamic> filteredUsers = [];
+  Map<String, int> unreadMessagesCount = {};
 
-  @override
-  void initState() {
-    super.initState();
-    fetchUsers();
-  }
-
-  Future<void> fetchUsers() async {
-    final Uri uri = Uri.parse(
+  Future<void> fetchUsersAndStaff(String currentUser) async {
+    final Uri councilUri = Uri.parse(
         'https://localhost:7025/api/concilMember/GetAllConcilMembers');
-    try {
-      final http.Response response = await http.get(uri);
+    final Uri staffUri =
+        Uri.parse('https://localhost:7025/api/StaffMember/GetAllStaffMember');
 
-      if (response.statusCode == 200) {
-        final List<dynamic> userData = jsonDecode(response.body);
+    try {
+      final councilResponse = await http.get(councilUri);
+      final staffResponse = await http.get(staffUri);
+
+      if (councilResponse.statusCode == 200 &&
+          staffResponse.statusCode == 200) {
+        final List<dynamic> councilData = jsonDecode(councilResponse.body);
+        final List<dynamic> staffData = jsonDecode(staffResponse.body);
+
+        final List<dynamic> allUsersData = [...councilData, ...staffData];
+
+        bool isCouncilOrTeacher = allUsersData.any((user) =>
+            user['concilID'].toString() == currentUser ||
+            user['teacherID'].toString() == currentUser);
+
+        List<dynamic> updatedUsers = [];
+
+        if (isCouncilOrTeacher) {
+          // Fetch users who sent messages to the current user
+          final Uri messagesUri = Uri.parse(
+              'https://localhost:7025/api/Messages/GetSendersByReceiverId/$currentUser');
+
+          try {
+            final messagesResponse = await http.get(messagesUri);
+            final List<dynamic> messagesData =
+                jsonDecode(messagesResponse.body);
+
+            print("Messages Data: $messagesData");
+
+            for (var senderId in messagesData) {
+              if (senderId != null) {
+                senderId = senderId.toString();
+                print("Processing senderId: $senderId");
+
+                // Check if the sender is not a council member or teacher
+                if (!allUsersData.any((user) =>
+                    user['concilID'].toString() == senderId ||
+                    user['teacherID'].toString() == senderId)) {
+                  // Fetch information of the sender
+                  final Uri senderUri = Uri.parse(
+                      'https://localhost:7025/api/Student/GetStudent/$senderId');
+                  try {
+                    final senderResponse = await http.get(senderUri);
+
+                    if (senderResponse.statusCode == 200) {
+                      final Map<String, dynamic> senderData =
+                          jsonDecode(senderResponse.body);
+                      updatedUsers.add(senderData);
+                    } else {
+                      print(
+                          'Error fetching sender data: ${senderResponse.statusCode}');
+                    }
+                  } catch (e) {
+                    print('Error fetching sender data: $e');
+                  }
+                }
+              } else {
+                print('SenderId is null');
+              }
+            }
+          } catch (e) {
+            print('Error fetching messages: $e');
+          }
+        }
+
+        // Add council members and teachers to the list
+        updatedUsers.addAll(allUsersData);
+
+        // Filter out the current user from the list
+        updatedUsers = updatedUsers
+            .where((user) =>
+                user['concilID']?.toString() != currentUser &&
+                user['teacherID']?.toString() != currentUser &&
+                user['studentID']?.toString() != currentUser)
+            .toList();
+
         setState(() {
-          users = userData;
+          users = updatedUsers;
+          filteredUsers = users;
         });
       } else {
-        print('Error fetching users: ${response.statusCode}');
+        print(
+            'Error fetching users: ${councilResponse.statusCode}, ${staffResponse.statusCode}');
       }
     } catch (e) {
       print('Error: $e');
@@ -43,7 +114,34 @@ class _ChatPageState extends State<chatPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // Defer fetching users until currentUser is obtained
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      final UserData userData =
+          ModalRoute.of(context)!.settings.arguments as UserData;
+      fetchUsersAndStaff(userData.id);
+    });
+  }
+
+  void filterUsers(String query) {
+    setState(() {
+      filteredUsers = users
+          .where((user) => (user['concilName'] ??
+                  user['teachername'] ??
+                  user['studentName'] ??
+                  'Unknown')
+              .toLowerCase()
+              .contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final UserData userData =
+        ModalRoute.of(context)!.settings.arguments as UserData;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -57,15 +155,13 @@ class _ChatPageState extends State<chatPage> {
                   children: [
                     Row(
                       children: [
-                        Text(
-                          "Enter ID",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
+                        Text("Enter ID",
+                            style: Theme.of(context).textTheme.bodyText1),
                         Spacer(),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.barcode_reader),
-                          color: Theme.of(context).colorScheme.primary,
+                          icon: Icon(Icons.qr_code_scanner),
+                          color: Theme.of(context).primaryColor,
                         ),
                       ],
                     ),
@@ -83,8 +179,7 @@ class _ChatPageState extends State<chatPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.primaryContainer,
+                        backgroundColor: Theme.of(context).primaryColorLight,
                       ),
                       onPressed: () {},
                       child: Center(
@@ -107,13 +202,27 @@ class _ChatPageState extends State<chatPage> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            TextField(
+              controller: searchController,
+              onChanged: filterUsers,
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                hintText: 'Search users...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                itemCount: users.length,
+                itemCount: filteredUsers.length,
                 itemBuilder: (context, index) {
-                  final user = users[index];
-                  final userName = user['name'] ??
-                      'Unknown'; // Get user's name from the user object
+                  final user = filteredUsers[index];
+                  final userName = user['concilName'] ??
+                      user['teachername'] ??
+                      user['studentName'] ??
+                      'Unknown';
                   return Card(
                     color: Color.fromARGB(255, 19, 179, 207),
                     child: ListTile(
@@ -121,22 +230,16 @@ class _ChatPageState extends State<chatPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ChatScreen(
-                            currentUser: {
-                              'id': widget
-                                  .userId, // Use widget.userId as senderId
-                              'name': 'Current User',
-                            },
+                            currentUser: userData.id,
                             user: user,
                             userName: userName,
                           ),
                         ),
                       ),
-                      title: Text(user['ConcilName'] ?? 'Unknown'),
-                      subtitle: Text("Last message"),
+                      title: Text(userName),
                       trailing: Badge(
                         backgroundColor: Color.fromARGB(255, 56, 122, 207),
                         padding: EdgeInsets.symmetric(horizontal: 12),
-                        label: Text("3"),
                         largeSize: 30,
                       ),
                     ),

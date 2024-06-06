@@ -48,18 +48,13 @@ class _ChatBotState extends State<ChatBot> {
 
   @override
   Widget build(BuildContext context) {
-   return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
         elevation: 0,
         titleSpacing: 0,
         title: Row(
-          children: [
-            SizedBox(width: 10),
-            Text('ChatBot ')
-
-            
-          ],
+          children: [SizedBox(width: 10), Text('ChatBot ')],
         ),
       ),
       body: Column(
@@ -122,7 +117,6 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-     
       margin: EdgeInsets.symmetric(vertical: 10.0),
       padding: EdgeInsets.symmetric(horizontal: 10.0),
       alignment: isUserMessage ? Alignment.topRight : Alignment.topLeft,

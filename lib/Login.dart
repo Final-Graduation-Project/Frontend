@@ -9,6 +9,12 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+class UserData {
+  final String id;
+
+  UserData(this.id);
+}
+
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _idController = TextEditingController();
@@ -148,12 +154,18 @@ class _LoginState extends State<Login> {
                 ],
               ),
               ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Navigator.pushNamed(context, '/firstPage');
-                    }
-                  },
-                  child: Text("Log in")),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    String userId = _idController.text;
+                    Navigator.pushNamed(
+                      context,
+                      '/firstPage',
+                      arguments: UserData(userId),
+                    );
+                  }
+                },
+                child: Text("Log in"),
+              ),
             ],
           ),
         ),

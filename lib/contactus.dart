@@ -47,9 +47,12 @@ class ContactUs extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildDeveloper('images/ziad.jpg', 'Ziad Masalma', 'z.j.masalma@gmail.com', imageSize),
-                      _buildDeveloper('images/jnn.jpg', 'Jenin Hajyassin', 'jeninhajyassin02@gmail.com', imageSize),
-                      _buildDeveloper('images/fadi.jpg', 'Fadi AlAmleh', 'fadyalmlt294@gmail.com', imageSize),
+                      _buildDeveloper('images/ziad.jpg', 'Ziad Masalma',
+                          'z.j.masalma@gmail.com', imageSize),
+                      _buildDeveloper('images/jnn.jpg', 'Jenin Hajyassin',
+                          'jeninhajyassin02@gmail.com', imageSize),
+                      _buildDeveloper('images/fadi.jpg', 'Fadi AlAmleh',
+                          'fadyalmlt294@gmail.com', imageSize),
                     ],
                   ),
                 ),
@@ -73,7 +76,8 @@ class ContactUs extends StatelessWidget {
     );
   }
 
-  Widget _buildDeveloper(String imagePath, String name, String email, double imageSize) {
+  Widget _buildDeveloper(
+      String imagePath, String name, String email, double imageSize) {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -119,7 +123,10 @@ class ContactUs extends StatelessWidget {
             onTap: () => _launchMail(email),
             child: Text(
               email,
-              style: TextStyle(fontSize: 14, color: Color(0xFF176B87), decoration: TextDecoration.underline),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF176B87),
+                  decoration: TextDecoration.underline),
               textAlign: TextAlign.center,
             ),
           ),

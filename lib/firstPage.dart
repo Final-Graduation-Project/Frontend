@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Login.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
-
   @override
   State<FirstPage> createState() => _FirstPageState();
 }
 
 class _FirstPageState extends State<FirstPage> {
+  int? id;
+
+  @override
   @override
   Widget build(BuildContext context) {
+    final UserData userData =
+        ModalRoute.of(context)!.settings.arguments as UserData;
+
     return Scaffold(
       backgroundColor: Color(0xFFB4D4FF),
       appBar: AppBar(
@@ -53,11 +59,9 @@ class _FirstPageState extends State<FirstPage> {
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/Eve');
-
-                // Navigate to event calendar page
               },
             ),
-            // for chatbot 
+            // for chatbot
             ListTile(
               contentPadding: EdgeInsets.all(20),
               leading: Icon(Icons.person),
@@ -78,24 +82,25 @@ class _FirstPageState extends State<FirstPage> {
             ),
             ListTile(
               contentPadding: EdgeInsets.all(20),
-              leading: Icon(Icons.calendar_month),
+              leading: Icon(Icons.chat),
               title: Text('Chat Page'),
               onTap: () {
                 Navigator.of(context).pop();
-                Navigator.pushNamed(context, '/Chatpage');
-
-                // Navigate to event calendar page
+                Navigator.pushNamed(
+                  context,
+                  '/Chatpage',
+                  arguments: userData, // Assuming userData is of type UserData
+                );
               },
             ),
+
             ListTile(
               contentPadding: EdgeInsets.all(20),
-              leading: Icon(Icons.calendar_month),
+              leading: Icon(Icons.group),
               title: Text('Group Page'),
               onTap: () {
                 Navigator.of(context).pop();
                 Navigator.pushNamed(context, '/GroupPage');
-
-                // Navigate to event calendar page
               },
             ),
             ListTile(

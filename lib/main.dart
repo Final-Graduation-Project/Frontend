@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ChatScreen.dart';
 import 'package:flutter_application_1/EventPage.dart';
-import 'package:flutter_application_1/Grouppage.dart';
 import 'package:flutter_application_1/Login.dart';
 import 'package:flutter_application_1/Validate.dart';
 import 'package:flutter_application_1/aboutus.dart';
@@ -12,8 +10,7 @@ import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
 import 'package:flutter_application_1/map.dart';
 import 'package:flutter_application_1/proposal.dart';
-
-import 'course.dart';
+import 'package:flutter_application_1/course.dart';
 
 void main() {
   runApp(Mainpage());
@@ -46,6 +43,12 @@ class Mainpage extends StatelessWidget {
         '/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
+        '/chatbot': (context) => ChatBot(),
+        '/map': (context) => map(),
+        '/proposal': (context) =>
+            Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
+        '/course': (context) => CourseSearchScreen(),
+        '/Chatpage': (context) => ChatPage(),
       },
     );
   }
