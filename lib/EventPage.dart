@@ -59,6 +59,7 @@ class _EventPageState extends State<EventPage> {
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
     _loadEvents();
   }
 
@@ -79,6 +80,21 @@ class _EventPageState extends State<EventPage> {
     final String eventsJson =
         json.encode(_events.map((e) => e.toJson()).toList());
     await prefs.setString('events', eventsJson);
+  }
+
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if (role == null) {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+
+  Future<String?> _getRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if (role == "student") {}
+    return role;
   }
 
   List<XFile>? _mediaFileList;
@@ -218,12 +234,16 @@ class _EventPageState extends State<EventPage> {
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             calendarFormat: _calendarFormat,
-            onDaySelected: (selectedDay, focusedDay) {
+            onDaySelected: (selectedDay, focusedDay) async {
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
-              _showAddEventDialog(isEdit: false);
+              if (await _getRole() == "student" || await _getRole() == null) {
+                return;
+              } else {
+                _showAddEventDialog(isEdit: false);
+              }
             },
             onFormatChanged: (format) {
               setState(() {
@@ -271,6 +291,7 @@ class _EventPageState extends State<EventPage> {
               itemCount: _visibleEvents().length,
               itemBuilder: (context, index) {
                 final event = _visibleEvents()[index];
+
                 return ListTile(
                   title: Row(
                     children: [

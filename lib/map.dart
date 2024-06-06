@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class node {
+class Node {
   String name;
   double x;
   double y;
-  node(this.name, this.x, this.y);
+  Node(this.name, this.x, this.y);
 }
 
 class map extends StatefulWidget {
   const map({Key? key}) : super(key: key);
 
   @override
-  _mapstate createState() => _mapstate();
+  _MapAppState createState() => _MapAppState();
 }
 
 class _mapstate extends State<map> {
@@ -21,8 +21,6 @@ class _mapstate extends State<map> {
   final Color color2 = Color(0xFFB4D4FF); // Lighter Blue
   final Color color3 = Color(0xFF86B6F6); // Even Lighter Blue
   final Color color4 = Color(0xFFEEF5FF); // Very Light Blue
-
-  // ignore: unused_element
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +37,8 @@ class _mapstate extends State<map> {
 }
 
 class MyHomePage extends StatelessWidget {
+  final GlobalKey<_RightSideState> _rightSideKey = GlobalKey<_RightSideState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,27 +64,26 @@ class MyHomePage extends StatelessWidget {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth < 600) {
-            // For small screens, arrange map at the top and other content below
+          if (constraints.maxWidth < 700) {
             return Column(
               children: [
                 Expanded(
-                  child: MapPane(),
+                  child: MapPane(rightSideKey: _rightSideKey),
                 ),
                 Expanded(
-                  child: RightSide(),
+                  child: RightSide(key: _rightSideKey),
                 ),
               ],
             );
           } else {
-            // For larger screens, display map and other content side by side
             return Row(
               children: [
                 Expanded(
-                  child: MapPane(),
+                  child: MapPane(rightSideKey: _rightSideKey),
+                  flex: 2,
                 ),
                 Expanded(
-                  child: RightSide(),
+                  child: RightSide(key: _rightSideKey),
                 ),
               ],
             );
@@ -141,17 +140,14 @@ class MapPane extends StatelessWidget {
             );
           }
 
-          // Return a Stack widget to overlay the map image with building points
           return Stack(
             children: [
-              // Map image as the background, scaled to fit the container
               Image.asset(
                 "images/birziet.jpg",
                 width: constraints.maxWidth,
                 height: constraints.maxHeight,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
               ),
-              // Overlay the building points on top of the map image
               ...positionedWidgets,
             ],
           );
@@ -171,9 +167,18 @@ class RightSide extends StatelessWidget {
         spacing: 20.0,
         runSpacing: 20.0,
         children: [
-          PathBox(),
-          SrcDestBox(),
-          Buttons(),
+          PathBox(path: _path, distance: _distance),
+          SrcDestBox(
+            locations: _locations,
+            selectedFrom: _selectedFrom,
+            selectedTo: _selectedTo,
+            onFromChanged: (value) => setState(() => _selectedFrom = value),
+            onToChanged: (value) => setState(() => _selectedTo = value),
+          ),
+          Buttons(
+            onFindPath: _findPath,
+            onClear: _clear,
+          ),
         ],
       ),
     );
@@ -181,6 +186,11 @@ class RightSide extends StatelessWidget {
 }
 
 class PathBox extends StatelessWidget {
+  final String path;
+  final double distance;
+
+  PathBox({required this.path, required this.distance});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -199,60 +209,43 @@ class PathBox extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10.0),
-          PathTable(),
+          Text(
+            'Path: $path',
+            style: TextStyle(
+              fontSize: 16.0,
+              color: Colors.black,
+            ),
+          ),
           SizedBox(height: 10.0),
-          TotalDistance(),
+          Text(
+            'Total Distance: ${distance.toStringAsFixed(2)} m',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16.0,
+              color: Colors.black,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class PathTable extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 150.0,
-      child: ListView.builder(
-        itemCount: 5, // Replace with actual number of rows
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text('From'),
-            subtitle: Text('To'),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class TotalDistance extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Total Distance: ',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16.0,
-            color: Colors.black,
-          ),
-        ),
-        Text(
-          '100 m', // Replace with actual total distance
-          style: TextStyle(
-            fontSize: 16.0,
-            color: Colors.black,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class SrcDestBox extends StatelessWidget {
+  final List<String> locations;
+  final String? selectedFrom;
+  final String? selectedTo;
+  final ValueChanged<String?> onFromChanged;
+  final ValueChanged<String?> onToChanged;
+
+  SrcDestBox({
+    required this.locations,
+    this.selectedFrom,
+    this.selectedTo,
+    required this.onFromChanged,
+    required this.onToChanged,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -268,15 +261,15 @@ class SrcDestBox extends StatelessWidget {
             ),
             SizedBox(width: 10.0),
             DropdownButton<String>(
-              // Implement DropdownButton based on Flutter's DropdownButton
-              onChanged: (value) {},
-              items: [
-                DropdownMenuItem(
-                  child: Text('Building 1'),
-                  value: 'Building 1',
-                ),
-                // Add more DropdownMenuItem widgets for each building
-              ],
+              value: selectedFrom,
+              hint: Text('Select Location'),
+              onChanged: onFromChanged,
+              items: locations.map((location) {
+                return DropdownMenuItem<String>(
+                  value: location,
+                  child: Text(location),
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -292,15 +285,15 @@ class SrcDestBox extends StatelessWidget {
             ),
             SizedBox(width: 10.0),
             DropdownButton<String>(
-              // Implement DropdownButton based on Flutter's DropdownButton
-              onChanged: (value) {},
-              items: [
-                DropdownMenuItem(
-                  child: Text('Building 2'),
-                  value: 'Building 2',
-                ),
-                // Add more DropdownMenuItem widgets for each building
-              ],
+              value: selectedTo,
+              hint: Text('Select Location'),
+              onChanged: onToChanged,
+              items: locations.map((location) {
+                return DropdownMenuItem<String>(
+                  value: location,
+                  child: Text(location),
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -310,21 +303,22 @@ class SrcDestBox extends StatelessWidget {
 }
 
 class Buttons extends StatelessWidget {
+  final VoidCallback onFindPath;
+  final VoidCallback onClear;
+
+  Buttons({required this.onFindPath, required this.onClear});
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ElevatedButton(
-          onPressed: () {
-            // Implement find path functionality
-          },
+          onPressed: onFindPath,
           child: Text('Find Path'),
         ),
         SizedBox(height: 10.0),
         ElevatedButton(
-          onPressed: () {
-            // Implement clear path functionality
-          },
+          onPressed: onClear,
           child: Text('Clear'),
         ),
       ],

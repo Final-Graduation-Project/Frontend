@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -28,9 +29,8 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
-  // ignore: unused_element
   Future<void> _login() async {
-    final id = _idController.text;
+    final id = int.tryParse(_idController.text);
     final password = _passwordController.text;
 
     final url = Uri.parse('http://localhost:5050/api/Student/login');
@@ -156,12 +156,7 @@ class _LoginState extends State<Login> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    String userId = _idController.text;
-                    Navigator.pushNamed(
-                      context,
-                      '/firstPage',
-                      arguments: UserData(userId),
-                    );
+                    Navigator.pushNamed(context, '/firstPage');
                   }
                 },
                 child: Text("Log in"),
