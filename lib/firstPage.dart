@@ -12,6 +12,11 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   List<Map<String, dynamic>> _acceptedProposals = [];
   Set<String> _userVotes = {}; // Track user votes
+  String? userName;
+  String? userEmail;
+  String? userPhone;
+  String? userRole;
+  String? userId;
 
   @override
   void initState() {
@@ -47,6 +52,46 @@ class _FirstPageState extends State<FirstPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString('userName');
+    userEmail = prefs.getString('userEmail');
+    userPhone = prefs.getString('userPhone');
+    userRole = prefs.getString('userRole');
+    userId = prefs.getString('userId');
+    if(userRole==null){
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+  void _showUserDetails() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('User Details'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Name: $userName'),
+              Text('Email: $userEmail'),
+              Text('Phone: $userPhone'),
+              Text('Role: $userRole'),
+              Text('ID: $userId'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _logout() async {
     final url = Uri.parse('http://localhost:5050/api/Student/logout');
@@ -80,13 +125,7 @@ class _FirstPageState extends State<FirstPage> {
     }
   }
 
-  Future<void> _fetchUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final role = prefs.getString('userRole');
-    if (role == null) {
-      Navigator.pushNamed(context, '/login');
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +136,8 @@ class _FirstPageState extends State<FirstPage> {
         title: Text('Welcome to Student Digital Guide'),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Implement search functionality
-            },
+            icon: Icon(Icons.person_2_outlined),
+            onPressed: _showUserDetails,
           ),
           TextButton(
             onPressed: () {

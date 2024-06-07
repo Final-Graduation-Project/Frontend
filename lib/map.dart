@@ -7,6 +7,11 @@ class Node {
   double x;
   double y;
   Node(this.name, this.x, this.y);
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "Name: $name, x: $x, y: $y";
+  }
 }
 
 class map extends StatefulWidget {
@@ -38,15 +43,14 @@ class _MapAppState extends State<map> {
 }
 
 class MyHomePage extends StatelessWidget {
-  final GlobalKey<_RightSideState> _rightSideKey = GlobalKey<_RightSideState>();
+  final GlobalKey<_MapPaneState> _mapPaneKey = GlobalKey<_MapPaneState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
-        leading: Image.asset('images/studentdigitalguidelogo.png',
-            height: 40, width: 40),
+        leading: Image.asset('images/studentdigitalguidelogo.png', height: 40, width: 40),
         title: Text("Student Digital Guide"),
         actions: <Widget>[
           TextButton(
@@ -69,10 +73,10 @@ class MyHomePage extends StatelessWidget {
             return Column(
               children: [
                 Expanded(
-                  child: MapPane(rightSideKey: _rightSideKey),
+                  child: MapPane(key: _mapPaneKey),
                 ),
                 Expanded(
-                  child: RightSide(key: _rightSideKey),
+                  child: RightSide(mapPaneKey: _mapPaneKey),
                 ),
               ],
             );
@@ -80,11 +84,11 @@ class MyHomePage extends StatelessWidget {
             return Row(
               children: [
                 Expanded(
-                  child: MapPane(rightSideKey: _rightSideKey),
+                  child: MapPane(key: _mapPaneKey),
                   flex: 2,
                 ),
                 Expanded(
-                  child: RightSide(key: _rightSideKey),
+                  child: RightSide(mapPaneKey: _mapPaneKey),
                 ),
               ],
             );
@@ -96,9 +100,7 @@ class MyHomePage extends StatelessWidget {
 }
 
 class MapPane extends StatefulWidget {
-  final GlobalKey<_RightSideState> rightSideKey;
-
-  MapPane({required this.rightSideKey});
+  const MapPane({Key? key}) : super(key: key);
 
   @override
   _MapPaneState createState() => _MapPaneState();
@@ -166,6 +168,10 @@ class _MapPaneState extends State<MapPane> {
                 height: constraints.maxHeight,
                 fit: BoxFit.cover,
               ),
+              CustomPaint(
+                size: Size(constraints.maxWidth, constraints.maxHeight),
+                painter: PathPainter(pathNodes: _pathNodes),
+              ),
               ...positionedWidgets,
             ],
           );
@@ -175,13 +181,16 @@ class _MapPaneState extends State<MapPane> {
   }
 
   void _updateDropdown(String nodeName) {
-    if (widget.rightSideKey.currentState != null) {
-      widget.rightSideKey.currentState!.updateDropdowns(nodeName);
+    final rightSideState = context.findAncestorStateOfType<_RightSideState>();
+    if (rightSideState != null) {
+      rightSideState.updateDropdowns(nodeName);
     }
   }
 
   void updatePath(List<Node> pathNodes) {
-    _pathNodes = pathNodes;
+    setState(() {
+      _pathNodes = pathNodes;
+    });
   }
 }
 
@@ -192,7 +201,6 @@ class PathPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    print("ziad");
     if (pathNodes.length < 2) return;
 
     Paint linePaint = Paint()
@@ -252,9 +260,7 @@ class _HoverableBuildingPointState extends State<HoverableBuildingPoint> {
               width: 10.0,
               height: 10.0,
               decoration: BoxDecoration(
-                color: _isHovered
-                    ? Colors.green
-                    : Colors.red, // Change color based on hover
+                color: _isHovered ? Colors.green : Colors.red, // Change color based on hover
                 shape: BoxShape.circle,
               ),
             ),
@@ -288,7 +294,9 @@ class _HoverableBuildingPointState extends State<HoverableBuildingPoint> {
 }
 
 class RightSide extends StatefulWidget {
-  RightSide({Key? key}) : super(key: key);
+  final GlobalKey<_MapPaneState> mapPaneKey;
+
+  RightSide({required this.mapPaneKey});
 
   @override
   _RightSideState createState() => _RightSideState();
@@ -352,39 +360,59 @@ class _RightSideState extends State<RightSide> {
     Node("البوك ستور", 0.4164062440395355, 0.2983966853994586),
     Node("A.Shaheen", 0.3215625, 0.22119953295780764)
   ];
+
   Future<void> _findPath() async {
     if (_selectedFrom != null && _selectedTo != null) {
       final response = await http.get(
-        Uri.parse(
-            'http://localhost:5050/api/building-distance/BuildingDistance?from=$_selectedFrom&to=$_selectedTo'),
+        Uri.parse('http://localhost:5050/api/building-distance/BuildingDistance?from=$_selectedFrom&to=$_selectedTo'),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        setState(() {
-          _path = _selectedFrom! + " -> " + data['path'].join(' -> ');
-          _distance = data['distance'];
-          List<Node> pathNodes = [];
-          List<String> path = _path.split(' -> ');
+        List<String> path = List<String>.from(data['path']); // Correctly parse the path as a list of strings
+
+        List<Node> pathNodes = [];
+        for (var nodeName in path) {
           for (var node in nodes) {
-            if (path.contains(node.name)) {
+            if (node.name == nodeName) {
               pathNodes.add(node);
+              break;
             }
           }
+        }
 
-          PathPainter(pathNodes: pathNodes);
-        });
+        // Add the selected nodes (from and to) if they are not already in the path
+        for (var node in nodes) {
+          if (node.name == _selectedFrom && !pathNodes.contains(node)) {
+            pathNodes.insert(0, node); // Ensure the starting node is at the beginning
+          } else if (node.name == _selectedTo && !pathNodes.contains(node)) {
+            pathNodes.add(node); // Ensure the destination node is at the end
+          }
+        }
+
+        // Use mounted to ensure setState is called only when the widget is still in the widget tree
+        if (mounted) {
+          setState(() {
+            _path = _selectedFrom! + " -> " + path.join(' -> ');
+            _distance = data['distance'];
+            widget.mapPaneKey.currentState?.updatePath(pathNodes);
+          });
+        }
       } else {
+        if (mounted) {
+          setState(() {
+            _path = "Error: Unable to find path.";
+            _distance = 0.0;
+          });
+        }
+      }
+    } else {
+      if (mounted) {
         setState(() {
-          _path = "Error: Unable to find path.";
+          _path = "Please select both starting and destination buildings.";
           _distance = 0.0;
         });
       }
-    } else {
-      setState(() {
-        _path = "Please select both starting and destination buildings.";
-        _distance = 0.0;
-      });
     }
   }
 
@@ -394,6 +422,7 @@ class _RightSideState extends State<RightSide> {
       _selectedTo = null;
       _path = "";
       _distance = 0.0;
+      widget.mapPaneKey.currentState?.updatePath([]);
     });
   }
 
@@ -577,3 +606,7 @@ class Buttons extends StatelessWidget {
     );
   }
 }
+
+// void main() {
+//   runApp(map());
+// }

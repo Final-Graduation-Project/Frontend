@@ -41,6 +41,8 @@ class _LoginState extends State<Login> {
     );
 
     if (response.statusCode == 200) {
+      final user = json.decode(response.body);
+      await _storeUserDetailsInSession(user);
       // Login successful, navigate to next page
       Navigator.pushNamed(context, '/firstPage');
     } else {
@@ -49,7 +51,7 @@ class _LoginState extends State<Login> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Login Failed'),
-          content: Text('Invalid ID or password'),
+          content: Text(response.body),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -61,6 +63,16 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Future<void> _storeUserDetailsInSession(Map<String, dynamic> userDetails) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Store user details in shared preferences
+    await prefs.setString('userId', userDetails['Id']);
+    await prefs.setString('userName', userDetails['Name']);
+    await prefs.setString('userEmail', userDetails['Email']);
+    await prefs.setString('userPhone', userDetails['Phone']);
+    await prefs.setString('userRole', userDetails['Role']);
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,7 +168,7 @@ class _LoginState extends State<Login> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    Navigator.pushNamed(context, '/firstPage');
+                    _login();
                   }
                 },
                 child: Text("Log in"),
