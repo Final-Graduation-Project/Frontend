@@ -44,7 +44,12 @@ class _LoginState extends State<Login> {
       final user = json.decode(response.body);
       await _storeUserDetailsInSession(user);
       // Login successful, navigate to next page
-      Navigator.pushNamed(context, '/firstPage');
+      String userId = _idController.text;
+                    Navigator.pushNamed(
+                      context,
+                      '/firstPage',
+                      arguments: UserData(userId),
+                    );
     } else {
       // Login failed, show error message
       showDialog(

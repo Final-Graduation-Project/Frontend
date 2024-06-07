@@ -239,12 +239,12 @@ class _EventPageState extends State<EventPage> {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
-              if (await _getRole() == "student" || await _getRole() == null) {
-                return;
-              } else {
+               if (await _getRole() == "student" || await _getRole() == null) {
+                 return;
+               } else {
                 _showAddEventDialog(isEdit: false);
-              }
-            },
+               }
+             },
             onFormatChanged: (format) {
               setState(() {
                 _calendarFormat = format;

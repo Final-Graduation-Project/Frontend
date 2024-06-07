@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Login.dart';
 import 'package:flutter_application_1/proposal.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,6 @@ class _FirstPageState extends State<FirstPage> {
   Set<String> _userVotes = {}; // Track user votes
   String? userName;
   String? userEmail;
-  String? userPhone;
   String? userRole;
   String? userId;
 
@@ -52,17 +52,18 @@ class _FirstPageState extends State<FirstPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+
   Future<void> _fetchUserData() async {
     final prefs = await SharedPreferences.getInstance();
     userName = prefs.getString('userName');
     userEmail = prefs.getString('userEmail');
-    userPhone = prefs.getString('userPhone');
     userRole = prefs.getString('userRole');
     userId = prefs.getString('userId');
-    if(userRole==null){
+    if (userRole == null) {
       Navigator.pushNamed(context, '/login');
     }
   }
+
   void _showUserDetails() {
     showDialog(
       context: context,
@@ -75,7 +76,6 @@ class _FirstPageState extends State<FirstPage> {
             children: [
               Text('Name: $userName'),
               Text('Email: $userEmail'),
-              Text('Phone: $userPhone'),
               Text('Role: $userRole'),
               Text('ID: $userId'),
             ],
@@ -105,7 +105,7 @@ class _FirstPageState extends State<FirstPage> {
       print('Logout successful');
       clearSpecificPreference();
       Navigator.pushNamed(
-          context, '/loginPage'); // Adjust the route name to your login page
+          context, '/'); // Adjust the route name to your login page
     } else {
       print(response.body);
       // Logout failed, show error message
@@ -125,10 +125,10 @@ class _FirstPageState extends State<FirstPage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+    final UserData userData =
+        ModalRoute.of(context)!.settings.arguments as UserData;
     return Scaffold(
       backgroundColor: Color(0xFFB4D4FF),
       appBar: AppBar(
@@ -177,7 +177,12 @@ class _FirstPageState extends State<FirstPage> {
             ListTile(
               leading: Icon(Icons.message),
               title: Text('Chat'),
-              onTap: () => Navigator.pushNamed(context, '/chat'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.pushNamed(
+                    context, '/Chatpage' // Assuming userData is of type UserData
+                    );
+              },
             ),
             ListTile(
               leading: Icon(Icons.post_add),

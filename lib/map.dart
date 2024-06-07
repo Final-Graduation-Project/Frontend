@@ -50,7 +50,7 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
-        leading: Image.asset('images/studentdigitalguidelogo.png', height: 40, width: 40),
+      
         title: Text("Student Digital Guide"),
         actions: <Widget>[
           TextButton(
