@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.studentdigitalguide">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:label="studentdigitalguide"
         android:icon="@mipmap/ic_launcher">
@@ -46,5 +49,4 @@
             <data android:mimeType="text/plain" />
         </intent>
     </queries>
-
 </manifest>

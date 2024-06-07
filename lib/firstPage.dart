@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/proposal.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
-
   @override
   State<FirstPage> createState() => _FirstPageState();
 }
@@ -11,6 +12,17 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   List<Map<String, dynamic>> _acceptedProposals = [];
   Set<String> _userVotes = {}; // Track user votes
+  String? userName;
+  String? userEmail;
+  String? userPhone;
+  String? userRole;
+  String? userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
 
   void addAcceptedProposal(Map<String, dynamic> proposal) {
     setState(() {
@@ -31,9 +43,89 @@ class _FirstPageState extends State<FirstPage> {
 
   void addComment(int index, String comment, String userId) {
     setState(() {
-      _acceptedProposals[index]['comments'].add({'id': userId, 'text': comment});
+      _acceptedProposals[index]['comments']
+          .add({'id': userId, 'text': comment});
     });
   }
+
+  Future<void> clearSpecificPreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    userName = prefs.getString('userName');
+    userEmail = prefs.getString('userEmail');
+    userPhone = prefs.getString('userPhone');
+    userRole = prefs.getString('userRole');
+    userId = prefs.getString('userId');
+    if(userRole==null){
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+  void _showUserDetails() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('User Details'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Name: $userName'),
+              Text('Email: $userEmail'),
+              Text('Phone: $userPhone'),
+              Text('Role: $userRole'),
+              Text('ID: $userId'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _logout() async {
+    final url = Uri.parse('http://localhost:5050/api/Student/logout');
+    final response = await http.get(
+      url,
+      headers: {'accept': '*/*'},
+    );
+
+    if (response.statusCode == 200) {
+      // Logout successful, navigate to login page or show a success message
+      print('Logout successful');
+      clearSpecificPreference();
+      Navigator.pushNamed(
+          context, '/loginPage'); // Adjust the route name to your login page
+    } else {
+      print(response.body);
+      // Logout failed, show error message
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Logout Failed'),
+          content: Text(response.body),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +136,13 @@ class _FirstPageState extends State<FirstPage> {
         title: Text('Welcome to Student Digital Guide'),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Implement search functionality
-            },
+            icon: Icon(Icons.person_2_outlined),
+            onPressed: _showUserDetails,
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/logout');
+              _logout();
+              Navigator.pushNamed(context, '/login');
             },
             child: Text("Log Out", style: TextStyle(color: Colors.black)),
           ),
@@ -151,9 +242,12 @@ class _FirstPageState extends State<FirstPage> {
                 final proposal = _acceptedProposals[index];
                 return ProposalCard(
                   proposal: proposal,
-                  hasVoted: _userVotes.contains('$index'), // Check if user has voted
-                  onVote: () => toggleVote(index, 'userId'), // Replace 'userId' with actual user ID
-                  onComment: (comment) => addComment(index, comment, 'userId'), // Replace 'userId' with actual user ID
+                  hasVoted:
+                      _userVotes.contains('$index'), // Check if user has voted
+                  onVote: () => toggleVote(
+                      index, 'userId'), // Replace 'userId' with actual user ID
+                  onComment: (comment) => addComment(index, comment,
+                      'userId'), // Replace 'userId' with actual user ID
                 );
               },
             ),
@@ -186,10 +280,13 @@ class ProposalCard extends StatelessWidget {
       child: Column(
         children: [
           ListTile(
-            title: Text(proposal?['text'] ?? 'Question missing'), // Null check added here
-            subtitle: Text(proposal?['id']?.toString() ?? 'ID missing'), // Null check added here
+            title: Text(proposal?['text'] ??
+                'Question missing'), // Null check added here
+            subtitle: Text(proposal?['id']?.toString() ??
+                'ID missing'), // Null check added here
           ),
-          if (proposal != null && proposal!.containsKey('options')) // Null check added here
+          if (proposal != null &&
+              proposal!.containsKey('options')) // Null check added here
             Column(
               children: proposal!['options'].map<Widget>((option) {
                 return ListTile(
@@ -199,19 +296,24 @@ class ProposalCard extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: Icon(Icons.thumb_up),
-                        onPressed: hasVoted ? null : onVote, // Disable voting if already voted
+                        onPressed: hasVoted
+                            ? null
+                            : onVote, // Disable voting if already voted
                       ),
                     ],
                   ),
                 );
               }).toList(),
             ),
-          if (proposal != null && proposal!.containsKey('comments')) // Null check added here
+          if (proposal != null &&
+              proposal!.containsKey('comments')) // Null check added here
             Column(
               children: proposal!['comments'].map<Widget>((comment) {
                 return ListTile(
-                  title: Text(comment['text']), // Assuming the key for comment text is 'text'
-                  subtitle: Text('User ID: ${comment['id']}'), // Assuming the key for user ID is 'id'
+                  title: Text(comment[
+                      'text']), // Assuming the key for comment text is 'text'
+                  subtitle: Text(
+                      'User ID: ${comment['id']}'), // Assuming the key for user ID is 'id'
                 );
               }).toList(),
             ),

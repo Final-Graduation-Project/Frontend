@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Course {
   final String nameOfCourse;
@@ -80,9 +81,16 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
     _loadCourses();
   }
-
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if(role==null){
+      Navigator.pushNamed(context, '/login');
+    }
+  }
   Future<void> _loadCourses() async {
     final String response = await rootBundle.loadString('files/courses.json');
     final List<dynamic> data = json.decode(response);
@@ -95,7 +103,6 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
     try {
       final response = await http.get(Uri.parse('http://localhost:5050/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
       if (response.statusCode == 200) {
-        print('Response body: ${response.body}');
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
           _filteredOfficeHours = [OfficeHour.fromJson(data)];

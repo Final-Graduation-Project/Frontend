@@ -59,6 +59,7 @@ class _EventPageState extends State<EventPage> {
   @override
   void initState() {
     super.initState();
+    _fetchUserData();
     _loadEvents();
   }
 
@@ -81,6 +82,21 @@ class _EventPageState extends State<EventPage> {
     await prefs.setString('events', eventsJson);
   }
 
+  Future<void> _fetchUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if (role == null) {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+
+  Future<String?> _getRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('userRole');
+    if (role == "student") {}
+    return role;
+  }
+
   List<XFile>? _mediaFileList;
 
   void _setImageFileListFromFile(XFile? value) {
@@ -91,7 +107,6 @@ class _EventPageState extends State<EventPage> {
   bool isVideo = false;
 
   String? _retrieveDataError;
-
 
   Future<void> _onImageButtonPressed(
     ImageSource source, {
@@ -121,13 +136,14 @@ class _EventPageState extends State<EventPage> {
       final String? mime = lookupMimeType(_mediaFileList![0].path);
       return ClipRRect(
         borderRadius: BorderRadius.circular(100),
-        child: Container(decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 30, 30, 30),
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(100),
-        ),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color.fromARGB(255, 30, 30, 30),
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(100),
+          ),
           width: 50,
           height: 50,
           child: Semantics(
@@ -148,10 +164,9 @@ class _EventPageState extends State<EventPage> {
                         },
                       )
                     : Container()),
-                    ),
+          ),
         ),
       );
-
     } else if (_pickImageError != null) {
       return Text(
         'Pick image error: $_pickImageError',
@@ -219,12 +234,16 @@ class _EventPageState extends State<EventPage> {
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             calendarFormat: _calendarFormat,
-            onDaySelected: (selectedDay, focusedDay) {
+            onDaySelected: (selectedDay, focusedDay) async {
               setState(() {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
-              _showAddEventDialog(isEdit: false);
+              if (await _getRole() == "student" || await _getRole() == null) {
+                return;
+              } else {
+                _showAddEventDialog(isEdit: false);
+              }
             },
             onFormatChanged: (format) {
               setState(() {
@@ -272,51 +291,51 @@ class _EventPageState extends State<EventPage> {
               itemCount: _visibleEvents().length,
               itemBuilder: (context, index) {
                 final event = _visibleEvents()[index];
+
                 return ListTile(
                   title: Row(
-                    children: [ Center(
-                      child: !kIsWeb &&
-                              defaultTargetPlatform == TargetPlatform.android
-                          ? FutureBuilder<void>(
-                              future: retrieveLostData(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<void> snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                  case ConnectionState.waiting:
-                                    return const Text(
-                                      'You have not yet picked an image.',
-                                      textAlign: TextAlign.center,
-                                    );
-                                  case ConnectionState.done:
-                                    return _handlePreview();
-                                  case ConnectionState.active:
-                                    if (snapshot.hasError) {
-                                      return Text(
-                                        'Pick image/video error: ${snapshot.error}}',
-                                        textAlign: TextAlign.center,
-                                      );
-                                    } else {
+                    children: [
+                      Center(
+                        child: !kIsWeb &&
+                                defaultTargetPlatform == TargetPlatform.android
+                            ? FutureBuilder<void>(
+                                future: retrieveLostData(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<void> snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                    case ConnectionState.waiting:
                                       return const Text(
                                         'You have not yet picked an image.',
                                         textAlign: TextAlign.center,
                                       );
-                                    }
-                                }
-                              },
-                            )
-                          : _handlePreview(),
-                    ),
+                                    case ConnectionState.done:
+                                      return _handlePreview();
+                                    case ConnectionState.active:
+                                      if (snapshot.hasError) {
+                                        return Text(
+                                          'Pick image/video error: ${snapshot.error}}',
+                                          textAlign: TextAlign.center,
+                                        );
+                                      } else {
+                                        return const Text(
+                                          'You have not yet picked an image.',
+                                          textAlign: TextAlign.center,
+                                        );
+                                      }
+                                  }
+                                },
+                              )
+                            : _handlePreview(),
+                      ),
                       Text(event.title),
                     ],
                   ),
                   subtitle: _buildEventSubtitle(event),
                   onTap: () {},
                   trailing: Row(
-                  
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      
                       IconButton(
                         icon: Icon(Icons.edit),
                         onPressed: () {
@@ -340,10 +359,8 @@ class _EventPageState extends State<EventPage> {
               },
             ),
           ),
-          
-         ],
+        ],
       ),
-
     );
   }
 
@@ -460,7 +477,17 @@ class _EventPageState extends State<EventPage> {
               ),
               SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () => _onImageButtonPressed(ImageSource.gallery,context:context,),
+                onPressed: () async {
+                  final XFile? image =
+                      await _picker.pickImage(source: ImageSource.gallery);
+                  if (image != null) {
+                    setState(() {
+                      if (isEdit) {
+                        editEvent!.imagePath = image.path;
+                      }
+                    });
+                  }
+                },
                 child: Text("Add Picture"),
               ),
             ],
@@ -498,5 +525,3 @@ class _EventPageState extends State<EventPage> {
     );
   }
 }
-
-typedef OnPickImageCallback = void Function();

@@ -3,15 +3,14 @@ import 'package:flutter_application_1/EventPage.dart';
 import 'package:flutter_application_1/Login.dart';
 import 'package:flutter_application_1/Validate.dart';
 import 'package:flutter_application_1/aboutus.dart';
+import 'package:flutter_application_1/chatPage.dart';
 import 'package:flutter_application_1/chatbot.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
 import 'package:flutter_application_1/signup.dart';
 import 'package:flutter_application_1/map.dart';
 import 'package:flutter_application_1/proposal.dart';
-
-import 'course.dart';
-
+import 'package:flutter_application_1/course.dart';
 
 void main() {
   runApp(Mainpage());
@@ -42,12 +41,14 @@ class Mainpage extends StatelessWidget {
         '/signup': (context) => Signup(),
         '/contactus': (context) => const ContactUs(),
         '/validate': (context) => const Validate(),
-        '/firstPage': (context) =>  FirstPage(),
+        '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
         '/chatbot': (context) => ChatBot(),
-        '/map':(context) => map(),
-        '/proposal': (context) => Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
+        '/map': (context) => map(),
+        '/proposal': (context) =>
+            Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
         '/course': (context) => CourseSearchScreen(),
+        '/Chatpage': (context) => ChatPage(),
       },
     );
   }
@@ -125,7 +126,7 @@ class Home extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/course');
+          Navigator.pushNamed(context, '/map');
         },
         child: Icon(Icons.map),
       ),
