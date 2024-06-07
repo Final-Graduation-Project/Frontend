@@ -33,7 +33,7 @@ class Mainpage extends StatelessWidget {
         scaffoldBackgroundColor: color4,
         primaryColor: color1,
         hintColor: color3,
-      )
+      ),
       routes: {
         '/': (context) => Home(),
         '/login': (context) => const Login(),
