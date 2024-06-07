@@ -124,6 +124,7 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF86B6F6),
         title: Text('Search'),
       ),
       body: Padding(
@@ -159,7 +160,7 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
                   },
                   child: Text('Office Hours'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _selectedOption == 2 ? Colors.blue : Colors.grey,
+                    backgroundColor: _selectedOption == 2 ? Color.fromARGB(255, 106, 144, 176) : Colors.grey,
                   ),
                 ),
               ],
@@ -168,7 +169,7 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
             TextField(
               controller: _controller,
               decoration: InputDecoration(
-                labelText: _selectedOption == 1 ? 'Enter course code like "COMP133"' : 'Enter instructor name',
+                labelText: _selectedOption == 1 ? 'Enter course code as "COMP133"' : 'Enter instructor name',
                 suffixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
