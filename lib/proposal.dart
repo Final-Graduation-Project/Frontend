@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'firstPage.dart';
 
 class Proposal extends StatefulWidget {
   final Function(Map<String, dynamic>) onProposalAccepted;
-
+  final minOptions = 2;
+  final maxOptions = 5; 
   const Proposal({Key? key, required this.onProposalAccepted})
       : super(key: key);
 
@@ -15,11 +15,17 @@ class Proposal extends StatefulWidget {
 class _ProposalState extends State<Proposal> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _questionController = TextEditingController();
+  late SharedPreferences prefs;
   @override
   void initState() {
     super.initState();
+    getPrefs();
     _fetchUserData();
   }
+
+  Future<void>  getPrefs() async{
+    prefs = await SharedPreferences.getInstance();
+    }
 
   final List<TextEditingController> _optionControllers = [
     TextEditingController(),
@@ -29,7 +35,46 @@ class _ProposalState extends State<Proposal> {
   String? _proposalType;
   String? _selectedVoteOption;
 
-  List<Map<String, dynamic>> _proposals = [];
+  List<Map<String, dynamic>> _proposals = [
+    {
+      'type': 'Vote',
+      'question': 'What is your favorite color?',
+      'options': ['Red', 'Green', 'Blue'],
+      'committee': 'اللجنة الثقافية',
+      'id': '1202580',
+      'votes': 0,
+      'comments': [],
+      'accepted': false,
+    },
+    {
+      'type': 'Question',
+      'question': 'What is the deadline for the project?',
+      'committee': 'اللجنة الفنية',
+      'id': '1202580',
+      'votes': 0,
+      'comments': [],
+      'accepted': false,
+    },
+     {
+      'type': 'Vote',
+      'question': 'What is your favorite color?',
+      'options': ['Red', 'Green', 'Blue'],
+      'committee': 'اللجنة الثقافية',
+      'id': '1202580',
+      'votes': 0,
+      'comments': [],
+      'accepted': false,
+    },
+    {
+      'type': 'Question',
+      'question': 'What is the deadline for the project?',
+      'committee': 'اللجنة الفنية',
+      'id': '1202580',
+      'votes': 0,
+      'comments': [],
+      'accepted': false,
+    }
+  ];
 
   final List<String> _committees = [
     'رئاسة المجلس',
@@ -43,7 +88,7 @@ class _ProposalState extends State<Proposal> {
     'اللجنة الاجتماعية',
     'اللجنة الصحية',
     'لجنة العلاقات العامة',
-    'الجميع',
+    
   ];
 
   final TextEditingController _commentController = TextEditingController();
@@ -79,16 +124,16 @@ class _ProposalState extends State<Proposal> {
               content: SingleChildScrollView(
                 child: Column(
                   children: [
-                    TextField(
-                      controller: _idController,
-                      decoration: InputDecoration(
-                        labelText: 'University ID',
-                        hintText: 'Enter your 7-digit university ID',
-                        border: OutlineInputBorder(),
-                      ),
-                      keyboardType: TextInputType.number,
-                      maxLength: 7,
-                    ),
+                    // TextField(
+                    //   controller: _idController,
+                    //   decoration: InputDecoration(
+                    //     labelText: 'University ID',
+                    //     hintText: 'Enter your 7-digit university ID',
+                    //     border: OutlineInputBorder(),
+                    //   ),
+                    //   keyboardType: TextInputType.number,
+                    //   maxLength: 7,
+                    // ),
                     SizedBox(height: 20),
                     DropdownButtonFormField<String>(
                       decoration: InputDecoration(
@@ -184,7 +229,10 @@ class _ProposalState extends State<Proposal> {
                     icon: Icon(Icons.delete),
                     onPressed: () {
                       setState(() {
-                        _optionControllers.removeAt(index);
+                        
+                        if(_optionControllers.length > widget.minOptions){
+                          _optionControllers.removeAt(index);
+                        }
                       });
                     },
                   ),
@@ -195,7 +243,9 @@ class _ProposalState extends State<Proposal> {
           TextButton.icon(
             onPressed: () {
               setState(() {
-                _optionControllers.add(TextEditingController());
+              if(_optionControllers.length < widget.maxOptions){
+                  _optionControllers.add(TextEditingController());
+              }
               });
             },
             icon: Icon(Icons.add),
@@ -221,63 +271,89 @@ class _ProposalState extends State<Proposal> {
 
   Widget _buildProposalCard(Map<String, dynamic> proposal) {
     if (proposal['type'] == null ||
-        proposal['id'] == null ||
+        // proposal['id'] == null ||
         proposal['committee'] == null) {
       return SizedBox(); // Return an empty widget if any essential data is null
     }
 
     return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text('${proposal['type']} by ${proposal['id']}'),
-            subtitle: Text(proposal['committee']),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(proposal['text'] ?? ''), // Add a null check for 'text'
-          ),
-          if (proposal['type'] == 'Vote') ...[
-            for (var option in proposal['options'])
-              RadioListTile<String>(
-                title: Text(option.trim()),
-                value: option.trim(),
-                groupValue: _selectedVoteOption,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedVoteOption = value;
-                    proposal['votes'] += 1;
-                  });
-                },
-              ),
-            Text('Total Votes: ${proposal['votes'] ?? 0}')
-          ] else ...[
-            _buildCommentsSection(proposal)
-          ],
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  setState(() {
-                    _proposals.remove(proposal);
-                  });
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.check),
-                onPressed: () {
-                  setState(() {
-                    proposal['accepted'] = true;
-                    widget.onProposalAccepted(proposal);
-                    _proposals.remove(proposal);
-                  });
-                },
-              ),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+            Text('A ${proposal['type']} by ${prefs.getString('userName')}', style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold
+            
+            ),),
+              //  Text(proposal['committee']),
+            
+            ],),
+            SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(proposal['question'], style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold
+            
+            ),), // Add a null check for 'text'
+            ),
+            if (proposal['type'] == 'Vote') ...[
+              for (var option in proposal['options'])
+                RadioListTile<String>(
+                  title: Text(option.trim()),
+                  value: option.trim(),
+                  groupValue: _selectedVoteOption,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedVoteOption = value;
+                      proposal['votes'] += 1;
+                    });
+                  },
+                ),
+                SizedBox(height: 20,),
+              // Text('Total Votes: ${proposal['votes'] ?? 0}')
+            ] else ...[
+              // _buildCommentsSection(proposal)
             ],
-          ),
-        ],
+            SizedBox(height: 10,)
+,             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: IconButton(
+                    
+                    icon: Icon(Icons.delete),
+                    color: Colors.red,
+                    onPressed: () {
+                      setState(() {
+                        _proposals.remove(proposal);
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: IconButton(
+                    icon: Icon(Icons.check),
+                    color: Colors.green,
+                    onPressed: () {
+                      setState(() {
+                        proposal['accepted'] = true;
+                        widget.onProposalAccepted(proposal);
+                        _proposals.remove(proposal);
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -330,13 +406,14 @@ class _ProposalState extends State<Proposal> {
     print("_proposalType: $_proposalType");
     print("_selectedCommittee: $_selectedCommittee");
 
-    if (_idController.text.length == 7 &&
+    if (
         _selectedCommittee != null &&
         _questionController.text.isNotEmpty &&
         _proposalType != null &&
         (_proposalType != 'Vote' ||
             _optionControllers
                 .every((controller) => controller.text.isNotEmpty))) {
+                   print(_proposals.length);
       setState(() {
         List<String> options = _proposalType == 'Vote'
             ? _optionControllers.map((controller) => controller.text).toList()
@@ -346,12 +423,13 @@ class _ProposalState extends State<Proposal> {
           'question': _questionController.text,
           'options': options,
           'committee': _selectedCommittee!,
-          'id': _idController.text,
+          // 'id': _idController.text,
           'votes': 0,
           'comments': [],
           'accepted': false,
         };
         _proposals.add(proposal);
+       
         widget.onProposalAccepted(
             proposal); // Pass the proposal data to the callback
         _questionController.clear();
@@ -373,18 +451,22 @@ class _ProposalState extends State<Proposal> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
+      floatingActionButton: FloatingActionButton(onPressed:(){ _showProposalDialog(context);}
+      ,child:  Icon(Icons.add),),
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
         elevation: 0,
         titleSpacing: 0,
         title: Row(
           children: [
-            SizedBox(width: 10),
+            // SizedBox(width: 10),
+            // Icon(Icons.post_add),
             Text('Proposals'),
-            Icon(Icons.post_add),
           ],
         ),
       ),
@@ -402,21 +484,34 @@ class _ProposalState extends State<Proposal> {
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
-                IconButton(
-                  onPressed: () => _showProposalDialog(context),
-                  icon: Icon(Icons.add),
-                ),
+                // IconButton(
+                //   onPressed: () => _showProposalDialog(context),
+                //   icon: Icon(Icons.add),
+                // ),
               ],
             ),
             SizedBox(height: 20),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: _proposals.length,
-              itemBuilder: (context, index) {
-                return _buildProposalCard(_proposals[index]);
-              },
+          
+            Row(
+              children: [
+                Spacer(flex: 1,),
+                Expanded(
+                  flex:1,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _proposals.length,
+                    itemBuilder: (context, index) {
+                      return _buildProposalCard(_proposals[index]);
+                    },
+                  ),
+                ),
+                Spacer(flex: 1,),
+              
+              ],
             ),
+            SizedBox(height: 20),
+            
           ],
         ),
       ),

@@ -24,29 +24,29 @@ class _FirstPageState extends State<FirstPage> {
     _fetchUserData();
   }
 
-  void addAcceptedProposal(Map<String, dynamic> proposal) {
-    setState(() {
-      print('Adding accepted proposal: $proposal');
-      _acceptedProposals.add(proposal);
-    });
-  }
+  // void addAcceptedProposal(Map<String, dynamic> proposal) {
+  //   setState(() {
+  //     print('Adding accepted proposal: $proposal');
+  //     _acceptedProposals.add(proposal);
+  //   });
+  // }
 
-  void toggleVote(int index, String userId) {
-    setState(() {
-      if (_userVotes.contains('$index$userId')) {
-        _userVotes.remove('$index$userId'); // Remove existing vote
-      } else {
-        _userVotes.add('$index$userId'); // Add new vote
-      }
-    });
-  }
+  // void toggleVote(int index, String userId) {
+  //   setState(() {
+  //     if (_userVotes.contains('$index$userId')) {
+  //       _userVotes.remove('$index$userId'); // Remove existing vote
+  //     } else {
+  //       _userVotes.add('$index$userId'); // Add new vote
+  //     }
+  //   });
+  // }
 
-  void addComment(int index, String comment, String userId) {
-    setState(() {
-      _acceptedProposals[index]['comments']
-          .add({'id': userId, 'text': comment});
-    });
-  }
+  // void addComment(int index, String comment, String userId) {
+  //   setState(() {
+  //     _acceptedProposals[index]['comments']
+  //         .add({'id': userId, 'text': comment});
+  //   });
+  // }
 
   Future<void> clearSpecificPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -125,6 +125,7 @@ class _FirstPageState extends State<FirstPage> {
     }
   }
 
+  
   @override
   Widget build(BuildContext context) {
     final UserData userData =
@@ -184,171 +185,125 @@ class _FirstPageState extends State<FirstPage> {
                     );
               },
             ),
-            ListTile(
-              leading: Icon(Icons.post_add),
-              title: Text('Proposal'),
-              onTap: () => Navigator.pushNamed(context, '/proposal'),
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.post_add),
+            //   title: Text('Proposal'),
+            //   onTap: () => Navigator.pushNamed(context, '/proposal'),
+            // ),
             ListTile(
               leading: Icon(Icons.book),
               title: Text('Courses'),
               onTap: () => Navigator.pushNamed(context, '/course'),
             ),
-            ListTile(
-              leading: Icon(Icons.group),
-              title: Text('Groups'),
-              onTap: () => Navigator.pushNamed(context, '/groups'),
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.group),
+            //   title: Text('Groups'),
+            //   onTap: () => Navigator.pushNamed(context, '/groups'),
+            // ),
             ListTile(
               leading: Icon(Icons.contact_mail),
               title: Text('Contact Us'),
-              onTap: () => Navigator.pushNamed(context, '/contact'),
+              onTap: () => Navigator.pushNamed(context, '/contactus'),
             ),
             ListTile(
               leading: Icon(Icons.info),
               title: Text('About Us'),
-              onTap: () => Navigator.pushNamed(context, '/about'),
+              onTap: () => Navigator.pushNamed(context, '/aboutus'),
             ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    "You can share anything with us if you want! Let's hear your ideas",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Proposal(
-                          onProposalAccepted: addAcceptedProposal,
-                        ),
-                      ),
-                    );
-                  },
-                  icon: Icon(Icons.arrow_forward_ios),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _acceptedProposals.length,
-              itemBuilder: (context, index) {
-                final proposal = _acceptedProposals[index];
-                return ProposalCard(
-                  proposal: proposal,
-                  hasVoted:
-                      _userVotes.contains('$index'), // Check if user has voted
-                  onVote: () => toggleVote(
-                      index, 'userId'), // Replace 'userId' with actual user ID
-                  onComment: (comment) => addComment(index, comment,
-                      'userId'), // Replace 'userId' with actual user ID
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+      body: Container()
     );
   }
 }
 
-class ProposalCard extends StatelessWidget {
-  final Map<String, dynamic>? proposal; // Change the type to allow null
-  final bool hasVoted;
-  final Function() onVote;
-  final Function(String) onComment;
+// class ProposalCard extends StatelessWidget {
+//   final Map<String, dynamic>? proposal; // Change the type to allow null
+//   final bool hasVoted;
+//   final Function() onVote;
+//   final Function(String) onComment;
 
-  const ProposalCard({
-    Key? key,
-    required this.proposal,
-    required this.hasVoted,
-    required this.onVote,
-    required this.onComment,
-  }) : super(key: key);
+//   const ProposalCard({
+//     Key? key,
+//     required this.proposal,
+//     required this.hasVoted,
+//     required this.onVote,
+//     required this.onComment,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    TextEditingController _commentController = TextEditingController();
+//   @override
+//   Widget build(BuildContext context) {
+//     TextEditingController _commentController = TextEditingController();
 
-    return Card(
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(proposal?['text'] ??
-                'Question missing'), // Null check added here
-            subtitle: Text(proposal?['id']?.toString() ??
-                'ID missing'), // Null check added here
-          ),
-          if (proposal != null &&
-              proposal!.containsKey('options')) // Null check added here
-            Column(
-              children: proposal!['options'].map<Widget>((option) {
-                return ListTile(
-                  title: Text(option),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.thumb_up),
-                        onPressed: hasVoted
-                            ? null
-                            : onVote, // Disable voting if already voted
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-            ),
-          if (proposal != null &&
-              proposal!.containsKey('comments')) // Null check added here
-            Column(
-              children: proposal!['comments'].map<Widget>((comment) {
-                return ListTile(
-                  title: Text(comment[
-                      'text']), // Assuming the key for comment text is 'text'
-                  subtitle: Text(
-                      'User ID: ${comment['id']}'), // Assuming the key for user ID is 'id'
-                );
-              }).toList(),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _commentController,
-                    decoration: InputDecoration(
-                      labelText: 'Add a comment',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () {
-                    if (_commentController.text.isNotEmpty) {
-                      onComment(_commentController.text);
-                      _commentController.clear();
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//     return Card(
+//       child: Column(
+//         children: [
+//           ListTile(
+//             title: Text(proposal?['text'] ??
+//                 'Question missing'), // Null check added here
+//             subtitle: Text(proposal?['id']?.toString() ??
+//                 'ID missing'), // Null check added here
+//           ),
+//           if (proposal != null &&
+//               proposal!.containsKey('options')) // Null check added here
+//             Column(
+//               children: proposal!['options'].map<Widget>((option) {
+//                 return ListTile(
+//                   title: Text(option),
+//                   trailing: Row(
+//                     mainAxisSize: MainAxisSize.min,
+//                     children: [
+//                       IconButton(
+//                         icon: Icon(Icons.thumb_up),
+//                         onPressed: hasVoted
+//                             ? null
+//                             : onVote, // Disable voting if already voted
+//                       ),
+//                     ],
+//                   ),
+//                 );
+//               }).toList(),
+//             ),
+//           if (proposal != null &&
+//               proposal!.containsKey('comments')) // Null check added here
+//             Column(
+//               children: proposal!['comments'].map<Widget>((comment) {
+//                 return ListTile(
+//                   title: Text(comment[
+//                       'text']), // Assuming the key for comment text is 'text'
+//                   subtitle: Text(
+//                       'User ID: ${comment['id']}'), // Assuming the key for user ID is 'id'
+//                 );
+//               }).toList(),
+//             ),
+//           Padding(
+//             padding: const EdgeInsets.all(8.0),
+//             child: Row(
+//               children: [
+//                 Expanded(
+//                   child: TextField(
+//                     controller: _commentController,
+//                     decoration: InputDecoration(
+//                       labelText: 'Add a comment',
+//                       border: OutlineInputBorder(),
+//                     ),
+//                   ),
+//                 ),
+//                 IconButton(
+//                   icon: Icon(Icons.send),
+//                   onPressed: () {
+//                     if (_commentController.text.isNotEmpty) {
+//                       onComment(_commentController.text);
+//                       _commentController.clear();
+//                     }
+//                   },
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

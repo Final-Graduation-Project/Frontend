@@ -27,68 +27,93 @@ class AboutUs extends StatelessWidget {
                 height: screenWidth > 600 ? 300 : 150, // Smaller image size
                 width: screenWidth > 600 ? 300 : 150,
               ),
-              Container(
-                margin: margin,
-                padding: padding,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 5,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                  border: Border.all(
-                    color: Color(0xFF176B87),
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  "SDG is a digital platform that streamlines interaction between university components and creates an interactive environment that connects all university components. This project aims to create a comprehensive digital platform that improves communication and interaction among students, the student council, teaching staff, and the university administration.",
-                  style: TextStyle(
-                    fontSize: textSize.toDouble(),
-                    color: Color.fromARGB(255, 10, 74, 95),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Container(
-                margin: margin,
-                padding: padding,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 5,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                  border: Border.all(
-                    color: Color(0xFF176B87),
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Interesting Features:",
-                      style: TextStyle(
-                        fontSize: textSize.toDouble(),
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 10, 74, 95),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                                    margin: margin,
+                                    padding: padding,
+                                    decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
                       ),
+                    ],
+                    border: Border.all(
+                      color: Color(0xFF176B87),
                     ),
-                    SizedBox(height: 6),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _buildFeatureList(screenWidth),
+                    borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                         Text(
+                          "Student Digital Guide",
+                          style: TextStyle(
+                            fontSize: textSize.toDouble(),
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 10, 74, 95),
+                          ),
+                        ),
+                        SizedBox(height: 6,),
+                                        Text(
+                                                            "SDG is a digital platform that streamlines interaction between university components and creates an interactive environment that connects all university components. This project aims to create a comprehensive digital platform that improves communication and interaction among students, the student council, teaching staff, and the university administration.",
+                                                            style: TextStyle(
+                                                              fontSize: textSize.toDouble(),
+                                                              color: Color.fromARGB(255, 10, 74, 95),
+                                                            ),
+                                                            textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                  ),
+              Expanded(
+                child: Container(
+                  margin: margin,
+                  padding: padding,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 5,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: Color(0xFF176B87),
                     ),
-                  ],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Interesting Features",
+                            style: TextStyle(
+                              fontSize: textSize.toDouble(),
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 10, 74, 95),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 6),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: _buildFeatureList(screenWidth),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ),],
+              )
             ],
           ),
         ),

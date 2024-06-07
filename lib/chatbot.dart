@@ -12,7 +12,7 @@ class _ChatBotState extends State<ChatBot> {
   @override
   void initState() {
     super.initState();
-    _fetchUserData();
+   _fetchUserData();
   }
 
   final List<ChatMessage> _messages = <ChatMessage>[
@@ -80,6 +80,8 @@ class _ChatBotState extends State<ChatBot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+              backgroundColor: Colors.grey[100],
+
       appBar: AppBar(
         backgroundColor: Color(0xFFB4D4FF),
         elevation: 0,
@@ -88,41 +90,75 @@ class _ChatBotState extends State<ChatBot> {
           children: [SizedBox(width: 10), Text('ChatBot')],
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: ListView.builder(
-              reverse: true,
-              itemCount: _messages.length,
-              itemBuilder: (_, int index) => _messages[index],
+      body:  Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Spacer(flex: 1,),
+            Expanded(
+              flex: 2,
+              child: Row(
+                
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(flex: 1,),
+                  Expanded(
+                    flex: 2,
+                child: ListView.builder(
+                  reverse: true,
+                  itemCount: _messages.length,
+                  itemBuilder: (_, int index) => _messages[index],
+                ),
+              ),
+              Spacer(flex: 1,),
+                ],
+              ),
             ),
-          ),
-          Divider(height: 1.0),
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
+           
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 16),
+              child: Row(
+                children: [
+                  Spacer(flex: 1,),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(16)
+                      ),
+                      child: _buildTextComposer(),
+                    ),
+                  ),
+                  Spacer(flex: 1,),
+                ],
+              ),
             ),
-            child: _buildTextComposer(),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
   }
 
   Widget _buildTextComposer() {
     return IconTheme(
       data: IconThemeData(color: Theme.of(context).colorScheme.secondary),
       child: Container(
+       
+        height: 60,
         margin: EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
-            Flexible(
+            Expanded(
               child: TextField(
                 controller: _textController,
                 onSubmitted: _handleSubmitted,
-                decoration: InputDecoration.collapsed(
-                  hintText: "Send a message",
-                ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(8),
+                  hintStyle: TextStyle(color: Colors.grey[600]),
+                  hintText: "Send a message"),
+                  
               ),
             ),
             Container(
