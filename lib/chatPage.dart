@@ -117,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     // Defer fetching users until currentUser is obtained
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
       final UserData userData =
           ModalRoute.of(context)!.settings.arguments as UserData;
       fetchUsersAndStaff(userData.id);
@@ -139,9 +139,19 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserData userData =
-        ModalRoute.of(context)!.settings.arguments as UserData;
-
+    final UserData? userData =
+        ModalRoute.of(context)?.settings.arguments as UserData?;
+    if (userData == null) {
+      // Navigate to login page if userData is null
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(context, '/login');
+      });
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {

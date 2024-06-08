@@ -101,7 +101,7 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
 
   Future<void> _fetchOfficeHours(String instructor) async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:5050/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
+      final response = await http.get(Uri.parse('https://localhost:7025/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {

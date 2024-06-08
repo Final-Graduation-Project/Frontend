@@ -9,7 +9,6 @@ class Node {
   Node(this.name, this.x, this.y);
   @override
   String toString() {
-    // TODO: implement toString
     return "Name: $name, x: $x, y: $y";
   }
 }
@@ -18,10 +17,10 @@ class map extends StatefulWidget {
   const map({Key? key}) : super(key: key);
 
   @override
-  _MapAppState createState() => _MapAppState();
+  _mapState createState() => _mapState();
 }
 
-class _MapAppState extends State<map> {
+class _mapState extends State<map> {
   final Color color1 = Color(0xFF176B87); // Dark Blue
   final Color color2 = Color(0xFFB4D4FF); // Lighter Blue
   final Color color3 = Color(0xFF86B6F6); // Even Lighter Blue
@@ -29,15 +28,13 @@ class _MapAppState extends State<map> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Student Digital Guide",
-      home: MyHomePage(),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: color4,
-        primaryColor: color1,
-        hintColor: color3,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: color1,
+       automaticallyImplyLeading: true,
+        title: Text("University map"),
       ),
+      body: MyHomePage(),
     );
   }
 }
@@ -47,54 +44,33 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFFB4D4FF),
-      
-        title: Text("Student Digital Guide"),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/aboutus');
-            },
-            child: Text("About us"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/contactus');
-            },
-            child: Text("Contact us"),
-          ),
-        ],
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth < 700) {
-            return Column(
-              children: [
-                Expanded(
-                  child: MapPane(key: _mapPaneKey),
-                ),
-                Expanded(
-                  child: RightSide(mapPaneKey: _mapPaneKey),
-                ),
-              ],
-            );
-          } else {
-            return Row(
-              children: [
-                Expanded(
-                  child: MapPane(key: _mapPaneKey),
-                  flex: 2,
-                ),
-                Expanded(
-                  child: RightSide(mapPaneKey: _mapPaneKey),
-                ),
-              ],
-            );
-          }
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 700) {
+          return Column(
+            children: [
+              Expanded(
+                child: MapPane(key: _mapPaneKey),
+              ),
+              Expanded(
+                child: RightSide(mapPaneKey: _mapPaneKey),
+              ),
+            ],
+          );
+        } else {
+          return Row(
+            children: [
+              Expanded(
+                child: MapPane(key: _mapPaneKey),
+                flex: 2,
+              ),
+              Expanded(
+                child: RightSide(mapPaneKey: _mapPaneKey),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }
@@ -364,7 +340,7 @@ class _RightSideState extends State<RightSide> {
   Future<void> _findPath() async {
     if (_selectedFrom != null && _selectedTo != null) {
       final response = await http.get(
-        Uri.parse('http://localhost:5050/api/building-distance/BuildingDistance?from=$_selectedFrom&to=$_selectedTo'),
+        Uri.parse('https://localhost:7025/api/building-distance/BuildingDistance?from=$_selectedFrom&to=$_selectedTo'),
       );
 
       if (response.statusCode == 200) {
@@ -478,6 +454,14 @@ class PathBox extends StatelessWidget {
       padding: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -607,6 +591,58 @@ class Buttons extends StatelessWidget {
   }
 }
 
-// void main() {
-//   runApp(map());
-// }
+// main.dart
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Student Digital Guide',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomePage(),
+      routes: {
+        '/map': (context) => map(),
+        '/login': (context) => LoginPage(), // Ensure you have a LoginPage defined
+      },
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home Page'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/map');
+          },
+          child: Text('Go to Map Page'),
+        ),
+      ),
+    );
+  }
+}
+
+// Ensure you have a LoginPage widget defined
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login Page'),
+      ),
+      body: Center(
+        child: Text('Login Page Content'),
+      ),
+    );
+  }
+}

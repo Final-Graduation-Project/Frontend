@@ -30,13 +30,11 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> _login() async {
-    // final id = int.tryParse(_idController.text);
-    // final password = _passwordController.text;
-     // TODO: remove this
-    final id = 1202580;
-    final password = "Jenin123456!";
+    final id = int.tryParse(_idController.text);
+    final password = _passwordController.text;
+    
 
-    final url = Uri.parse('http://localhost:5050/api/Student/login');
+    final url = Uri.parse('https://localhost:7025/api/Student/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -49,7 +47,7 @@ class _LoginState extends State<Login> {
       // Login successful, navigate to next page
       String userId = _idController.text;
       // TODO: remove this
-      userId = "1202580";
+      userId = "$id";
                     Navigator.pushNamed(
                       context,
                       '/firstPage',
