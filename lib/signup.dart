@@ -157,7 +157,7 @@ class _SignupState extends State<Signup> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Sign Up"),
-        backgroundColor: Color(0xFFB4D4FF),
+        backgroundColor: Color(0xFF176B87),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),

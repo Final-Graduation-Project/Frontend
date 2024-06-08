@@ -8,7 +8,7 @@ class SignUp extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sign Up'),
-        backgroundColor: Color(0xFFB4D4FF),
+        backgroundColor: Color(0xFF176B87),
       ),
       body: Center(
         child: ElevatedButton(

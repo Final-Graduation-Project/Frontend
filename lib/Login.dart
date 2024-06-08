@@ -86,7 +86,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Log in"),
-        backgroundColor: Color(0xFFB4D4FF), // Lighter Blue
+        backgroundColor: Color(0xFF176B87), // Lighter Blue
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,

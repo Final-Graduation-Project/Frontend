@@ -250,8 +250,8 @@ class _FirstPageState extends State<FirstPage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserData userData =
-        ModalRoute.of(context)!.settings.arguments as UserData;
+    final UserData? userData =
+        ModalRoute.of(context)!.settings.arguments as UserData?;
     if (userData == null) {
       // Navigate to login page if userData is null
       WidgetsBinding.instance?.addPostFrameCallback((_) {

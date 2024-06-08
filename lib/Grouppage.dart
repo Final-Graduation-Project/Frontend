@@ -13,7 +13,7 @@ class _grouppageState extends State<grouppage> {
     return Scaffold(
       backgroundColor: Color(0xFFB4D4FF),
       appBar: AppBar(
-        backgroundColor: Color(0xFFEEF5FF),
+        backgroundColor: Color(0xFF176B87),
         title: Text('Groups'),
         actions: <Widget>[
           IconButton(

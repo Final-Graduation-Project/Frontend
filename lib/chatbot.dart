@@ -83,7 +83,7 @@ class _ChatBotState extends State<ChatBot> {
               backgroundColor: Colors.grey[100],
 
       appBar: AppBar(
-        backgroundColor: Color(0xFFB4D4FF),
+        backgroundColor: Color(0xFF176B87),
         elevation: 0,
         titleSpacing: 0,
         title: Row(

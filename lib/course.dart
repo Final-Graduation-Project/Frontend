@@ -131,7 +131,7 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF86B6F6),
+        backgroundColor: Color(0xFF176B87),
         title: Text('Search'),
       ),
       body: Padding(

@@ -44,7 +44,7 @@ class Mainpage extends StatelessWidget {
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
         '/chatbot': (context) => ChatBot(),
-        '/map': (context) =>  map(),
+        '/map': (context) => map(),
         '/proposal': (context) =>
             Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
         '/course': (context) => CourseSearchScreen(),
@@ -61,7 +61,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFB4D4FF),
+        backgroundColor: Color(0xFF176B87),
         leading: Image.asset('images/studentdigitalguidelogo.png',
             height: 40, width: 40),
         title: Text("Student Digital Guide"),
@@ -70,13 +70,19 @@ class Home extends StatelessWidget {
             onPressed: () {
               Navigator.pushNamed(context, '/aboutus');
             },
-            child: Text("About us"),
+            child: Text(
+              "About us",
+              style: TextStyle(color: Colors.black),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.pushNamed(context, '/contactus');
             },
-            child: Text("Contact us"),
+            child: Text(
+              "Contact us",
+              style: TextStyle(color: Colors.black),
+            ),
           ),
         ],
       ),
@@ -98,7 +104,10 @@ class Home extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Already signed in ?"),
+                  Text(
+                    "Already signed in?",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/login');
@@ -111,7 +120,10 @@ class Home extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("New student? "),
+                  Text(
+                    "New student? ",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(context, '/signup');

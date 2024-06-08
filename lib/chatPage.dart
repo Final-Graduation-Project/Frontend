@@ -205,7 +205,7 @@ class _ChatPageState extends State<ChatPage> {
         child: Icon(Icons.chat),
       ),
       appBar: AppBar(
-        backgroundColor: Color(0xFFB4D4FF),
+backgroundColor: Color(0xFF176B87),
         title: const Text('Chat Page'),
       ),
       body: Padding(

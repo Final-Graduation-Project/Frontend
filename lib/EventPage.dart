@@ -216,7 +216,7 @@ class _EventPageState extends State<EventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFFB4D4FF),
+        backgroundColor: Color(0xFF176B87),
         elevation: 0,
         titleSpacing: 0,
         title: Row(

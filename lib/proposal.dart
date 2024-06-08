@@ -5,7 +5,8 @@ class Proposal extends StatefulWidget {
   final Function(Map<String, dynamic>) onProposalAccepted;
   final minOptions = 2;
   final maxOptions = 5;
-  const Proposal({Key? key, required this.onProposalAccepted}) : super(key: key);
+  const Proposal({Key? key, required this.onProposalAccepted})
+      : super(key: key);
 
   @override
   State<Proposal> createState() => _ProposalState();
@@ -113,7 +114,8 @@ class _ProposalState extends State<Proposal> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Submit your questions or any proposal, we are here to help'),
+              title: Text(
+                  'Submit your questions or any proposal, we are here to help'),
               content: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -142,7 +144,8 @@ class _ProposalState extends State<Proposal> {
                         labelText: 'Proposal Type',
                         border: OutlineInputBorder(),
                       ),
-                      items: ['Vote', 'Question', 'Proposal'].map((String type) {
+                      items:
+                          ['Vote', 'Question', 'Proposal'].map((String type) {
                         return DropdownMenuItem<String>(
                           value: type,
                           child: Text(type),
@@ -168,7 +171,9 @@ class _ProposalState extends State<Proposal> {
                   child: Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: _submitProposal,
+                  onPressed: () {
+                    _showSubmitConfirmationDialog();
+                  },
                   child: Text('Submit'),
                 ),
               ],
@@ -238,8 +243,11 @@ class _ProposalState extends State<Proposal> {
       return TextField(
         controller: _questionController,
         decoration: InputDecoration(
-          labelText: _proposalType == 'Question' ? 'Your Question' : 'Your Proposal',
-          hintText: _proposalType == 'Question' ? 'Write your question here...' : 'Describe your proposal...',
+          labelText:
+              _proposalType == 'Question' ? 'Your Question' : 'Your Proposal',
+          hintText: _proposalType == 'Question'
+              ? 'Write your question here...'
+              : 'Describe your proposal...',
           border: OutlineInputBorder(),
         ),
         maxLines: 5,
@@ -294,9 +302,7 @@ class _ProposalState extends State<Proposal> {
                     icon: Icon(Icons.delete),
                     color: Colors.red,
                     onPressed: () {
-                      setState(() {
-                        _proposals.remove(proposal);
-                      });
+                      _showDeleteConfirmationDialog(proposal);
                     },
                   ),
                 ),
@@ -321,12 +327,71 @@ class _ProposalState extends State<Proposal> {
     );
   }
 
+  void _showDeleteConfirmationDialog(Map<String, dynamic> proposal) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Deletion'),
+          content: Text('Are you sure you want to delete this proposal?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _proposals.remove(proposal);
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showSubmitConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Submission'),
+          content:
+              Text('Are you sure you want to submit this ${_proposalType}?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _submitProposal();
+              },
+              child: Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _submitProposal() {
     if (_prefsInitialized &&
         _selectedCommittee != null &&
         _questionController.text.isNotEmpty &&
         _proposalType != null &&
-        (_proposalType != 'Vote' || _optionControllers.every((controller) => controller.text.isNotEmpty))) {
+        (_proposalType != 'Vote' ||
+            _optionControllers
+                .every((controller) => controller.text.isNotEmpty))) {
       setState(() {
         List<String> options = _proposalType == 'Vote'
             ? _optionControllers.map((controller) => controller.text).toList()
@@ -342,7 +407,8 @@ class _ProposalState extends State<Proposal> {
         };
         _proposals.add(proposal);
 
-        widget.onProposalAccepted(proposal); // Pass the proposal data to the callback
+        widget.onProposalAccepted(
+            proposal); // Pass the proposal data to the callback
         _questionController.clear();
         _idController.clear();
         _selectedCommittee = null;
@@ -394,7 +460,8 @@ class _ProposalState extends State<Proposal> {
                       Expanded(
                         child: Text(
                           "Submit your questions or proposals, we are here to help you",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
