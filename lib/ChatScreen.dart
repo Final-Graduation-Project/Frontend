@@ -2,21 +2,23 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_application_1/chatPage.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
-  final Map<String, dynamic> user;
-  final String currentUser;
-  final String userName;
-
+  // final Map<String, dynamic> user;
+  // final String currentUser;
+  // final String userName;
+  final Chat currentChat;
   const ChatScreen({
     Key? key,
-    required this.user,
-    required this.currentUser,
-    required this.userName,
+    required this.currentChat,
+    // required this.user,
+    // required this.currentUser,
+    // required this.userName,
   }) : super(key: key);
 
   @override
@@ -28,10 +30,16 @@ class _ChatScreenState extends State<ChatScreen> {
   List<Map<String, dynamic>> messages = [];
   final ImagePicker _picker = ImagePicker();
   final Dio _dio = Dio();
-
+  late var user;
+  late var currentUser;
+  late var userName;
   @override
   void initState() {
     super.initState();
+    user = widget.currentChat.user;
+    currentUser = widget.currentChat.currentUserId;
+    userName = widget.currentChat.userName;
+    print("initializing");
     fetchMessages();
   }
 
@@ -49,10 +57,10 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> fetchMessages() async {
-    final String currentUser = widget.currentUser;
-    final String? councilId = widget.user['concilID']?.toString();
-    final String? teacherId = widget.user['teacherID']?.toString();
-    final String? studentId = widget.user['studentID']?.toString();
+    // final String currentUser = currentUser;
+    final String? councilId = user['concilID']?.toString();
+    final String? teacherId = user['teacherID']?.toString();
+    final String? studentId = user['studentID']?.toString();
 
     Uri uri;
     if (councilId != null) {
@@ -106,15 +114,15 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> sendMessage(String message,
       {String? imageUrl, bool isImage = false}) async {
-    final String? receiverId = widget.user['concilID']?.toString() ??
-        widget.user['teacherID']?.toString() ??
-        widget.user['studentID']?.toString();
+    final String? receiverId = user['concilID']?.toString() ??
+        user['teacherID']?.toString() ??
+        user['studentID']?.toString();
 
     if (receiverId != null) {
       final Uri uri = Uri.parse('https://localhost:7025/api/Messages');
 
       final Map<String, dynamic> requestData = {
-        'senderId': int.parse(widget.currentUser),
+        'senderId': int.parse(currentUser),
         'receiverId': int.parse(receiverId),
         'content': message,
         'imageUrl': imageUrl ?? '',
@@ -210,180 +218,199 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String userName = widget.user['concilName'] ??
-        widget.user['teachername'] ??
-        widget.user['studentName'] ??
+    print("rebuilding widget, current chat: ${widget.currentChat.userName}");
+    final String userName = user['concilName'] ??
+        user['teachername'] ??
+        user['studentName'] ??
         'Unknown';
-    final String lastSeen = widget.user['lastSeen'] ?? 'Unknown';
+    final String lastSeen = user['lastSeen'] ?? 'Unknown';
 
     return Scaffold(
-      appBar: AppBar(
-backgroundColor: Color(0xFF176B87),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(userName),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                reverse: true,
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  final message = messages[index];
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: Color(0xFF176B87),
+      //   title: Column(
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     children: [
+      //       Text(userName),
+      //     ],
+      //   ),
+      // ),
+      body: Container(
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  reverse: true,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
 
-                  return Row(
-                    mainAxisAlignment: message['isSentByMe']
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.start,
-                    children: [
-                      if (message['isSentByMe'])
-                        Row(
-                          mainAxisAlignment: message['isSentByMe']
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
-                          children: [
-                            if (message['isSentByMe'])
-                              PopupMenuButton(
-                                itemBuilder: (context) => [
-                                  PopupMenuItem(
-                                    child: Text("Edit"),
-                                    value: "edit",
-                                  ),
-                                  PopupMenuItem(
-                                    child: Text("Delete"),
-                                    value: "delete",
+                    return Row(
+                      mainAxisAlignment: message['isSentByMe']
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        if (message['isSentByMe'])
+                          Row(
+                            mainAxisAlignment: message['isSentByMe']
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
+                            children: [
+                              if (message['isSentByMe'])
+                                PopupMenuButton(
+                                  itemBuilder: (context) => [
+                                    PopupMenuItem(
+                                      child: Text("Edit"),
+                                      value: "edit",
+                                    ),
+                                    PopupMenuItem(
+                                      child: Text("Delete"),
+                                      value: "delete",
+                                    ),
+                                  ],
+                                  onSelected: (value) {
+                                    if (value == "edit") {
+                                      showEditMessageDialog(
+                                          context, message['id']);
+                                    } else if (value == "delete") {
+                                      showDeleteConfirmationDialog(
+                                          context, message['id']);
+                                    }
+                                  },
+                                  icon: Icon(Icons.more_vert),
+                                ),
+                            ],
+                          ),
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(
+                                  message['isSentByMe'] ? 16 : 0),
+                              bottomRight: Radius.circular(
+                                  message['isSentByMe'] ? 0 : 16),
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16),
+                            ),
+                          ),
+                          color: message['isSentByMe']
+                              ? Color(0xFF4F9BFF)
+                              : Colors.grey[400],
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: MediaQuery.of(context).size.width / 2,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (message['isImage'] &&
+                                      message['imageUrl'] != null)
+                                    Image.network(
+                                      message['imageUrl'],
+                                      fit: BoxFit.cover,
+                                      width: 150,
+                                      height: 150,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Text(
+                                            'Image could not be loaded: $error');
+                                      },
+                                    )
+                                  else
+                                    Text(
+                                      message['content'] ?? 'No Content',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        message['time'],
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                      ),
+                                      SizedBox(width: 6),
+                                      if (message['isSentByMe'])
+                                        Icon(
+                                          Icons.done_outline_outlined,
+                                          color: Colors.blueAccent,
+                                          size: 18,
+                                        ),
+                                    ],
                                   ),
                                 ],
-                                onSelected: (value) {
-                                  if (value == "edit") {
-                                    showEditMessageDialog(
-                                        context, message['id']);
-                                  } else if (value == "delete") {
-                                    showDeleteConfirmationDialog(
-                                        context, message['id']);
-                                  }
-                                },
-                                icon: Icon(Icons.more_vert),
                               ),
-                          ],
-                        ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                            bottomLeft:
-                                Radius.circular(message['isSentByMe'] ? 16 : 0),
-                            bottomRight:
-                                Radius.circular(message['isSentByMe'] ? 0 : 16),
-                            topLeft: Radius.circular(16),
-                            topRight: Radius.circular(16),
-                          ),
-                        ),
-                        color: message['isSentByMe']
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.primary,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Container(
-                            constraints: BoxConstraints(
-                              maxWidth: MediaQuery.of(context).size.width / 2,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (message['isImage'] &&
-                                    message['imageUrl'] != null)
-                                  Image.network(
-                                    message['imageUrl'],
-                                    fit: BoxFit.cover,
-                                    width: 150,
-                                    height: 150,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Text(
-                                          'Image could not be loaded: $error');
-                                    },
-                                  )
-                                else
-                                  Text(
-                                    message['content'] ?? 'No Content',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      message['time'],
-                                      style:
-                                          Theme.of(context).textTheme.caption,
-                                    ),
-                                    SizedBox(width: 6),
-                                    if (message['isSentByMe'])
-                                      Icon(
-                                        Icons.done_outline_outlined,
-                                        color: Colors.blueAccent,
-                                        size: 18,
-                                      ),
-                                  ],
-                                ),
-                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                },
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: TextField(
-                      controller: messageController,
-                      maxLines: 5,
-                      minLines: 1,
-                      decoration: InputDecoration(
-                        suffixIcon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: pickAndUploadImage,
-                              icon: Icon(Icons.image),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.camera_alt),
-                            ),
-                          ],
+              Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      child: TextField(
+                        controller: messageController,
+                        // maxLines: 5,
+                        minLines: 1,
+                        onSubmitted: (query) {
+                          final message = messageController.text;
+                          if (message.isNotEmpty) {
+                            sendMessage(message);
+                          }
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          focusedErrorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          suffixIcon: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                onPressed: pickAndUploadImage,
+                                icon: Icon(Icons.image),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.camera_alt),
+                              ),
+                            ],
+                          ),
+                          contentPadding: EdgeInsets.all(16),
+                          hintText: "Type your message",
                         ),
-                        contentPadding: EdgeInsets.all(16),
-                        hintText: "Type your message",
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 10),
-                CircleAvatar(
-                  backgroundColor: Color(0xFFB4D4FF),
-                  child: IconButton(
-                    onPressed: () {
-                      final message = messageController.text;
-                      if (message.isNotEmpty) {
-                        sendMessage(message);
-                      }
-                    },
-                    icon: Icon(Icons.send, color: Colors.white),
+                  SizedBox(width: 10),
+                  CircleAvatar(
+                    backgroundColor: Color(0xFF0047A5),
+                    child: IconButton(
+                      onPressed: () {
+                        final message = messageController.text;
+                        if (message.isNotEmpty) {
+                          sendMessage(message);
+                        }
+                      },
+                      icon: Icon(Icons.send, color: Colors.white),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

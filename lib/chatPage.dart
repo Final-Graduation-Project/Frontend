@@ -17,7 +17,7 @@ class _ChatPageState extends State<ChatPage> {
   List<dynamic> users = [];
   List<dynamic> filteredUsers = [];
   Map<String, int> unreadMessagesCount = {};
-
+  Chat? currentChat = null;
   Future<void> fetchUsersAndStaff(String currentUser) async {
     final Uri councilUri = Uri.parse(
         'https://localhost:7025/api/concilMember/GetAllConcilMembers');
@@ -117,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     // Defer fetching users until currentUser is obtained
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final UserData userData =
           ModalRoute.of(context)!.settings.arguments as UserData;
       fetchUsersAndStaff(userData.id);
@@ -143,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
         ModalRoute.of(context)?.settings.arguments as UserData?;
     if (userData == null) {
       // Navigate to login page if userData is null
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacementNamed(context, '/login');
       });
       return Scaffold(
@@ -153,113 +153,99 @@ class _ChatPageState extends State<ChatPage> {
       );
     }
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showBottomSheet(
-            context: context,
-            builder: (context) {
-              return Container(
-                padding: EdgeInsets.all(20),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF176B87),
+        title: const Text(
+          'Chat Page',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      children: [
-                        Text("Enter ID",
-                            style: Theme.of(context).textTheme.bodyText1),
-                        Spacer(),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.qr_code_scanner),
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ],
-                    ),
                     TextField(
-                      controller: idController,
+                      controller: searchController,
+                      onChanged: filterUsers,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.arrow_forward),
-                        hintText: "Enter ID",
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(16),
-                        shape: RoundedRectangleBorder(
+                        prefixIcon: Icon(Icons.search),
+                        hintText: 'Search users...',
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        backgroundColor: Theme.of(context).primaryColorLight,
                       ),
-                      onPressed: () {},
-                      child: Center(
-                        child: Text("Create Chat"),
+                    ),
+                    SizedBox(height: 20),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: filteredUsers.length,
+                        itemBuilder: (context, index) {
+                          final user = filteredUsers[index];
+                          final userName = user['concilName'] ??
+                              user['teachername'] ??
+                              user['studentName'] ??
+                              'Unknown';
+                          return Card(
+                            color: Colors.grey[300],
+                            child: ListTile(
+                              onTap: () {
+                                setState(() {
+                                  currentChat = null;
+                                  currentChat = Chat(
+                                      currentUserId: userData.id,
+                                      user: user,
+                                      userName: userName);
+                                  print(
+                                      "chat is now: ${currentChat!.userName}");
+                                });
+                              },
+                              title: Text(userName),
+                              trailing: Badge(
+                                backgroundColor: Colors.green,
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                largeSize: 30,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
                 ),
-              );
-            },
-          );
-        },
-        child: Icon(Icons.chat),
-      ),
-      appBar: AppBar(
-backgroundColor: Color(0xFF176B87),
-        title: const Text('Chat Page'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: searchController,
-              onChanged: filterUsers,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                hintText: 'Search users...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
               ),
             ),
-            SizedBox(height: 20),
             Expanded(
-              child: ListView.builder(
-                itemCount: filteredUsers.length,
-                itemBuilder: (context, index) {
-                  final user = filteredUsers[index];
-                  final userName = user['concilName'] ??
-                      user['teachername'] ??
-                      user['studentName'] ??
-                      'Unknown';
-                  return Card(
-                    color: Color.fromARGB(255, 19, 179, 207),
-                    child: ListTile(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatScreen(
-                            currentUser: userData.id,
-                            user: user,
-                            userName: userName,
-                          ),
-                        ),
-                      ),
-                      title: Text(userName),
-                      trailing: Badge(
-                        backgroundColor: Color.fromARGB(255, 56, 122, 207),
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        largeSize: 30,
-                      ),
+              flex: 2,
+              child: currentChat == null
+                  ? Center(
+                      child: Text('Select a chat to start messaging'),
+                    )
+                  : ChatScreen(
+                      key: ValueKey(currentChat),
+                      currentChat: currentChat!,
                     ),
-                  );
-                },
-              ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
+}
+
+class Chat {
+  final String currentUserId;
+  final dynamic user;
+  final String userName;
+
+  Chat(
+      {required this.currentUserId,
+      required this.user,
+      required this.userName});
 }

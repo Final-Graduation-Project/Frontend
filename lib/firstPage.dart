@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Login.dart';
 import 'package:flutter_application_1/course.dart';
 import 'package:flutter_application_1/proposal.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -29,6 +31,10 @@ class _FirstPageState extends State<FirstPage> {
   List<Course> _courses = [];
   List<Course> _filteredCourses = [];
   List<OfficeHour> _filteredOfficeHours = [];
+
+  // News-related fields
+  final List<Map<String, String>> _newsList = [];
+  XFile? _selectedImage;
 
   @override
   void initState() {
@@ -84,14 +90,16 @@ class _FirstPageState extends State<FirstPage> {
 
   Future<void> _fetchOfficeHours(String instructor) async {
     try {
-      final response = await http.get(Uri.parse('https://localhost:7025/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
+      final response = await http.get(Uri.parse(
+          'https://localhost:7025/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
           _filteredOfficeHours = [OfficeHour.fromJson(data)];
         });
       } else {
-        throw Exception('Failed to load office hours. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load office hours. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching office hours: $e');
@@ -105,17 +113,21 @@ class _FirstPageState extends State<FirstPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Color(0xFFEEF5FF),
-          title: Text('User Details', style: TextStyle(color: Color(0xFF176B87))),
+          title:
+              Text('User Details', style: TextStyle(color: Color(0xFF176B87))),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Divider(color: Color(0xFF176B87)),
-              Text('Name: $userName', style: TextStyle(color: Color(0xFF176B87))),
+              Text('Name: $userName',
+                  style: TextStyle(color: Color(0xFF176B87))),
               Divider(color: Color(0xFF176B87)),
-              Text('Email: $userEmail', style: TextStyle(color: Color(0xFF176B87))),
+              Text('Email: $userEmail',
+                  style: TextStyle(color: Color(0xFF176B87))),
               Divider(color: Color(0xFF176B87)),
-              Text('Role: $userRole', style: TextStyle(color: Color(0xFF176B87))),
+              Text('Role: $userRole',
+                  style: TextStyle(color: Color(0xFF176B87))),
               Divider(color: Color(0xFF176B87)),
               Text('ID: $userId', style: TextStyle(color: Color(0xFF176B87))),
               Divider(color: Color(0xFF176B87)),
@@ -179,8 +191,11 @@ class _FirstPageState extends State<FirstPage> {
     }
 
     if (_selectedOption == 1) {
-      _filteredCourses = _courses.where((course) =>
-          course.nameOfCourse.toLowerCase() == _searchController.text.toLowerCase()).toList();
+      _filteredCourses = _courses
+          .where((course) =>
+              course.nameOfCourse.toLowerCase() ==
+              _searchController.text.toLowerCase())
+          .toList();
     } else {
       _fetchOfficeHours(_searchController.text);
     }
@@ -190,57 +205,126 @@ class _FirstPageState extends State<FirstPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Search Results'),
-          content: _selectedOption == 1
-              ? _filteredCourses.isNotEmpty
-              ? ListView.builder(
-            itemCount: _filteredCourses.length,
-            itemBuilder: (context, index) {
-              final course = _filteredCourses[index];
-              return ListTile(
-                title: Text('Course Name: ${course.nameOfCourse}', style: TextStyle(fontSize: 18)),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Section: ${course.sec}', style: TextStyle(fontSize: 16)),
-                    Text('Instructor: ${course.nameOfInstructor}', style: TextStyle(fontSize: 16)),
-                    Text('Days: ${course.days}', style: TextStyle(fontSize: 16)),
-                    Text('Time: ${course.time}', style: TextStyle(fontSize: 16)),
-                    Text('Place: ${course.place}', style: TextStyle(fontSize: 16)),
-                  ],
-                ),
-                isThreeLine: true,
-              );
-            },
-          )
-              : Text('No course found', style: TextStyle(fontSize: 18))
-              : _filteredOfficeHours.isNotEmpty
-              ? ListView.builder(
-            itemCount: _filteredOfficeHours.length,
-            itemBuilder: (context, index) {
-              final officeHour = _filteredOfficeHours[index];
-              return ListTile(
-                title: Text('Instructor: ${_searchController.text}', style: TextStyle(fontSize: 18)),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Days: ${officeHour.teacherFreeDay}', style: TextStyle(fontSize: 16)),
-                    Text('Start Time: ${officeHour.teacherStartFreeTime}', style: TextStyle(fontSize: 16)),
-                    Text('End Time: ${officeHour.teacherEndFreeTime}', style: TextStyle(fontSize: 16)),
-                    Text('Building: ${officeHour.buildingName}', style: TextStyle(fontSize: 16)),
-                    Text('Room: ${officeHour.roomNumber}', style: TextStyle(fontSize: 16)),
-                  ],
-                ),
-                isThreeLine: true,
-              );
-            },
-          )
-              : Text('No office hours found', style: TextStyle(fontSize: 18)),
+          content: _filteredCourses.isNotEmpty
+              ? SingleChildScrollView(
+                  child: Column(
+                    children: _filteredCourses.map((course) {
+                      return Column(
+                        children: [
+                          Text('Section: ${course.sec}',
+                              style: TextStyle(fontSize: 16)),
+                          Text('Instructor: ${course.nameOfInstructor}',
+                              style: TextStyle(fontSize: 16)),
+                          Text('Days: ${course.days}',
+                              style: TextStyle(fontSize: 16)),
+                          Text('Time: ${course.time}',
+                              style: TextStyle(fontSize: 16)),
+                          Text('Place: ${course.place}',
+                              style: TextStyle(fontSize: 16)),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                )
+              : Text('No course found', style: TextStyle(fontSize: 18)),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               child: Text('Close', style: TextStyle(color: Colors.blue)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAddNewsDialog() {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    XFile? selectedImage;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add News'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(labelText: 'Title'),
+                ),
+                TextField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(labelText: 'Description'),
+                  maxLines: 3,
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () async {
+                    final XFile? image = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    if (image != null) {
+                      setState(() {
+                        selectedImage = image;
+                      });
+                    }
+                  },
+                  child: Text('Attach Image'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _newsList.add({
+                    'title': titleController.text,
+                    'description': descriptionController.text,
+                    'imageUrl': selectedImage?.path ?? '',
+                  });
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showNewsDetails(Map<String, String> news) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(news['title'] ?? ''),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (news['imageUrl'] != null && news['imageUrl']!.isNotEmpty)
+                Image.file(File(news['imageUrl']!)),
+              SizedBox(height: 10),
+              Text(news['description'] ?? ''),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close'),
             ),
           ],
         );
@@ -265,17 +349,12 @@ class _FirstPageState extends State<FirstPage> {
       appBar: AppBar(
         backgroundColor: Color(0xFF176B87),
         automaticallyImplyLeading: false, // Remove the back button
-        title: Text('Welcome to Student Digital Guide', style: TextStyle(color: Colors.white)),
+        title: Text('Welcome to Student Digital Guide',
+            style: TextStyle(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/hotnews');
-            },
-            child: Text("Hot News", style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/proposal');
+              Navigator.pushNamed(context, '/propstudent');
             },
             child: Text("Proposals", style: TextStyle(color: Colors.white)),
           ),
@@ -296,22 +375,27 @@ class _FirstPageState extends State<FirstPage> {
                         children: [
                           CircleAvatar(
                             backgroundColor: Colors.white,
-                            child: Icon(Icons.person, size: 40, color: Colors.black),
+                            child: Icon(Icons.person,
+                                size: 40, color: Colors.black),
                           ),
                           SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(userName ?? '', style: TextStyle(color: Colors.black, fontSize: 18)),
-                              Text(userRole ?? '', style: TextStyle(color: Colors.black, fontSize: 14)),
+                              Text(userName ?? '',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18)),
+                              Text(userRole ?? '',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14)),
                             ],
                           ),
                         ],
                       ),
                     ),
                   ),
-                  
+
                   ListTile(
                     leading: Icon(Icons.info),
                     title: Text('Proposals'),
@@ -336,7 +420,7 @@ class _FirstPageState extends State<FirstPage> {
                     title: Text('Events'),
                     onTap: () => Navigator.pushNamed(context, '/Eve'),
                   ),
-                  //chatbot 
+                  //chatbot
                   ListTile(
                     leading: Icon(Icons.chat),
                     title: Text('Chatbot'),
@@ -373,7 +457,8 @@ class _FirstPageState extends State<FirstPage> {
                       ListTile(
                         leading: Icon(Icons.lock),
                         title: Text('Change Password'),
-                        onTap: () => Navigator.pushNamed(context, '/changepassword'),
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/changepassword'),
                       ),
                       ListTile(
                         leading: Icon(Icons.logout),
@@ -407,24 +492,27 @@ class _FirstPageState extends State<FirstPage> {
                         children: [
                           CircleAvatar(
                             backgroundColor: Colors.white,
-                            child: Icon(Icons.person, size: 40, color: Colors.black),
+                            child: Icon(Icons.person,
+                                size: 40, color: Colors.black),
                           ),
                           SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(userName ?? '', style: TextStyle(color: Colors.black, fontSize: 18)),
-                              Text(userRole ?? '', style: TextStyle(color: Colors.black, fontSize: 14)),
+                              Text(userName ?? '',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18)),
+                              Text(userRole ?? '',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 14)),
                             ],
                           ),
                         ],
                       ),
                     ),
                   ),
-                  
-                  
-                  
+
                   ListTile(
                     leading: Icon(Icons.info),
                     title: Text('Proposals'),
@@ -444,13 +532,13 @@ class _FirstPageState extends State<FirstPage> {
                     title: Text('Courses'),
                     onTap: () => Navigator.pushNamed(context, '/course'),
                   ),
-                 // event calendar 
+                  // event calendar
                   ListTile(
                     leading: Icon(Icons.calendar_today),
                     title: Text('Events'),
                     onTap: () => Navigator.pushNamed(context, '/Eve'),
                   ),
-                  //chatbot 
+                  //chatbot
                   ListTile(
                     leading: Icon(Icons.chat),
                     title: Text('Chatbot'),
@@ -460,7 +548,7 @@ class _FirstPageState extends State<FirstPage> {
                       arguments: userData,
                     ),
                   ),
-                  //map 
+                  //map
                   ListTile(
                     leading: Icon(Icons.map),
                     title: Text('Map'),
@@ -469,7 +557,7 @@ class _FirstPageState extends State<FirstPage> {
                       '/map',
                     ),
                   ),
-                 
+
                   Divider(),
                   ExpansionTile(
                     leading: Icon(Icons.settings),
@@ -488,7 +576,8 @@ class _FirstPageState extends State<FirstPage> {
                       ListTile(
                         leading: Icon(Icons.lock),
                         title: Text('Change Password'),
-                        onTap: () => Navigator.pushNamed(context, '/changepassword'),
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/changepassword'),
                       ),
                       ListTile(
                         leading: Icon(Icons.logout),
@@ -510,18 +599,16 @@ class _FirstPageState extends State<FirstPage> {
                   Padding(
                     padding: EdgeInsets.all(16.0),
                     child: TextField(
+                      onSubmitted: (query) {
+                        _showSearchResultsDialog();
+                      },
+                      textInputAction: TextInputAction.go,
                       controller: _searchController,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         hintText: 'Search courses, office hours...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () {
-                            _showSearchResultsDialog();
-                          },
                         ),
                       ),
                     ),
@@ -532,7 +619,8 @@ class _FirstPageState extends State<FirstPage> {
                       firstDay: DateTime.utc(2021, 1, 1),
                       lastDay: DateTime.utc(2030, 12, 31),
                       focusedDay: _focusedDay,
-                      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                      selectedDayPredicate: (day) =>
+                          isSameDay(_selectedDay, day),
                       calendarFormat: _calendarFormat,
                       onDaySelected: (selectedDay, focusedDay) {
                         setState(() {
@@ -594,25 +682,38 @@ class _FirstPageState extends State<FirstPage> {
                   Divider(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'HOT NEWS',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF176B87),
-                        fontFamily: 'Roboto',
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'HOT NEWS',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF176B87),
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: _showAddNewsDialog,
+                        ),
+                      ],
                     ),
                   ),
                   Container(
                     height: 100,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: [
-                        _buildNewsCard('News 1', Icons.newspaper),
-                        _buildNewsCard('News 2', Icons.newspaper),
-                        _buildNewsCard('News 3', Icons.newspaper),
-                      ],
+                      children: _newsList.map((news) {
+                        return GestureDetector(
+                          onTap: () {
+                            _showNewsDetails(news);
+                          },
+                          child:
+                              _buildNewsCard(news['title']!, Icons.newspaper),
+                        );
+                      }).toList(),
                     ),
                   ),
                 ],

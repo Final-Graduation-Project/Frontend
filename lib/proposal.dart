@@ -440,7 +440,7 @@ class _ProposalState extends State<Proposal> {
               child: Icon(Icons.add),
             ),
             appBar: AppBar(
-              backgroundColor: Color(0xFFB4D4FF),
+              backgroundColor: Color(0xFF176B87),
               elevation: 0,
               titleSpacing: 0,
               title: Row(

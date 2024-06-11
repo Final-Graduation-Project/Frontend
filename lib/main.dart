@@ -7,6 +7,7 @@ import 'package:flutter_application_1/chatPage.dart';
 import 'package:flutter_application_1/chatbot.dart';
 import 'package:flutter_application_1/contactus.dart';
 import 'package:flutter_application_1/firstPage.dart';
+import 'package:flutter_application_1/proposalstudent.dart';
 import 'package:flutter_application_1/signup.dart';
 import 'package:flutter_application_1/map.dart';
 import 'package:flutter_application_1/proposal.dart';
@@ -27,9 +28,17 @@ class Mainpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "student digital guide",
+      title: "Student Digital Guide",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          actionsIconTheme: IconThemeData(color: color4),
+          iconTheme: IconThemeData(color: color4),
+          titleTextStyle: TextStyle(
+            color: color4,
+            fontSize: 20,
+          ),
+        ),
         scaffoldBackgroundColor: color4,
         primaryColor: color1,
         hintColor: color3,
@@ -49,6 +58,7 @@ class Mainpage extends StatelessWidget {
             Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
         '/course': (context) => CourseSearchScreen(),
         '/Chatpage': (context) => ChatPage(),
+        '/propstudent': (context) => proposalstudent(),
       },
     );
   }
@@ -59,11 +69,11 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.of(context).size.width < 600;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF176B87),
-        leading: Image.asset('images/studentdigitalguidelogo.png',
-            height: 40, width: 40),
         title: Text("Student Digital Guide"),
         actions: <Widget>[
           TextButton(
@@ -72,7 +82,7 @@ class Home extends StatelessWidget {
             },
             child: Text(
               "About us",
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.white),
             ),
           ),
           TextButton(
@@ -81,65 +91,109 @@ class Home extends StatelessWidget {
             },
             child: Text(
               "Contact us",
-              style: TextStyle(color: Colors.black),
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Image.asset("images/studentdigitalguidelogo.png",
-                height: 200, width: 200),
-          ),
-          SizedBox(height: 24),
-          Text(
-            "Student Digital Guide",
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 24),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already signed in?",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
-                    child: Text("Login"),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "New student? ",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/signup');
-                    },
-                    child: Text("Sign up"),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 40),
+          child: isMobile
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/studentdigitalguidelogo.png",
+                      height: 150,
+                      width: 150,
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/login');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Color(0xFF176B87),
+                        backgroundColor: Colors.white,
+                        textStyle: TextStyle(fontSize: 24),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+                      ),
+                      child: Text("Login"),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/signup');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Color(0xFF176B87),
+                        textStyle: TextStyle(fontSize: 24),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+                      ),
+                      child: Text("Sign up"),
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/login.jpg",
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      width: MediaQuery.of(context).size.width * 0.5,
+                    ),
+                    SizedBox(width: 100),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "images/studentdigitalguidelogo.png",
+                          height: 250,
+                          width: 250,
+                        ),
+                        SizedBox(height: 40),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Color(0xFF176B87),
+                            backgroundColor: Colors.white,
+                            textStyle: TextStyle(fontSize: 24),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 60, vertical: 20),
+                          ),
+                          child: Text("Login"),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/signup');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Color(0xFF176B87),
+                            textStyle: TextStyle(fontSize: 24),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 60, vertical: 20),
+                          ),
+                          child: Text("Sign up"),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/map');
         },
+        backgroundColor: Color(0xFF176B87),
         child: Icon(Icons.map),
       ),
     );

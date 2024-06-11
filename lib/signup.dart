@@ -27,7 +27,8 @@ class _SignupState extends State<Signup> {
   bool _universityIDEnabled = false;
   bool _passwordEnabled = false;
   bool _passwordMatch = false;
-  bool _majorEnabled = false; // Define _majorEnabled and set initial value to false
+  bool _majorEnabled =
+      false; // Define _majorEnabled and set initial value to false
 
   final List<String> majors = [
     "Arabic Language and Literature",
@@ -152,6 +153,7 @@ class _SignupState extends State<Signup> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,7 +174,7 @@ class _SignupState extends State<Signup> {
                 SizedBox(height: 16),
                 buildFirstNameField(),
                 SizedBox(height: 16),
-              //comit
+                //comit
                 buildEmailField(),
                 SizedBox(height: 16),
                 buildMajorField(),
@@ -265,14 +267,16 @@ class _SignupState extends State<Signup> {
       enabled: _emailEnabled,
       onChanged: (value) {
         setState(() {
-          _majorEnabled = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+').hasMatch(value);
+          _majorEnabled =
+              RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+').hasMatch(value);
         });
       },
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "Please enter your email";
         }
-        if (!RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+').hasMatch(value)) {
+        if (!RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
+            .hasMatch(value)) {
           return "Please enter a valid email";
         }
         return null;
@@ -286,14 +290,17 @@ class _SignupState extends State<Signup> {
       ),
     );
   }
-Widget buildMajorField() {
+
+  Widget buildMajorField() {
     return Autocomplete<String>(
       optionsBuilder: (TextEditingValue textEditingValue) {
         if (textEditingValue.text == '') {
           return const Iterable<String>.empty();
         }
         return majors.where((String option) {
-          return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+          return option
+              .toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
         });
       },
       onSelected: (String selection) {
@@ -366,7 +373,9 @@ Widget buildMajorField() {
         if (value == null || value.isEmpty) {
           return "Please enter your password";
         }
-        if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$').hasMatch(value)) {
+        if (!RegExp(
+                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+            .hasMatch(value)) {
           return "Password should contain at least one uppercase letter, one lowercase letter, one digit, and one special character";
         }
         return null;
@@ -378,7 +387,8 @@ Widget buildMajorField() {
         ),
         prefixIcon: Icon(Icons.lock),
         suffixIcon: IconButton(
-          icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
+          icon:
+              Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
           onPressed: () {
             setState(() {
               _passwordVisible = !_passwordVisible;
@@ -415,7 +425,8 @@ Widget buildMajorField() {
         ),
         prefixIcon: Icon(Icons.lock),
         suffixIcon: IconButton(
-          icon: Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
+          icon:
+              Icon(_passwordVisible ? Icons.visibility : Icons.visibility_off),
           onPressed: () {
             setState(() {
               _passwordVisible = !_passwordVisible;
@@ -431,8 +442,9 @@ Widget buildMajorField() {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-                   // Implement your sign-up logic here
-            _signUp();
+            // Implement your sign-up logic here
+            // _signUp();
+            Navigator.pushNamed(context, '/validate');
           }
         },
         child: Text("Validate your email !"),
