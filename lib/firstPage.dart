@@ -309,14 +309,17 @@ class _FirstPageState extends State<FirstPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(news['title'] ?? ''),
+          backgroundColor: Colors.blue,
+          title:
+              Text(news['title'] ?? '', style: TextStyle(color: Colors.white)),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               if (news['imageUrl'] != null && news['imageUrl']!.isNotEmpty)
                 Image.file(File(news['imageUrl']!)),
               SizedBox(height: 10),
-              Text(news['description'] ?? ''),
+              Text(news['description'] ?? '',
+                  style: TextStyle(color: Colors.white)),
             ],
           ),
           actions: [
@@ -324,7 +327,43 @@ class _FirstPageState extends State<FirstPage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: Text('Close', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEventDetails(Event event) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.blue,
+          title: Text(event.title, style: TextStyle(color: Colors.white)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (event.imagePath != null && event.imagePath!.isNotEmpty)
+                Image.file(File(event.imagePath!)),
+              SizedBox(height: 10),
+              Text('Date: ${event.date.toLocal()}'.split(' ')[0],
+                  style: TextStyle(color: Colors.white)),
+              Text('Time: ${event.time?.format(context) ?? ''}',
+                  style: TextStyle(color: Colors.white)),
+              if (event.location != null)
+                Text('Location: ${event.location}',
+                    style: TextStyle(color: Colors.white)),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Close', style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -675,7 +714,10 @@ class _FirstPageState extends State<FirstPage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: _visibleEvents().map((event) {
-                        return _buildEventCard(event.title, Icons.event);
+                        return GestureDetector(
+                          onTap: () => _showEventDetails(event),
+                          child: _buildEventCard(event.title, Icons.event),
+                        );
                       }).toList(),
                     ),
                   ),
