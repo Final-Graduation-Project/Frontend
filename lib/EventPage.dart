@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:http/http.dart' as http;
 
 class Event {
+  int activityID;
   DateTime date;
   String title;
   String? location;
@@ -17,6 +17,7 @@ class Event {
   TimeOfDay? time;
 
   Event({
+    required this.activityID,
     required this.date,
     required this.title,
     this.location,
@@ -25,6 +26,7 @@ class Event {
   });
 
   Map<String, dynamic> toJson() => {
+        'activityID': activityID,
         'date': date.toIso8601String(),
         'title': title,
         'location': location,
@@ -33,15 +35,19 @@ class Event {
         'minute': time?.minute,
       };
 
-  static Event fromJson(Map<String, dynamic> json) => Event(
-        date: DateTime.parse(json['date']),
-        title: json['title'],
-        location: json['location'],
-        imagePath: json['imagePath'],
-        time: json['hour'] != null
-            ? TimeOfDay(hour: json['hour'], minute: json['minute'])
-            : null,
-      );
+  static Event fromJson(Map<String, dynamic> json) {
+    return Event(
+      activityID: json['activityID'] ?? 0,
+      date: DateTime.tryParse(json['activityExecutionTime'] ?? '') ??
+          DateTime.now(),
+      title: json['activityName'] ?? 'Untitled',
+      location: json['locationOfActivity'],
+      imagePath: json['imagePath'],
+      time: json['hour'] != null && json['minute'] != null
+          ? TimeOfDay(hour: json['hour'], minute: json['minute'])
+          : null,
+    );
+  }
 }
 
 class EventAddEntity {
@@ -77,51 +83,6 @@ class EventAddEntity {
       };
 }
 
-class EventService {
-  static const String _baseUrl = 'https://localhost:7025/api/EventControllercs';
-
-  Future<bool> addEvent(EventAddEntity event) async {
-    final url = '$_baseUrl/AddEvent';
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode(event.toJson()),
-      );
-
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        print('Failed to add event: ${response.body}');
-        return false;
-      }
-    } catch (e) {
-      print('Error occurred: $e');
-      return false;
-    }
-  }
-
-  Future<String> uploadImage(File imageFile) async {
-    final url = '$_baseUrl/UploadImage';
-    final mimeType = lookupMimeType(imageFile.path);
-    final imageUploadRequest = http.MultipartRequest('POST', Uri.parse(url));
-    final file = await http.MultipartFile.fromPath('file', imageFile.path,
-        contentType: MediaType.parse(mimeType!));
-
-    imageUploadRequest.files.add(file);
-    final response = await imageUploadRequest.send();
-
-    if (response.statusCode == 200) {
-      final responseData = await response.stream.bytesToString();
-      final jsonResponse = json.decode(responseData);
-      return jsonResponse[
-          'imageUrl']; // Adjust according to your backend response
-    } else {
-      throw Exception('Failed to upload image');
-    }
-  }
-}
-
 class EventPage extends StatefulWidget {
   const EventPage({Key? key}) : super(key: key);
 
@@ -136,16 +97,17 @@ class _EventPageState extends State<EventPage> {
   DateTime _selectedDay = DateTime.now();
   final ImagePicker _picker = ImagePicker();
   TimeOfDay? _selectedTime;
-  final EventService _eventService = EventService();
   String? userId;
   String? userRole;
   XFile? _selectedImage;
+  Uint8List? _webImage; // For web image handling
 
   @override
   void initState() {
     super.initState();
     _fetchUserData();
     _loadEvents();
+    _loadImagePath();
   }
 
   Future<void> _fetchUserData() async {
@@ -161,15 +123,29 @@ class _EventPageState extends State<EventPage> {
   }
 
   Future<void> _loadEvents() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? eventsJson = prefs.getString('events');
-    if (eventsJson != null) {
-      setState(() {
-        _events = (json.decode(eventsJson) as List)
-            .map((e) => Event.fromJson(e as Map<String, dynamic>))
-            .toList();
-        _events.sort((a, b) => a.date.compareTo(b.date)); // Sort events by date
-      });
+    final String url =
+        'https://localhost:7025/api/EventControllercs/GetAllEvent';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final String responseBody = response.body;
+        try {
+          // Check if the response body is a valid JSON
+          final List<dynamic> eventsJson = json.decode(responseBody);
+          setState(() {
+            _events = eventsJson.map((e) => Event.fromJson(e)).toList();
+            _events.sort((a, b) => a.date.compareTo(b.date));
+          });
+          _saveEvents();
+        } catch (e) {
+          print('Error occurred while decoding JSON: $e');
+          print('Response body: $responseBody');
+        }
+      } else {
+        print('Failed to load events: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred while loading events: $e');
     }
   }
 
@@ -180,26 +156,72 @@ class _EventPageState extends State<EventPage> {
     await prefs.setString('events', eventsJson);
   }
 
-  Widget _handlePreview() {
-    if (_selectedImage != null) {
-      final String? mime = lookupMimeType(_selectedImage!.path);
-      return Container(
-        width: 80,
-        height: 80,
-        child: kIsWeb
-            ? Image.network(_selectedImage!.path, fit: BoxFit.cover)
-            : (mime == null || mime.startsWith('image/')
-                ? Image.file(
-                    File(_selectedImage!.path),
-                    fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object error,
-                        StackTrace? stackTrace) {
-                      return const Center(
-                          child: Text('This image type is not supported'));
-                    },
-                  )
-                : Container()),
-      );
+  Future<void> _loadImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      final imagePath = prefs.getString('selectedImagePath');
+      if (imagePath != null) {
+        if (kIsWeb) {
+          _webImage = base64Decode(imagePath);
+        } else {
+          _selectedImage = XFile(imagePath);
+        }
+      }
+    });
+  }
+
+  Future<void> _saveImagePath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedImagePath', path);
+  }
+
+  void _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      if (kIsWeb) {
+        final bytes = await image.readAsBytes();
+        setState(() {
+          _webImage = bytes;
+          _selectedImage = image;
+        });
+        await _saveImagePath(base64Encode(bytes));
+      } else {
+        setState(() {
+          _selectedImage = image;
+        });
+        await _saveImagePath(image.path);
+      }
+      print("Image picked: ${image.path}");
+    }
+  }
+
+  Widget _handlePreview(Event event) {
+    if (event.imagePath != null && event.imagePath!.isNotEmpty) {
+      if (kIsWeb) {
+        return Image.memory(
+          base64Decode(event.imagePath!),
+          width: 80,
+          height: 80,
+          fit: BoxFit.cover,
+          errorBuilder:
+              (BuildContext context, Object error, StackTrace? stackTrace) {
+            return const Center(
+                child: Text('This image type is not supported'));
+          },
+        );
+      } else {
+        return Image.file(
+          File(event.imagePath!),
+          width: 80,
+          height: 80,
+          fit: BoxFit.cover,
+          errorBuilder:
+              (BuildContext context, Object error, StackTrace? stackTrace) {
+            return const Center(
+                child: Text('This image type is not supported'));
+          },
+        );
+      }
     } else {
       return const Text(
         'You have not yet picked an image.',
@@ -208,16 +230,171 @@ class _EventPageState extends State<EventPage> {
     }
   }
 
-  Future<void> retrieveLostData() async {
-    final LostDataResponse response = await _picker.retrieveLostData();
-    if (response.isEmpty) {
-      return;
+  Future<bool> addEventToServer(EventAddEntity event) async {
+    final String url = 'https://localhost:7025/api/EventControllercs/AddEvent';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(event.toJson()),
+      );
+      if (response.statusCode == 200) {
+        print('Event added successfully');
+        return true;
+      } else {
+        print('Failed to add event: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      return false;
     }
-    if (response.file != null) {
-      setState(() {
-        _selectedImage = response.file;
-      });
-    } else {}
+  }
+
+  void _showAddEventDialog({bool isEdit = false, Event? editEvent}) {
+    final TextEditingController titleController =
+        TextEditingController(text: isEdit ? editEvent?.title : '');
+    final TextEditingController locationController =
+        TextEditingController(text: isEdit ? editEvent?.location : '');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(isEdit ? "Edit Event" : "Add New Event"),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: "Event Name"),
+              ),
+              TextField(
+                controller: locationController,
+                decoration: const InputDecoration(labelText: "Location"),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  final TimeOfDay? time = await showTimePicker(
+                    context: context,
+                    initialTime: _selectedTime ?? TimeOfDay.now(),
+                    builder: (context, child) {
+                      return Theme(
+                        data: ThemeData.light().copyWith(
+                          colorScheme: const ColorScheme.light(
+                            primary: Color(0xFF86B6F6),
+                            onPrimary: Colors.white,
+                            onSurface: Color(0xFF176B87),
+                          ),
+                          dialogBackgroundColor: Colors.white,
+                        ),
+                        child: child!,
+                      );
+                    },
+                  );
+                  if (time != null) {
+                    setState(() {
+                      _selectedTime = time;
+                    });
+                  }
+                },
+                child: Text(_selectedTime == null
+                    ? "Select Time"
+                    : 'Time: ${_selectedTime!.format(context)}'),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: const Text("Add Picture"),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _selectedImage != null
+                    ? _handlePreview(Event(
+                        activityID: 0, // Temporary ID
+                        date: DateTime.now(),
+                        title: '',
+                        imagePath: _selectedImage!.path))
+                    : const Text(
+                        'You have not yet picked an image.',
+                        textAlign: TextAlign.center,
+                      ),
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text("Cancel"),
+            onPressed: () => Navigator.pop(context),
+          ),
+          TextButton(
+            child: const Text("Save"),
+            onPressed: () async {
+              if (userId == null) {
+                print("Failed to get userId");
+                return;
+              }
+
+              if (userRole == null) {
+                print("Failed to get userRole");
+                return;
+              }
+
+              String imagePath = "";
+              if (kIsWeb && _webImage != null) {
+                imagePath = base64Encode(_webImage!);
+              } else if (_selectedImage != null) {
+                imagePath = _selectedImage!.path;
+              }
+
+              final newEvent = EventAddEntity(
+                activityID:
+                    isEdit && editEvent != null ? editEvent.activityID : 0,
+                activityName: titleController.text,
+                locationOfActivity: locationController.text,
+                activityExecutionTime: _selectedDay,
+                time: _selectedDay, // Adjust if separate time needed
+                entityResponsibleActivity: userRole!, // Replace as needed
+                concilMemberID: int.parse(userId!), // Use retrieved ID
+                imagePath: imagePath, // Use selected image path
+              );
+
+              bool success = await addEventToServer(newEvent);
+
+              if (success) {
+                setState(() {
+                  if (isEdit && editEvent != null) {
+                    editEvent.title = titleController.text;
+                    editEvent.location = locationController.text;
+                    editEvent.time = _selectedTime;
+                    editEvent.imagePath = imagePath;
+                  } else {
+                    _events.add(Event(
+                      activityID: newEvent.activityID,
+                      title: titleController.text,
+                      location: locationController.text,
+                      imagePath: imagePath,
+                      date: _selectedDay,
+                      time: _selectedTime,
+                    ));
+                    _events.sort((a, b) => a.date.compareTo(b.date));
+                  }
+                });
+                Navigator.pop(context);
+                _saveEvents();
+                _selectedImage = null; // Clear selected image
+                _webImage = null; // Clear web image data
+              } else {
+                print("Failed to add event");
+              }
+            },
+          ),
+        ],
+        backgroundColor: const Color(0xFF86B6F6),
+      ),
+    );
   }
 
   @override
@@ -300,8 +477,7 @@ class _EventPageState extends State<EventPage> {
                 },
               ),
             ),
-            VerticalDivider(
-                width: 1, color: Color.fromARGB(255, 255, 255, 255)),
+            const VerticalDivider(width: 1, color: Colors.grey),
             Expanded(
               flex: 3,
               child: Column(
@@ -311,7 +487,7 @@ class _EventPageState extends State<EventPage> {
                     child: Text(
                       'UPCOMING EVENTS for ${_formatCalendarHeader()}!',
                       style: const TextStyle(
-                        fontSize: 24, // Increased font size
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF176B87),
                         fontFamily: 'Roboto',
@@ -319,55 +495,58 @@ class _EventPageState extends State<EventPage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
-                      itemCount: _visibleEvents().length,
-                      itemBuilder: (context, index) {
-                        final event = _visibleEvents()[index];
-
-                        return Card(
-                          color: Color.fromARGB(
-                              255, 164, 197, 241), // Set the card color to blue
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 16),
-                          child: ListTile(
-                            leading: _handlePreview(),
-                            title: Text(
-                              event.title,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18), // Font size increased
-                            ),
-                            subtitle: _buildEventSubtitle(event),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Colors.black),
-                                  onPressed: () {
-                                    _selectedDay = event.date;
-                                    _selectedTime = event.time;
-                                    _showAddEventDialog(
-                                        isEdit: true, editEvent: event);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.black),
-                                  onPressed: () {
-                                    setState(() {
-                                      _events.removeAt(_events.indexOf(event));
-                                    });
-                                    _saveEvents(); // Save changes to the persistent storage
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                      child: _events.isEmpty
+                          ? const Center(child: Text('No events found.'))
+                          : ListView.builder(
+                              itemCount: _events.length,
+                              itemBuilder: (context, index) {
+                                final event = _events[index];
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 16),
+                                  child: Card(
+                                    color: const Color(0xFF86B6F6),
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 16),
+                                    child: ListTile(
+                                      leading: _handlePreview(event),
+                                      title: Text(
+                                        event.title,
+                                        style: const TextStyle(
+                                            color: Colors.black, fontSize: 18),
+                                      ),
+                                      subtitle: _buildEventSubtitle(event),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          IconButton(
+                                            icon: const Icon(Icons.edit,
+                                                color: Colors.black),
+                                            onPressed: () {
+                                              _selectedDay = event.date;
+                                              _selectedTime = event.time;
+                                              _showAddEventDialog(
+                                                  isEdit: true,
+                                                  editEvent: event);
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete,
+                                                color: Colors.black),
+                                            onPressed: () {
+                                              setState(() {
+                                                _events.removeAt(index);
+                                              });
+                                              _saveEvents();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            )),
                 ],
               ),
             ),
@@ -416,168 +595,42 @@ class _EventPageState extends State<EventPage> {
           children: [
             const Icon(Icons.calendar_today, size: 16, color: Colors.black),
             const SizedBox(width: 4),
-            Text('Date: ${event.date.toString().split(' ')[0]}',
-                style: const TextStyle(color: Colors.black, fontSize: 16)),
+            Expanded(
+              child: Text(
+                'Date: ${event.date.toString().split(' ')[0]}',
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         Row(
           children: [
             const Icon(Icons.access_time, size: 16, color: Colors.black),
             const SizedBox(width: 4),
-            Text('Time: ${event.time?.format(context) ?? 'Not Set'}',
-                style: const TextStyle(color: Colors.black, fontSize: 16)),
+            Expanded(
+              child: Text(
+                'Time: ${event.time?.format(context) ?? 'Not Set'}',
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         Row(
           children: [
             const Icon(Icons.place, size: 16, color: Colors.black),
             const SizedBox(width: 4),
-            Text('Place: ${event.location ?? 'No location'}',
-                style: const TextStyle(color: Colors.black, fontSize: 16)),
+            Expanded(
+              child: Text(
+                'Place: ${event.location ?? 'No location'}',
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ],
-    );
-  }
-
-  void _showAddEventDialog({bool isEdit = false, Event? editEvent}) {
-    final TextEditingController titleController =
-        TextEditingController(text: isEdit ? editEvent?.title : '');
-    final TextEditingController locationController =
-        TextEditingController(text: isEdit ? editEvent?.location : '');
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(isEdit ? "Edit Event" : "Add New Event"),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: "Event Name"),
-              ),
-              TextField(
-                controller: locationController,
-                decoration: const InputDecoration(labelText: "Location"),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () async {
-                  final TimeOfDay? time = await showTimePicker(
-                    context: context,
-                    initialTime: _selectedTime ?? TimeOfDay.now(),
-                    builder: (context, child) {
-                      return Theme(
-                        data: ThemeData.light().copyWith(
-                          colorScheme: const ColorScheme.light(
-                            primary: Color(0xFF86B6F6),
-                            onPrimary: Colors.white,
-                            onSurface: Color(0xFF176B87),
-                          ),
-                          dialogBackgroundColor: Colors.white,
-                        ),
-                        child: child!,
-                      );
-                    },
-                  );
-                  if (time != null) {
-                    setState(() {
-                      _selectedTime = time;
-                    });
-                  }
-                },
-                child: Text(_selectedTime == null
-                    ? "Select Time"
-                    : 'Time: ${_selectedTime!.format(context)}'),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () async {
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    setState(() {
-                      _selectedImage = image;
-                    });
-                  }
-                },
-                child: const Text("Add Picture"),
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text("Cancel"),
-            onPressed: () => Navigator.pop(context),
-          ),
-          TextButton(
-            child: const Text("Save"),
-            onPressed: () async {
-              if (userId == null) {
-                print("Failed to get userId");
-                return;
-              }
-
-              if (userRole == null) {
-                print("Failed to get userRole");
-                return;
-              }
-
-              String imagePath = '';
-              if (_selectedImage != null) {
-                try {
-                  final file = File(_selectedImage!.path);
-                  imagePath = await _eventService.uploadImage(file);
-                } catch (e) {
-                  print('Error uploading image: $e');
-                }
-              }
-
-              final newEvent = EventAddEntity(
-                activityID: 0, // Replace with actual ID if needed
-                activityName: titleController.text,
-                locationOfActivity: locationController.text,
-                activityExecutionTime: _selectedDay,
-                time: _selectedDay, // Adjust if separate time needed
-                entityResponsibleActivity: userRole!, // Replace as needed
-                concilMemberID: int.parse(userId!), // Use retrieved ID
-                imagePath: imagePath, // Use uploaded image path
-              );
-
-              bool success = await _eventService.addEvent(newEvent);
-              if (success) {
-                setState(() {
-                  if (isEdit) {
-                    editEvent!.title = titleController.text;
-                    editEvent!.location = locationController.text;
-                    editEvent!.time = _selectedTime;
-                    editEvent!.imagePath = imagePath;
-                  } else {
-                    _events.add(Event(
-                      title: titleController.text,
-                      location: locationController.text,
-                      imagePath: imagePath,
-                      date: _selectedDay,
-                      time: _selectedTime,
-                    ));
-                    _events.sort((a, b) =>
-                        a.date.compareTo(b.date)); // Sort events by date
-                  }
-                });
-                Navigator.pop(context);
-                _saveEvents(); // Persist data after adding/updating an event
-              } else {
-                // Handle error
-                print("Failed to add event");
-              }
-            },
-          ),
-        ],
-        backgroundColor: const Color(0xFF86B6F6),
-      ),
     );
   }
 }

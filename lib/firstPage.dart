@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Login.dart';
@@ -21,6 +22,7 @@ class _FirstPageState extends State<FirstPage> {
   String? userEmail;
   String? userRole;
   String? userId;
+  String? userProfilePicture; // New field for profile picture
   List<Event> _events = [];
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
@@ -42,6 +44,7 @@ class _FirstPageState extends State<FirstPage> {
     _fetchUserData();
     _loadEvents();
     _loadCourses();
+    _loadNews();
   }
 
   Future<void> clearSpecificPreference() async {
@@ -55,21 +58,38 @@ class _FirstPageState extends State<FirstPage> {
     userEmail = prefs.getString('userEmail');
     userRole = prefs.getString('userRole');
     userId = prefs.getString('userId');
+    userProfilePicture =
+        prefs.getString('userProfilePicture'); // Load profile picture
     if (userRole == null) {
       Navigator.pushNamed(context, '/login');
     }
     setState(() {}); // Update the state after fetching user data
   }
 
-  Future<void> _loadEvents() async {
+  Future<void> _saveUserProfilePicture(String imagePath) async {
     final prefs = await SharedPreferences.getInstance();
-    final String? eventsJson = prefs.getString('events');
-    if (eventsJson != null) {
-      setState(() {
-        _events = (json.decode(eventsJson) as List)
-            .map((e) => Event.fromJson(e as Map<String, dynamic>))
-            .toList();
-      });
+    await prefs.setString('userProfilePicture', imagePath);
+    setState(() {
+      userProfilePicture = imagePath;
+    });
+  }
+
+  Future<void> _loadEvents() async {
+    final url = 'https://localhost:7025/api/EventControllercs/GetAllEvent';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final List<dynamic> eventsJson = json.decode(response.body);
+        setState(() {
+          _events = eventsJson.map((e) => Event.fromJson(e)).toList();
+          _events.sort((a, b) => a.date.compareTo(b.date));
+        });
+        _saveEvents();
+      } else {
+        print('Failed to load events: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred while loading events: $e');
     }
   }
 
@@ -119,6 +139,16 @@ class _FirstPageState extends State<FirstPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (userProfilePicture != null && userProfilePicture!.isNotEmpty)
+                Image.memory(base64Decode(userProfilePicture!),
+                    height: 100, fit: BoxFit.cover)
+              else
+                Icon(Icons.person, size: 100),
+              TextButton(
+                onPressed: _editProfilePicture,
+                child: Text('Edit Picture',
+                    style: TextStyle(color: Color(0xFF176B87))),
+              ),
               Divider(color: Color(0xFF176B87)),
               Text('Name: $userName',
                   style: TextStyle(color: Color(0xFF176B87))),
@@ -144,6 +174,15 @@ class _FirstPageState extends State<FirstPage> {
         );
       },
     );
+  }
+
+  Future<void> _editProfilePicture() async {
+    final XFile? image =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      final String imagePath = base64Encode(await image.readAsBytes());
+      await _saveUserProfilePicture(imagePath);
+    }
   }
 
   Future<void> _logout() async {
@@ -183,6 +222,68 @@ class _FirstPageState extends State<FirstPage> {
     return _events.where((event) {
       return event.date.difference(_focusedDay).inDays.abs() < 7;
     }).toList();
+  }
+
+  Future<void> _loadNews() async {
+    final String url = 'https://localhost:7025/api/News/GetAllNews';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final List<dynamic> newsJson = json.decode(response.body);
+        setState(() {
+          _newsList.addAll(newsJson.map((e) {
+            return {
+              'title': e['title']?.toString() ?? '',
+              'description': e['description']?.toString() ?? '',
+              'imageUrl': e['imagePath']?.toString() ?? '',
+            };
+          }).toList());
+        });
+      } else {
+        print('Failed to load news: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred while loading news: $e');
+    }
+  }
+
+  Future<void> _addNews(Map<String, String> news) async {
+    final String url = 'https://localhost:7025/api/News/AddNews';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(news),
+      );
+      if (response.statusCode == 201) {
+        print('News added successfully');
+        setState(() {
+          _newsList.add(news);
+        });
+      } else {
+        print('Failed to add news: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred while adding news: $e');
+    }
+  }
+
+  Future<void> _deleteNews(int index) async {
+    final String url =
+        'https://localhost:7025/api/News/DeleteNews/${_newsList[index]['id']}';
+    try {
+      final response = await http.delete(Uri.parse(url));
+      if (response.statusCode == 200) {
+        print('News deleted successfully');
+        setState(() {
+          _newsList.removeAt(index);
+        });
+      } else {
+        print('Failed to delete news: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred while deleting news: $e');
+    }
   }
 
   void _showSearchResultsDialog() {
@@ -286,14 +387,29 @@ class _FirstPageState extends State<FirstPage> {
               child: Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  _newsList.add({
-                    'title': titleController.text,
-                    'description': descriptionController.text,
-                    'imageUrl': selectedImage?.path ?? '',
-                  });
-                });
+              onPressed: () async {
+                if (titleController.text.isEmpty ||
+                    descriptionController.text.isEmpty ||
+                    selectedImage == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('All fields are required.'),
+                    ),
+                  );
+                  return;
+                }
+
+                final String imagePath =
+                    base64Encode(await selectedImage!.readAsBytes());
+
+                final news = {
+                  'title': titleController.text,
+                  'description': descriptionController.text,
+                  'imageUrl': imagePath,
+                };
+
+                await _addNews(news);
+
                 Navigator.of(context).pop();
               },
               child: Text('Save'),
@@ -308,28 +424,59 @@ class _FirstPageState extends State<FirstPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.blue,
-          title:
-              Text(news['title'] ?? '', style: TextStyle(color: Colors.white)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (news['imageUrl'] != null && news['imageUrl']!.isNotEmpty)
-                Image.file(File(news['imageUrl']!)),
-              SizedBox(height: 10),
-              Text(news['description'] ?? '',
-                  style: TextStyle(color: Colors.white)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close', style: TextStyle(color: Colors.white)),
+        Uint8List? imageBytes;
+        if (news['imageUrl'] != null && news['imageUrl']!.isNotEmpty) {
+          try {
+            imageBytes = base64Decode(news['imageUrl']!);
+          } catch (e) {
+            print('Error decoding image: $e');
+          }
+        }
+
+        return Dialog(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (imageBytes != null)
+                  Image.memory(imageBytes,
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      fit: BoxFit.cover)
+                else
+                  Icon(Icons.image_not_supported,
+                      size: 100, color: Colors.white),
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    news['title'] ?? '',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    news['description'] ?? '',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close', style: TextStyle(color: Colors.blue)),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
@@ -339,33 +486,84 @@ class _FirstPageState extends State<FirstPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.blue,
-          title: Text(event.title, style: TextStyle(color: Colors.white)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (event.imagePath != null && event.imagePath!.isNotEmpty)
-                Image.file(File(event.imagePath!)),
-              SizedBox(height: 10),
-              Text('Date: ${event.date.toLocal()}'.split(' ')[0],
-                  style: TextStyle(color: Colors.white)),
-              Text('Time: ${event.time?.format(context) ?? ''}',
-                  style: TextStyle(color: Colors.white)),
-              if (event.location != null)
-                Text('Location: ${event.location}',
-                    style: TextStyle(color: Colors.white)),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Close', style: TextStyle(color: Colors.white)),
+        Uint8List? imageBytes;
+        if (event.imagePath != null && event.imagePath!.isNotEmpty) {
+          try {
+            imageBytes = base64Decode(event.imagePath!);
+          } catch (e) {
+            print('Error decoding image: $e');
+          }
+        }
+
+        return Dialog(
+          child: Container(
+            width: 160,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (imageBytes != null)
+                  Image.memory(
+                    imageBytes,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )
+                else
+                  Icon(Icons.image_not_supported,
+                      size: 100, color: Colors.black),
+                SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    event.title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Table(
+                    children: [
+                      TableRow(children: [
+                        Text('Date:', style: TextStyle(color: Colors.black)),
+                        Text(
+                          '${event.date.toLocal()}'.split(' ')[0],
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ]),
+                      TableRow(children: [
+                        Text('Time:', style: TextStyle(color: Colors.black)),
+                        Text(
+                          event.time != null
+                              ? event.time!.format(context)
+                              : 'N/A',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ]),
+                      TableRow(children: [
+                        Text('Location:',
+                            style: TextStyle(color: Colors.black)),
+                        Text(
+                          event.location ?? 'N/A',
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ]),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close', style: TextStyle(color: Colors.blue)),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
@@ -388,16 +586,39 @@ class _FirstPageState extends State<FirstPage> {
       appBar: AppBar(
         backgroundColor: Color(0xFF176B87),
         automaticallyImplyLeading: false, // Remove the back button
-        title: Text('Welcome to Student Digital Guide',
-            style: TextStyle(color: Colors.white)),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/propstudent');
-            },
-            child: Text("Proposals", style: TextStyle(color: Colors.white)),
-          ),
-        ],
+        title: Row(
+          children: [
+            Text('Welcome to Student Digital Guide',
+                style: TextStyle(color: Colors.white)),
+            Spacer(),
+            Expanded(
+              child: TextField(
+                onSubmitted: (query) {
+                  _showSearchResultsDialog();
+                },
+                textInputAction: TextInputAction.go,
+                controller: _searchController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search courses..',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: EdgeInsets.symmetric(vertical: 10.0),
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/propstudent');
+              },
+              child: Text("Proposals", style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
       ),
       drawer: isMobile
           ? Drawer(
@@ -406,17 +627,22 @@ class _FirstPageState extends State<FirstPage> {
                 children: <Widget>[
                   DrawerHeader(
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 152, 178, 213),
+                      color: Color(0xFF176B87),
                     ),
                     child: GestureDetector(
                       onTap: _showUserDetails,
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.white,
-                            child: Icon(Icons.person,
-                                size: 40, color: Colors.black),
-                          ),
+                          if (userProfilePicture != null &&
+                              userProfilePicture!.isNotEmpty)
+                            Image.memory(base64Decode(userProfilePicture!),
+                                height: 50, width: 50, fit: BoxFit.cover)
+                          else
+                            CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.person,
+                                  size: 40, color: Colors.black),
+                            ),
                           SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -424,17 +650,20 @@ class _FirstPageState extends State<FirstPage> {
                             children: [
                               Text(userName ?? '',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 18)),
+                                      color: const Color.fromARGB(
+                                          255, 255, 254, 254),
+                                      fontSize: 18)),
                               Text(userRole ?? '',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 14)),
+                                      color: const Color.fromARGB(
+                                          255, 255, 252, 252),
+                                      fontSize: 14)),
                             ],
                           ),
                         ],
                       ),
                     ),
                   ),
-
                   ListTile(
                     leading: Icon(Icons.info),
                     title: Text('Proposals'),
@@ -459,16 +688,15 @@ class _FirstPageState extends State<FirstPage> {
                     title: Text('Events'),
                     onTap: () => Navigator.pushNamed(context, '/Eve'),
                   ),
-                  //chatbot
                   ListTile(
                     leading: Icon(Icons.chat),
                     title: Text('Chatbot'),
                     onTap: () => Navigator.pushNamed(
                       context,
                       '/chatbot',
+                      arguments: userData,
                     ),
                   ),
-                  //map
                   ListTile(
                     leading: Icon(Icons.map),
                     title: Text('Map'),
@@ -477,8 +705,7 @@ class _FirstPageState extends State<FirstPage> {
                       '/map',
                     ),
                   ),
-
-                  Divider(),
+                  Divider(color: Color(0xFF176B87)),
                   ExpansionTile(
                     leading: Icon(Icons.settings),
                     title: Text('Settings'),
@@ -518,22 +745,28 @@ class _FirstPageState extends State<FirstPage> {
           if (!isMobile)
             Container(
               width: 250,
+              color: Color.fromARGB(255, 249, 250, 251),
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   DrawerHeader(
                     decoration: BoxDecoration(
-                      color: Color(0xFFEEF5FF),
+                      color: Color(0xFF176B87),
                     ),
                     child: GestureDetector(
                       onTap: _showUserDetails,
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.white,
-                            child: Icon(Icons.person,
-                                size: 40, color: Colors.black),
-                          ),
+                          if (userProfilePicture != null &&
+                              userProfilePicture!.isNotEmpty)
+                            Image.memory(base64Decode(userProfilePicture!),
+                                height: 50, width: 50, fit: BoxFit.cover)
+                          else
+                            CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.person,
+                                  size: 40, color: Colors.black),
+                            ),
                           SizedBox(width: 10),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -541,25 +774,26 @@ class _FirstPageState extends State<FirstPage> {
                             children: [
                               Text(userName ?? '',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 18)),
+                                      color: Color.fromARGB(255, 247, 245, 245),
+                                      fontSize: 18)),
                               Text(userRole ?? '',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 14)),
+                                      color: Colors.white, fontSize: 14)),
                             ],
                           ),
                         ],
                       ),
                     ),
                   ),
-
                   ListTile(
-                    leading: Icon(Icons.info),
-                    title: Text('Proposals'),
+                    leading: Icon(Icons.info, color: Colors.black),
+                    title: Text('Proposals',
+                        style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(context, '/proposal'),
                   ),
                   ListTile(
-                    leading: Icon(Icons.chat),
-                    title: Text('Chat'),
+                    leading: Icon(Icons.chat, color: Colors.black),
+                    title: Text('Chat', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(
                       context,
                       '/Chatpage',
@@ -567,60 +801,65 @@ class _FirstPageState extends State<FirstPage> {
                     ),
                   ),
                   ListTile(
-                    leading: Icon(Icons.book),
-                    title: Text('Courses'),
+                    leading: Icon(Icons.book,
+                        color: Color.fromARGB(255, 10, 10, 10)),
+                    title:
+                        Text('Courses', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(context, '/course'),
                   ),
-                  // event calendar
                   ListTile(
-                    leading: Icon(Icons.calendar_today),
-                    title: Text('Events'),
+                    leading: Icon(Icons.calendar_today, color: Colors.black),
+                    title:
+                        Text('Events', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(context, '/Eve'),
                   ),
-                  //chatbot
                   ListTile(
-                    leading: Icon(Icons.chat),
-                    title: Text('Chatbot'),
+                    leading: Icon(Icons.chat, color: Colors.black),
+                    title:
+                        Text('Chatbot', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(
                       context,
                       '/chatbot',
                       arguments: userData,
                     ),
                   ),
-                  //map
                   ListTile(
-                    leading: Icon(Icons.map),
-                    title: Text('Map'),
+                    leading: Icon(Icons.map, color: Colors.black),
+                    title: Text('Map', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(
                       context,
                       '/map',
                     ),
                   ),
-
-                  Divider(),
+                  Divider(color: Color(0xFF176B87)),
                   ExpansionTile(
-                    leading: Icon(Icons.settings),
-                    title: Text('Settings'),
+                    leading: Icon(Icons.settings, color: Colors.black),
+                    title:
+                        Text('Settings', style: TextStyle(color: Colors.black)),
                     children: [
                       ListTile(
-                        leading: Icon(Icons.info),
-                        title: Text('About Us'),
+                        leading: Icon(Icons.info, color: Colors.black),
+                        title: Text('About Us',
+                            style: TextStyle(color: Colors.black)),
                         onTap: () => Navigator.pushNamed(context, '/aboutus'),
                       ),
                       ListTile(
-                        leading: Icon(Icons.contact_mail),
-                        title: Text('Contact Us'),
+                        leading: Icon(Icons.contact_mail, color: Colors.black),
+                        title: Text('Contact Us',
+                            style: TextStyle(color: Colors.black)),
                         onTap: () => Navigator.pushNamed(context, '/contactus'),
                       ),
                       ListTile(
-                        leading: Icon(Icons.lock),
-                        title: Text('Change Password'),
+                        leading: Icon(Icons.lock, color: Colors.black),
+                        title: Text('Change Password',
+                            style: TextStyle(color: Colors.black)),
                         onTap: () =>
                             Navigator.pushNamed(context, '/changepassword'),
                       ),
                       ListTile(
-                        leading: Icon(Icons.logout),
-                        title: Text('Log Out'),
+                        leading: Icon(Icons.logout, color: Colors.black),
+                        title: Text('Log Out',
+                            style: TextStyle(color: Colors.black)),
                         onTap: () {
                           _logout();
                           Navigator.pushNamed(context, '/');
@@ -635,23 +874,6 @@ class _FirstPageState extends State<FirstPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: TextField(
-                      onSubmitted: (query) {
-                        _showSearchResultsDialog();
-                      },
-                      textInputAction: TextInputAction.go,
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        hintText: 'Search courses, office hours...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ),
                   Container(
                     padding: EdgeInsets.all(16.0),
                     child: TableCalendar(
@@ -697,6 +919,7 @@ class _FirstPageState extends State<FirstPage> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -710,54 +933,53 @@ class _FirstPageState extends State<FirstPage> {
                     ),
                   ),
                   Container(
-                    height: 100,
+                    height: MediaQuery.of(context).size.height * 0.2,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: _visibleEvents().map((event) {
+                      children: _events.map((event) {
                         return GestureDetector(
-                          onTap: () => _showEventDetails(event),
-                          child: _buildEventCard(event.title, Icons.event),
+                          onTap: () {
+                            _showEventDetails(event);
+                          },
+                          child: _buildEventCard(
+                              event.title, event.imagePath ?? '', Icons.event),
                         );
                       }).toList(),
                     ),
                   ),
-                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    child: Divider(color: Color(0xFF176B87)),
+                  ),
+                  SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'HOT NEWS',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF176B87),
-                            fontFamily: 'Roboto',
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: _showAddNewsDialog,
-                        ),
-                      ],
+                    child: Text(
+                      'HOT NEWS',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF176B87),
+                        fontFamily: 'Roboto',
+                      ),
                     ),
                   ),
                   Container(
-                    height: 100,
-                    child: ListView(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      children: _newsList.map((news) {
+                      itemCount: _newsList.length,
+                      itemBuilder: (context, index) {
+                        final news = _newsList[index];
                         return GestureDetector(
                           onTap: () {
                             _showNewsDetails(news);
                           },
-                          child:
-                              _buildNewsCard(news['title']!, Icons.newspaper),
+                          child: _buildNewsCard(news, index),
                         );
-                      }).toList(),
+                      },
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
@@ -767,32 +989,87 @@ class _FirstPageState extends State<FirstPage> {
     );
   }
 
-  Widget _buildEventCard(String title, IconData icon) {
+  Widget _buildEventCard(String title, String imageUrl, IconData icon) {
+    Uint8List? imageBytes;
+    if (imageUrl.isNotEmpty) {
+      try {
+        imageBytes = base64Decode(imageUrl);
+      } catch (e) {
+        print('Error decoding image: $e');
+      }
+    }
     return Card(
-      child: Container(
-        width: 160,
-        child: ListTile(
-          leading: Icon(icon),
-          title: Text(title),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (imageBytes != null)
+            Expanded(
+              child: Image.memory(imageBytes, fit: BoxFit.cover),
+            )
+          else
+            Icon(Icons.image_not_supported),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildNewsCard(String title, IconData icon) {
+  Widget _buildNewsCard(Map<String, String> news, int index) {
+    Uint8List? imageBytes;
+    if (news['imageUrl']!.isNotEmpty) {
+      try {
+        imageBytes = base64Decode(news['imageUrl']!);
+      } catch (e) {
+        print('Error decoding image: $e');
+      }
+    }
+
     return Card(
-      child: Container(
-        width: 160,
-        child: ListTile(
-          leading: Icon(icon),
-          title: Text(title),
-        ),
+      child: Column(
+        children: [
+          if (imageBytes != null)
+            Expanded(
+              child: Image.memory(imageBytes, fit: BoxFit.cover),
+            )
+          else
+            Icon(Icons.image_not_supported),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              news['title']!,
+              style: TextStyle(fontWeight: FontWeight.bold),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () => _deleteNews(index),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class Event {
+  int activityID;
   DateTime date;
   String title;
   String? location;
@@ -800,6 +1077,7 @@ class Event {
   TimeOfDay? time;
 
   Event({
+    required this.activityID,
     required this.date,
     required this.title,
     this.location,
@@ -808,6 +1086,7 @@ class Event {
   });
 
   Map<String, dynamic> toJson() => {
+        'activityID': activityID,
         'date': date.toIso8601String(),
         'title': title,
         'location': location,
@@ -816,13 +1095,17 @@ class Event {
         'minute': time?.minute,
       };
 
-  static Event fromJson(Map<String, dynamic> json) => Event(
-        date: DateTime.parse(json['date']),
-        title: json['title'],
-        location: json['location'],
-        imagePath: json['imagePath'],
-        time: json['hour'] != null
-            ? TimeOfDay(hour: json['hour'], minute: json['minute'])
-            : null,
-      );
+  static Event fromJson(Map<String, dynamic> json) {
+    return Event(
+      activityID: json['activityID'] ?? 0,
+      date: DateTime.tryParse(json['activityExecutionTime'] ?? '') ??
+          DateTime.now(),
+      title: json['activityName'] ?? 'Untitled',
+      location: json['locationOfActivity'],
+      imagePath: json['imagePath'],
+      time: json['hour'] != null && json['minute'] != null
+          ? TimeOfDay(hour: json['hour'], minute: json['minute'])
+          : null,
+    );
+  }
 }

@@ -1,24 +1,20 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:io';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_application_1/chatPage.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
 
 class ChatScreen extends StatefulWidget {
-  // final Map<String, dynamic> user;
-  // final String currentUser;
-  // final String userName;
-  final Chat currentChat;
+  final Map<String, dynamic> user;
+  final String currentUser;
+  final String userName;
+
   const ChatScreen({
     Key? key,
-    required this.currentChat,
-    // required this.user,
-    // required this.currentUser,
-    // required this.userName,
+    required this.user,
+    required this.currentUser,
+    required this.userName,
   }) : super(key: key);
 
   @override
@@ -29,38 +25,20 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController messageController = TextEditingController();
   List<Map<String, dynamic>> messages = [];
   final ImagePicker _picker = ImagePicker();
-  final Dio _dio = Dio();
-  late var user;
-  late var currentUser;
-  late var userName;
+  XFile? _selectedImage;
+  Uint8List? _webImage; // For web image handling
+
   @override
   void initState() {
     super.initState();
-    user = widget.currentChat.user;
-    currentUser = widget.currentChat.currentUserId;
-    userName = widget.currentChat.userName;
-    print("initializing");
     fetchMessages();
   }
 
-  Future<void> requestPermissions() async {
-    if (!kIsWeb) {
-      var status = await Permission.storage.status;
-      if (!status.isGranted) {
-        if (await Permission.storage.request().isGranted) {
-          print('Storage permission granted.');
-        } else {
-          print('Storage permission denied.');
-        }
-      }
-    }
-  }
-
   Future<void> fetchMessages() async {
-    // final String currentUser = currentUser;
-    final String? councilId = user['concilID']?.toString();
-    final String? teacherId = user['teacherID']?.toString();
-    final String? studentId = user['studentID']?.toString();
+    final String currentUser = widget.currentUser;
+    final String? councilId = widget.user['concilID']?.toString();
+    final String? teacherId = widget.user['teacherID']?.toString();
+    final String? studentId = widget.user['studentID']?.toString();
 
     Uri uri;
     if (councilId != null) {
@@ -85,19 +63,15 @@ class _ChatScreenState extends State<ChatScreen> {
 
         List<Map<String, dynamic>> fetchedMessages = [];
         for (var message in responseData) {
-          final imageUrl = message['imageUrl'] != null
-              ? 'https://localhost:7025/' + message['imageUrl']
-              : null;
           fetchedMessages.add({
             'id': message['messageId'],
             'content': message['content'] ?? 'No content',
-            'imageUrl': imageUrl,
+            'imagePath': message['imageUrl'],
             'time': DateTime.parse(message['timeSent'])
                 .toLocal()
                 .toString()
                 .substring(11, 16),
             'isSentByMe': (message['senderId'].toString() == currentUser),
-            'isImage': message['isImage'] ?? false,
           });
         }
 
@@ -112,22 +86,20 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> sendMessage(String message,
-      {String? imageUrl, bool isImage = false}) async {
-    final String? receiverId = user['concilID']?.toString() ??
-        user['teacherID']?.toString() ??
-        user['studentID']?.toString();
+  Future<void> sendMessage(String message, {String? imagePath}) async {
+    final String? receiverId = widget.user['concilID']?.toString() ??
+        widget.user['teacherID']?.toString() ??
+        widget.user['studentID']?.toString();
 
     if (receiverId != null) {
       final Uri uri = Uri.parse('https://localhost:7025/api/Messages');
 
       final Map<String, dynamic> requestData = {
-        'senderId': int.parse(currentUser),
+        'senderId': int.parse(widget.currentUser),
         'receiverId': int.parse(receiverId),
         'content': message,
-        'imageUrl': imageUrl ?? '',
+        'imageUrl': imagePath ?? '',
         'sentAt': DateTime.now().toUtc().toIso8601String(),
-        'isImage': isImage,
       };
 
       try {
@@ -142,10 +114,9 @@ class _ChatScreenState extends State<ChatScreen> {
             messages.insert(0, {
               'id': jsonDecode(response.body)['messageId'],
               'content': message,
-              'imageUrl': imageUrl,
+              'imagePath': imagePath,
               'time': DateTime.now().toLocal().toString().substring(11, 16),
               'isSentByMe': true,
-              'isImage': isImage,
             });
           });
           messageController.clear();
@@ -160,82 +131,114 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> pickAndUploadImage() async {
+  Future<void> deleteMessage(int messageId) async {
+    final Uri uri = Uri.parse(
+        'https://localhost:7025/api/Messages/DeleteMessage/$messageId');
+
+    try {
+      final http.Response response = await http.delete(uri);
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        setState(() {
+          messages.removeWhere((message) => message['id'] == messageId);
+        });
+      } else {
+        print('Error deleting message: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> showDeleteConfirmationDialog(
+      BuildContext context, int messageId) async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Deletion'),
+          content: Text('Are you sure you want to delete this message?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      await deleteMessage(messageId);
+    }
+  }
+
+  Future<void> pickAndSelectImage() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         if (kIsWeb) {
-          // For web, use http package to upload the image
-          final uri =
-              Uri.parse('https://localhost:7025/api/Messages/UploadImage');
-          final request = http.MultipartRequest('POST', uri)
-            ..files.add(await http.MultipartFile.fromPath(
-              'file',
-              pickedFile.path,
-              contentType: MediaType('image', 'jpeg'),
-            ));
-
-          final streamedResponse = await request.send();
-          final response = await http.Response.fromStream(streamedResponse);
-
-          if (response.statusCode == 200) {
-            final responseData = jsonDecode(response.body);
-            final imageUrl = responseData['imageUrl'];
-            await sendMessage('', imageUrl: imageUrl, isImage: true);
-          } else {
-            print('Error uploading image: ${response.statusCode}');
-            print('Response body: ${response.body}');
-          }
-        } else {
-          // For mobile and desktop, use dio package to upload the image
-          final String fileName = pickedFile.path.split('/').last;
-          final FormData formData = FormData.fromMap({
-            'file': await MultipartFile.fromFile(pickedFile.path,
-                filename: fileName),
+          final bytes = await pickedFile.readAsBytes();
+          setState(() {
+            _webImage = bytes;
           });
-
-          final Response response = await _dio.post(
-            'https://localhost:7025/api/Messages/UploadImage',
-            data: formData,
-          );
-
-          if (response.statusCode == 200) {
-            final responseData = response.data;
-            final imageUrl = responseData['imageUrl'];
-            await sendMessage('', imageUrl: imageUrl, isImage: true);
-          } else {
-            print('Error uploading image: ${response.statusCode}');
-            print('Response body: ${response.data}');
-          }
+          await sendMessage('', imagePath: base64Encode(bytes));
+        } else {
+          setState(() {
+            _selectedImage = pickedFile;
+          });
+          await sendMessage('', imagePath: pickedFile.path);
         }
       } else {
         print('No image selected.');
       }
     } catch (e) {
-      print('Error picking or uploading image: $e');
+      print('Error picking image: $e');
+    }
+  }
+
+  Widget _handlePreview(String? imagePath) {
+    if (imagePath != null && imagePath.isNotEmpty) {
+      if (kIsWeb) {
+        try {
+          return Image.memory(
+            base64Decode(imagePath),
+            width: 150,
+            height: 150,
+            fit: BoxFit.cover,
+          );
+        } catch (e) {
+          return const Text('Failed to load image.');
+        }
+      } else {
+        return Image.file(
+          File(imagePath),
+          width: 150,
+          height: 150,
+          fit: BoxFit.cover,
+        );
+      }
+    } else {
+      return const Text('No image selected.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print("rebuilding widget, current chat: ${widget.currentChat.userName}");
-    final String userName = user['concilName'] ??
-        user['teachername'] ??
-        user['studentName'] ??
+    final String userName = widget.user['concilName'] ??
+        widget.user['teachername'] ??
+        widget.user['studentName'] ??
         'Unknown';
-    final String lastSeen = user['lastSeen'] ?? 'Unknown';
 
     return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   backgroundColor: Color(0xFF176B87),
-      //   title: Column(
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     children: [
-      //       Text(userName),
-      //     ],
-      //   ),
-      // ),
       body: Container(
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(16)),
@@ -309,19 +312,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  if (message['isImage'] &&
-                                      message['imageUrl'] != null)
-                                    Image.network(
-                                      message['imageUrl'],
-                                      fit: BoxFit.cover,
-                                      width: 150,
-                                      height: 150,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Text(
-                                            'Image could not be loaded: $error');
-                                      },
-                                    )
+                                  if (message['imagePath'] != null &&
+                                      message['imagePath']!.isNotEmpty)
+                                    _handlePreview(message['imagePath'])
                                   else
                                     Text(
                                       message['content'] ?? 'No Content',
@@ -360,31 +353,15 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Card(
                       child: TextField(
                         controller: messageController,
-                        // maxLines: 5,
+                        maxLines: 5,
                         minLines: 1,
-                        onSubmitted: (query) {
-                          final message = messageController.text;
-                          if (message.isNotEmpty) {
-                            sendMessage(message);
-                          }
-                        },
                         decoration: InputDecoration(
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          errorBorder: InputBorder.none,
-                          focusedErrorBorder: InputBorder.none,
-                          disabledBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
                           suffixIcon: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                onPressed: pickAndUploadImage,
+                                onPressed: pickAndSelectImage,
                                 icon: Icon(Icons.image),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.camera_alt),
                               ),
                             ],
                           ),
@@ -396,7 +373,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   SizedBox(width: 10),
                   CircleAvatar(
-                    backgroundColor: Color(0xFF0047A5),
+                    backgroundColor: Color(0xFFB4D4FF),
                     child: IconButton(
                       onPressed: () {
                         final message = messageController.text;
@@ -414,37 +391,6 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> showDeleteConfirmationDialog(
-      BuildContext context, int messageId) async {
-    final bool? confirm = await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('تأكيد الحذف'),
-          content: Text('هل أنت متأكد أنك تريد حذف هذه الرسالة؟'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: Text('إلغاء'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: Text('حذف'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirm == true) {
-      await deleteMessage(messageId);
-    }
   }
 
   Future<void> showEditMessageDialog(
@@ -485,44 +431,14 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> deleteMessage(int? messageId) async {
-    if (messageId == null) {
-      print('Error: Cannot delete message with null ID.');
-      return;
-    }
-
-    final Uri uri = Uri.parse(
-        'https://localhost:7025/api/Messages/DeleteMessage/$messageId');
-
-    try {
-      final http.Response response = await http.delete(uri);
-
-      if (response.statusCode == 200) {
-        setState(() {
-          messages.removeWhere((message) => message['id'] == messageId);
-        });
-      } else {
-        print('Error deleting message: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
-
-  Future<void> editMessage(int? messageId, String newContent) async {
-    if (messageId == null) {
-      print('Error: Cannot edit message with null ID.');
-      return;
-    }
-
+  Future<void> editMessage(int messageId, String newContent) async {
     final Uri uri = Uri.parse(
         'https://localhost:7025/api/Messages/UpdateMessage/$messageId');
 
     final Map<String, dynamic> requestData = {
       'messageId': messageId,
       'content': newContent,
-      'imageUrl':
-          '' // Add ImageUrl field with an empty string or appropriate value
+      'imageUrl': '' // Ensure imageUrl field is set appropriately
     };
 
     try {

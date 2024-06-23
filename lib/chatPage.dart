@@ -18,6 +18,7 @@ class _ChatPageState extends State<ChatPage> {
   List<dynamic> filteredUsers = [];
   Map<String, int> unreadMessagesCount = {};
   Chat? currentChat = null;
+
   Future<void> fetchUsersAndStaff(String currentUser) async {
     final Uri councilUri = Uri.parse(
         'https://localhost:7025/api/concilMember/GetAllConcilMembers');
@@ -197,7 +198,6 @@ class _ChatPageState extends State<ChatPage> {
                             child: ListTile(
                               onTap: () {
                                 setState(() {
-                                  currentChat = null;
                                   currentChat = Chat(
                                       currentUserId: userData.id,
                                       user: user,
@@ -229,7 +229,9 @@ class _ChatPageState extends State<ChatPage> {
                     )
                   : ChatScreen(
                       key: ValueKey(currentChat),
-                      currentChat: currentChat!,
+                      user: currentChat!.user,
+                      currentUser: currentChat!.currentUserId,
+                      userName: currentChat!.userName,
                     ),
             )
           ],

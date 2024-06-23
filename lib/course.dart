@@ -84,13 +84,15 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
     _fetchUserData();
     _loadCourses();
   }
+
   Future<void> _fetchUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final role = prefs.getString('userRole');
-    if(role==null){
+    if (role == null) {
       Navigator.pushNamed(context, '/login');
     }
   }
+
   Future<void> _loadCourses() async {
     final String response = await rootBundle.loadString('files/courses.json');
     final List<dynamic> data = json.decode(response);
@@ -101,14 +103,16 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
 
   Future<void> _fetchOfficeHours(String instructor) async {
     try {
-      final response = await http.get(Uri.parse('https://localhost:7025/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
+      final response = await http.get(Uri.parse(
+          'https://localhost:7025/api/OfficeHour/GetOfficeHour?TeacherName=$instructor'));
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         setState(() {
           _filteredOfficeHours = [OfficeHour.fromJson(data)];
         });
       } else {
-        throw Exception('Failed to load office hours. Status code: ${response.statusCode}');
+        throw Exception(
+            'Failed to load office hours. Status code: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching office hours: $e');
@@ -118,8 +122,10 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
 
   void _searchCourse(String name) {
     setState(() {
-      _filteredCourses = _courses.where((course) =>
-      course.nameOfCourse.toLowerCase() == name.toLowerCase()).toList();
+      _filteredCourses = _courses
+          .where((course) =>
+              course.nameOfCourse.toLowerCase() == name.toLowerCase())
+          .toList();
     });
   }
 
@@ -152,7 +158,9 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
                   },
                   child: Text('Course'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _selectedOption == 1 ? Colors.blue : Colors.grey,
+                    backgroundColor: _selectedOption == 1
+                        ? Color.fromARGB(255, 106, 144, 176)
+                        : Colors.grey,
                   ),
                 ),
                 SizedBox(width: 10),
@@ -167,7 +175,9 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
                   },
                   child: Text('Office Hours'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _selectedOption == 2 ? Color.fromARGB(255, 106, 144, 176) : Colors.grey,
+                    backgroundColor: _selectedOption == 2
+                        ? Color.fromARGB(255, 106, 144, 176)
+                        : Colors.grey,
                   ),
                 ),
               ],
@@ -175,8 +185,17 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
             SizedBox(height: 20),
             TextField(
               controller: _controller,
+              onSubmitted: (text) {
+                if (_selectedOption == 1) {
+                  _searchCourse(text);
+                } else {
+                  _searchOfficeHours(text);
+                }
+              },
               decoration: InputDecoration(
-                labelText: _selectedOption == 1 ? 'Enter course code as "COMP133"' : 'Enter instructor name',
+                labelText: _selectedOption == 1
+                    ? 'Enter course code as "COMP133"'
+                    : 'Enter instructor name',
                 suffixIcon: IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () {
@@ -193,49 +212,312 @@ class _CourseSearchScreenState extends State<CourseSearchScreen> {
             Expanded(
               child: _selectedOption == 1
                   ? _filteredCourses.isNotEmpty
-                  ? ListView.builder(
-                itemCount: _filteredCourses.length,
-                itemBuilder: (context, index) {
-                  final course = _filteredCourses[index];
-                  return ListTile(
-                    title: Text('Course Name: ${course.nameOfCourse}', style: TextStyle(fontSize: 18)),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Section: ${course.sec}', style: TextStyle(fontSize: 16)),
-                        Text('Instructor: ${course.nameOfInstructor}', style: TextStyle(fontSize: 16)),
-                        Text('Days: ${course.days}', style: TextStyle(fontSize: 16)),
-                        Text('Time: ${course.time}', style: TextStyle(fontSize: 16)),
-                        Text('Place: ${course.place}', style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    isThreeLine: true,
-                  );
-                },
-              )
-                  : Text('No course found', style: TextStyle(fontSize: 18))
+                      ? ListView.builder(
+                          itemCount: _filteredCourses.length,
+                          itemBuilder: (context, index) {
+                            final course = _filteredCourses[index];
+                            return Center(
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    child: Table(
+                                      columnWidths: {
+                                        0: FlexColumnWidth(),
+                                        1: FlexColumnWidth(),
+                                      },
+                                      children: [
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Course Name:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                course.nameOfCourse,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Section:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                course.sec.toString(),
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Instructor:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                course.nameOfInstructor,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Days:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                course.days,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Time:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                course.time,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Place:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                course.place,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Text('No course found', style: TextStyle(fontSize: 18))
                   : _filteredOfficeHours.isNotEmpty
-                  ? ListView.builder(
-                itemCount: _filteredOfficeHours.length,
-                itemBuilder: (context, index) {
-                  final officeHour = _filteredOfficeHours[index];
-                  return ListTile(
-                    title: Text('Instructor: ${_controller.text}', style: TextStyle(fontSize: 18)),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Days: ${officeHour.teacherFreeDay}', style: TextStyle(fontSize: 16)),
-                        Text('Start Time: ${officeHour.teacherStartFreeTime}', style: TextStyle(fontSize: 16)),
-                        Text('End Time: ${officeHour.teacherEndFreeTime}', style: TextStyle(fontSize: 16)),
-                        Text('Building: ${officeHour.buildingName}', style: TextStyle(fontSize: 16)),
-                        Text('Room: ${officeHour.roomNumber}', style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    isThreeLine: true,
-                  );
-                },
-              )
-                  : Text('No office hours found', style: TextStyle(fontSize: 18)),
+                      ? ListView.builder(
+                          itemCount: _filteredOfficeHours.length,
+                          itemBuilder: (context, index) {
+                            final officeHour = _filteredOfficeHours[index];
+                            return Center(
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.8,
+                                    child: Table(
+                                      columnWidths: {
+                                        0: FlexColumnWidth(),
+                                        1: FlexColumnWidth(),
+                                      },
+                                      children: [
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Instructor:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                _controller.text,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Days:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                officeHour.teacherFreeDay,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Start Time:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                officeHour.teacherStartFreeTime,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'End Time:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                officeHour.teacherEndFreeTime,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Building:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                officeHour.buildingName,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                'Room:',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Center(
+                                              child: Text(
+                                                officeHour.roomNumber,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                            ),
+                                          ),
+                                        ]),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Text('No office hours found',
+                          style: TextStyle(fontSize: 18)),
             ),
           ],
         ),
