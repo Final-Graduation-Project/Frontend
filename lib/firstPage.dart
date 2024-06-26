@@ -218,9 +218,12 @@ class _FirstPageState extends State<FirstPage> {
     return _events.any((event) => isSameDay(event.date, date));
   }
 
-  List<Event> _visibleEvents() {
+  List<Event> _currentWeekEvents() {
+    final startOfWeek =
+        _focusedDay.subtract(Duration(days: _focusedDay.weekday - 1));
+    final endOfWeek = startOfWeek.add(Duration(days: 6));
     return _events.where((event) {
-      return event.date.difference(_focusedDay).inDays.abs() < 7;
+      return event.date.isAfter(startOfWeek) && event.date.isBefore(endOfWeek);
     }).toList();
   }
 
@@ -236,6 +239,7 @@ class _FirstPageState extends State<FirstPage> {
               'title': e['title']?.toString() ?? '',
               'description': e['description']?.toString() ?? '',
               'imageUrl': e['imagePath']?.toString() ?? '',
+              'id': e['id']?.toString() ?? '',
             };
           }).toList());
         });
@@ -418,6 +422,110 @@ class _FirstPageState extends State<FirstPage> {
         );
       },
     );
+  }
+
+  void _showEditNewsDialog(Map<String, String> news, int index) {
+    TextEditingController titleController =
+        TextEditingController(text: news['title']);
+    TextEditingController descriptionController =
+        TextEditingController(text: news['description']);
+    XFile? selectedImage;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Edit News'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(labelText: 'Title'),
+                ),
+                TextField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(labelText: 'Description'),
+                  maxLines: 3,
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () async {
+                    final XFile? image = await ImagePicker()
+                        .pickImage(source: ImageSource.gallery);
+                    if (image != null) {
+                      setState(() {
+                        selectedImage = image;
+                      });
+                    }
+                  },
+                  child: Text('Attach Image'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (titleController.text.isEmpty ||
+                    descriptionController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Title and description are required.'),
+                    ),
+                  );
+                  return;
+                }
+
+                String? imagePath = news['imageUrl'];
+                if (selectedImage != null) {
+                  imagePath = base64Encode(await selectedImage!.readAsBytes());
+                }
+
+                final updatedNews = {
+                  'title': titleController.text,
+                  'description': descriptionController.text,
+                  'imageUrl': imagePath!,
+                  'id': news['id']!,
+                };
+
+                await _updateNews(updatedNews, index);
+
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _updateNews(Map<String, String> news, int index) async {
+    final String url = 'https://localhost:7025/api/News/UpdateNews';
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(news),
+      );
+      if (response.statusCode == 200) {
+        print('News updated successfully');
+        setState(() {
+          _newsList[index] = news;
+        });
+      } else {
+        print('Failed to update news: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred while updating news: $e');
+    }
   }
 
   void _showNewsDetails(Map<String, String> news) {
@@ -933,39 +1041,47 @@ class _FirstPageState extends State<FirstPage> {
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: _events.map((event) {
+                      children: _currentWeekEvents().map((event) {
                         return GestureDetector(
                           onTap: () {
                             _showEventDetails(event);
                           },
-                          child: _buildEventCard(
+                          child: _buildCard(
                               event.title, event.imagePath ?? '', Icons.event),
                         );
                       }).toList(),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Divider(color: Color(0xFF176B87)),
                   ),
-                  SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'HOT NEWS',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF176B87),
-                        fontFamily: 'Roboto',
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'HOT NEWS',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF176B87),
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add, color: Color(0xFF176B87)),
+                          onPressed: _showAddNewsDialog,
+                        ),
+                      ],
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
+                    height: MediaQuery.of(context).size.height * 0.3,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: _newsList.length,
@@ -989,7 +1105,7 @@ class _FirstPageState extends State<FirstPage> {
     );
   }
 
-  Widget _buildEventCard(String title, String imageUrl, IconData icon) {
+  Widget _buildCard(String title, String imageUrl, IconData icon) {
     Uint8List? imageBytes;
     if (imageUrl.isNotEmpty) {
       try {
@@ -998,26 +1114,36 @@ class _FirstPageState extends State<FirstPage> {
         print('Error decoding image: $e');
       }
     }
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (imageBytes != null)
-            Expanded(
-              child: Image.memory(imageBytes, fit: BoxFit.cover),
-            )
-          else
-            Icon(Icons.image_not_supported),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              title,
-              style: TextStyle(fontWeight: FontWeight.bold),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+    return Container(
+      width: 200, // Fixed width for all cards
+      margin: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (imageBytes != null)
+              Image.memory(imageBytes,
+                  height: 100,
+                  width: 200,
+                  fit: BoxFit.cover) // Fixed size for image
+            else
+              Container(
+                height: 100,
+                width: 200,
+                color: Colors.grey,
+                child: Icon(icon, size: 60),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1032,37 +1158,52 @@ class _FirstPageState extends State<FirstPage> {
       }
     }
 
-    return Card(
-      child: Column(
-        children: [
-          if (imageBytes != null)
-            Expanded(
-              child: Image.memory(imageBytes, fit: BoxFit.cover),
-            )
-          else
-            Icon(Icons.image_not_supported),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              news['title']!,
-              style: TextStyle(fontWeight: FontWeight.bold),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+    return Container(
+      width: 200, // Fixed width for all cards
+      margin: const EdgeInsets.all(8.0),
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (imageBytes != null)
+              Image.memory(imageBytes,
+                  height: 100,
+                  width: 200,
+                  fit: BoxFit.cover) // Fixed size for image
+            else
+              Container(
+                height: 100,
+                width: 200,
+                color: Colors.grey,
+                child: Icon(Icons.article, size: 60),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                news['title']!,
+                style: TextStyle(fontWeight: FontWeight.bold),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () => _deleteNews(index),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.edit, color: Colors.blue),
+                    onPressed: () => _showEditNewsDialog(news, index),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () => _deleteNews(index),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
