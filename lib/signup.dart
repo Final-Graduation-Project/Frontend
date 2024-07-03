@@ -1,4 +1,3 @@
-// ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -118,7 +117,7 @@ class _SignupState extends State<Signup> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-    final url = Uri.parse('http://localhost:5050/api/Student/AddStudent');
+    final url = Uri.parse('https://localhost:7025/api/Student/AddStudent');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -132,7 +131,6 @@ class _SignupState extends State<Signup> {
         'universityMajor': major,
       }),
     );
-
     if (response.statusCode == 200) {
       // Sign-up successful, navigate to next page
       Navigator.pushNamed(context, '/validate');

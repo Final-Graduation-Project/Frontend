@@ -49,7 +49,7 @@ class Mainpage extends StatelessWidget {
         '/aboutus': (context) => const AboutUs(),
         '/signup': (context) => Signup(),
         '/contactus': (context) => const ContactUs(),
-        '/validate': (context) => const Validate(),
+        //'/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
         '/chatbot': (context) => ChatBot(),

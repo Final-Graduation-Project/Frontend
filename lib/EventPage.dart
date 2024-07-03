@@ -519,6 +519,7 @@ class _EventPageState extends State<EventPage> {
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
+                                          if(userRole!="student"&&userRole!=null)
                                           IconButton(
                                             icon: const Icon(Icons.edit,
                                                 color: Colors.black),
@@ -530,7 +531,8 @@ class _EventPageState extends State<EventPage> {
                                                   editEvent: event);
                                             },
                                           ),
-                                          IconButton(
+                                          if(userRole!="student"&&userRole!=null)
+                                            IconButton(
                                             icon: const Icon(Icons.delete,
                                                 color: Colors.black),
                                             onPressed: () {
