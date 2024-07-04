@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -27,8 +25,7 @@ class _SignupState extends State<Signup> {
   bool _universityIDEnabled = false;
   bool _passwordEnabled = false;
   bool _passwordMatch = false;
-  bool _majorEnabled =
-      false; // Define _majorEnabled and set initial value to false
+  bool _majorEnabled = false;
 
   final List<String> majors = [
     "Arabic Language and Literature",
@@ -134,10 +131,8 @@ class _SignupState extends State<Signup> {
     );
 
     if (response.statusCode == 200) {
-      // Sign-up successful, navigate to next page
       Navigator.pushNamed(context, '/validate');
     } else {
-      // Sign-up failed, show error message
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -174,7 +169,6 @@ class _SignupState extends State<Signup> {
                 SizedBox(height: 16),
                 buildFirstNameField(),
                 SizedBox(height: 16),
-                //comit
                 buildEmailField(),
                 SizedBox(height: 16),
                 buildMajorField(),
@@ -318,6 +312,7 @@ class _SignupState extends State<Signup> {
         return TextFormField(
           controller: fieldController,
           focusNode: fieldFocusNode,
+          enabled: _majorEnabled,
           decoration: InputDecoration(
             labelText: "Major",
             border: OutlineInputBorder(
@@ -442,9 +437,7 @@ class _SignupState extends State<Signup> {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            // Implement your sign-up logic here
-            // _signUp();
-            Navigator.pushNamed(context, '/validate');
+            _signUp();
           }
         },
         child: Text("Validate your email !"),
