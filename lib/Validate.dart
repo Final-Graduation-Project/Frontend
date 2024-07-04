@@ -1,11 +1,12 @@
-/*
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Validate extends StatefulWidget {
-
   const Validate({Key? key}) : super(key: key);
 
   @override
@@ -15,18 +16,141 @@ class Validate extends StatefulWidget {
 class _ValidateState extends State<Validate> {
   final List<TextEditingController> _controllers =
   List.generate(5, (index) => TextEditingController());
+  late String _generatedCode;
 
   @override
   void initState() {
     super.initState();
+    _getUserData();
   }
 
-  @override
-  void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
+  void _show(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('email'),
+          content: Text("the code sent to: "+message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Future<void> _getUserData() async {
+    final preferences = await SharedPreferences.getInstance();
+    String? _email = preferences.getString('email');
+    _generatedCode = _generateRandomCode();
+    if (_email != null) {
+      await _sendCodeToEmail(_email, _generatedCode);
+      _show(context, _email);
+    } else {
+      print('email null');
     }
-    super.dispose();
+  }
+
+  String _generateRandomCode() {
+    final random = Random();
+    final code = List.generate(5, (_) => random.nextInt(10)).join();
+    return code;
+  }
+
+  Future<void> _sendCodeToEmail(String email, String code) async {
+    print(email + "" + code);
+    final response = await http.get(
+      Uri.parse('https://localhost:7025/api/Account?email=$email&token=$code'),
+    );
+
+    if (response.statusCode != 200) {
+      _showErrorDialog(context, response.body);
+    }
+  }
+
+  void _validateCode(BuildContext context) async {
+    String userInputToken =
+    _controllers.map((controller) => controller.text).join();
+    if (_generatedCode == userInputToken) {
+      final preferences = await SharedPreferences.getInstance();
+      String? universityID = preferences.getString('universityID');
+      String? password = preferences.getString('password');
+      String? confirmPassword = preferences.getString('confirmPassword');
+      String? name = preferences.getString('name');
+      String? major = preferences.getString('major');
+      String? _email = preferences.getString('email');
+      final url = Uri.parse('https://localhost:7025/api/Student/AddStudent');
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'id': int.parse(universityID!),
+          'email': _email,
+          'password': password,
+          'confpassword': confirmPassword,
+          'name': name,
+          'phone': 591234567,
+          'universityMajor': major,
+        }),
+      );
+      if (response.statusCode == 200) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Sign Up done  '),
+            content: Text('you can login to system'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pushNamed(context, '/login'),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        preferences.clear();
+      } else {
+        // Sign-up failed, show error message
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Sign Up Failed'),
+            content: Text(response.body),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      _showErrorDialog(context, 'Error validating code. Please try again.');
+    }
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -84,11 +208,13 @@ class _ValidateState extends State<Validate> {
                           ),
                         ),
                       ),
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.symmetric(vertical: 50.0),
                         child: ElevatedButton(
-                          onPressed: null, // Add your onPressed logic here
-                          child: Text('Validate'),
+                          onPressed: () {
+                            _validateCode(context);
+                          },
+                          child: const Text('Validate'),
                         ),
                       ),
                     ],
@@ -101,47 +227,4 @@ class _ValidateState extends State<Validate> {
       ),
     );
   }
-
-  void _validateCode(BuildContext context) async {
-    String userInputToken =
-    _controllers.map((controller) => controller.text).join();
-
-    final response = await http.get(
-      Uri.parse(
-          'https://localhost:7025/api/Account?email=${widget.email}&token=$userInputToken'),
-    );
-
-    if (response.statusCode == 200) {
-      final responseBody = json.decode(response.body);
-      if (responseBody['isValid']) {
-
-        Navigator.pushNamed(context, '/firstPage');
-      } else {
-        _showErrorDialog(context, 'Invalid code. Please try again.');
-      }
-    } else {
-      _showErrorDialog(context, 'Error validating code. Please try again.');
-    }
-  }
-
-  void _showErrorDialog(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
-*/
