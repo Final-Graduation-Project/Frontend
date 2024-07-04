@@ -53,7 +53,7 @@ class Mainpage extends StatelessWidget {
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
         '/chatbot': (context) => ChatBot(),
-        '/map': (context) => map(),
+        '/map': (context) => MapPage(),
         '/proposal': (context) =>
             Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
         '/course': (context) => CourseSearchScreen(),

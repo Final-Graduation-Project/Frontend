@@ -13,14 +13,14 @@ class Node {
   }
 }
 
-class map extends StatefulWidget {
-  const map({Key? key}) : super(key: key);
+class MapPage extends StatefulWidget {
+  const MapPage({Key? key}) : super(key: key);
 
   @override
-  _mapState createState() => _mapState();
+  _MapPageState createState() => _MapPageState();
 }
 
-class _mapState extends State<map> {
+class _MapPageState extends State<MapPage> {
   final Color color1 = Color(0xFF176B87); // Dark Blue
   final Color color2 = Color(0xFFB4D4FF); // Lighter Blue
   final Color color3 = Color(0xFF86B6F6); // Even Lighter Blue
@@ -31,7 +31,7 @@ class _mapState extends State<map> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: color1,
-       automaticallyImplyLeading: true,
+        automaticallyImplyLeading: true,
         title: Text("University map"),
       ),
       body: MyHomePage(),
@@ -40,6 +40,7 @@ class _mapState extends State<map> {
 }
 
 class MyHomePage extends StatelessWidget {
+  final GlobalKey<_RightSideState> _rightSideKey = GlobalKey<_RightSideState>();
   final GlobalKey<_MapPaneState> _mapPaneKey = GlobalKey<_MapPaneState>();
 
   @override
@@ -50,10 +51,10 @@ class MyHomePage extends StatelessWidget {
           return Column(
             children: [
               Expanded(
-                child: MapPane(key: _mapPaneKey),
+                child: MapPane(key: _mapPaneKey, rightSideKey: _rightSideKey),
               ),
               Expanded(
-                child: RightSide(mapPaneKey: _mapPaneKey),
+                child: RightSide(key: _rightSideKey, mapPaneKey: _mapPaneKey),
               ),
             ],
           );
@@ -61,11 +62,11 @@ class MyHomePage extends StatelessWidget {
           return Row(
             children: [
               Expanded(
-                child: MapPane(key: _mapPaneKey),
+                child: MapPane(key: _mapPaneKey, rightSideKey: _rightSideKey),
                 flex: 2,
               ),
               Expanded(
-                child: RightSide(mapPaneKey: _mapPaneKey),
+                child: RightSide(key: _rightSideKey, mapPaneKey: _mapPaneKey),
               ),
             ],
           );
@@ -76,7 +77,9 @@ class MyHomePage extends StatelessWidget {
 }
 
 class MapPane extends StatefulWidget {
-  const MapPane({Key? key}) : super(key: key);
+  final GlobalKey<_RightSideState> rightSideKey;
+
+  MapPane({required Key key, required this.rightSideKey}) : super(key: key);
 
   @override
   _MapPaneState createState() => _MapPaneState();
@@ -157,9 +160,8 @@ class _MapPaneState extends State<MapPane> {
   }
 
   void _updateDropdown(String nodeName) {
-    final rightSideState = context.findAncestorStateOfType<_RightSideState>();
-    if (rightSideState != null) {
-      rightSideState.updateDropdowns(nodeName);
+    if (widget.rightSideKey.currentState != null) {
+      widget.rightSideKey.currentState!.updateDropdowns(nodeName);
     }
   }
 
@@ -192,7 +194,6 @@ class PathPainter extends CustomPainter {
 
     canvas.drawPath(path, linePaint);
   }
-
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
@@ -272,7 +273,7 @@ class _HoverableBuildingPointState extends State<HoverableBuildingPoint> {
 class RightSide extends StatefulWidget {
   final GlobalKey<_MapPaneState> mapPaneKey;
 
-  RightSide({required this.mapPaneKey});
+  RightSide({required Key key, required this.mapPaneKey}) : super(key: key);
 
   @override
   _RightSideState createState() => _RightSideState();
@@ -347,48 +348,43 @@ class _RightSideState extends State<RightSide> {
         final data = jsonDecode(response.body);
         List<String> path = List<String>.from(data['path']); // Correctly parse the path as a list of strings
 
-        List<Node> pathNodes = [];
-        for (var nodeName in path) {
-          for (var node in nodes) {
-            if (node.name == nodeName) {
-              pathNodes.add(node);
-              break;
+        setState(() {
+          _path = _selectedFrom! + " -> " + data['path'].join(' -> ');
+          _distance = data['distance'];
+
+          List<Node> pathNodes = [];
+          for (var nodeName in path) {
+            for (var node in nodes) {
+              if (node.name == nodeName) {
+                pathNodes.add(node);
+                break;
+              }
             }
           }
-        }
 
-        // Add the selected nodes (from and to) if they are not already in the path
-        for (var node in nodes) {
-          if (node.name == _selectedFrom && !pathNodes.contains(node)) {
-            pathNodes.insert(0, node); // Ensure the starting node is at the beginning
-          } else if (node.name == _selectedTo && !pathNodes.contains(node)) {
-            pathNodes.add(node); // Ensure the destination node is at the end
+          for (var node in nodes) {
+            if (node.name == _selectedFrom && !pathNodes.contains(node)) {
+              pathNodes.insert(0, node); // Ensure the starting node is at the beginning
+            } else if (node.name == _selectedTo && !pathNodes.contains(node)) {
+              pathNodes.add(node); // Ensure the destination node is at the end
+            }
           }
-        }
 
-        // Use mounted to ensure setState is called only when the widget is still in the widget tree
-        if (mounted) {
-          setState(() {
-            _path = _selectedFrom! + " -> " + path.join(' -> ');
-            _distance = data['distance'];
-            widget.mapPaneKey.currentState?.updatePath(pathNodes);
-          });
-        }
+
+          widget.mapPaneKey.currentState?.updatePath(pathNodes);
+        });
+
       } else {
-        if (mounted) {
-          setState(() {
-            _path = "Error: Unable to find path.";
-            _distance = 0.0;
-          });
-        }
-      }
-    } else {
-      if (mounted) {
         setState(() {
-          _path = "Please select both starting and destination buildings.";
+          _path = "Error: Unable to find path.";
           _distance = 0.0;
         });
       }
+    } else {
+      setState(() {
+        _path = "Please select both starting and destination buildings.";
+        _distance = 0.0;
+      });
     }
   }
 
@@ -591,11 +587,6 @@ class Buttons extends StatelessWidget {
   }
 }
 
-// main.dart
-void main() {
-  runApp(MyApp());
-}
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -606,8 +597,7 @@ class MyApp extends StatelessWidget {
       ),
       home: HomePage(),
       routes: {
-        '/map': (context) => map(),
-        '/login': (context) => LoginPage(), // Ensure you have a LoginPage defined
+        '/map': (context) => MapPage(),
       },
     );
   }
@@ -633,16 +623,5 @@ class HomePage extends StatelessWidget {
 }
 
 // Ensure you have a LoginPage widget defined
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login Page'),
-      ),
-      body: Center(
-        child: Text('Login Page Content'),
-      ),
-    );
-  }
-}
+
+

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Signup extends StatefulWidget {
   Signup({Key? key}) : super(key: key);
@@ -117,39 +118,12 @@ class _SignupState extends State<Signup> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-    final url = Uri.parse('https://localhost:7025/api/Student/AddStudent');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'id': universityID,
-        'email': email,
-        'password': password,
-        'confpassword': confirmPassword,
-        'name': name,
-        'phone': '591234567',
-        'universityMajor': major,
-      }),
-    );
-    if (response.statusCode == 200) {
-      // Sign-up successful, navigate to next page
-      Navigator.pushNamed(context, '/validate');
-    } else {
-      // Sign-up failed, show error message
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Sign Up Failed'),
-          content: Text(response.body),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('name', name);
+    preferences.setString('email', email);
+    preferences.setString('major', major!);
+    preferences.setString('universityID', universityID);
+    preferences.setString('password', password);
   }
 
   @override
