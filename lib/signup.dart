@@ -1,6 +1,9 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Signup extends StatefulWidget {
   Signup({Key? key}) : super(key: key);
@@ -131,8 +134,10 @@ class _SignupState extends State<Signup> {
     );
 
     if (response.statusCode == 200) {
+      // Sign-up successful, navigate to next page
       Navigator.pushNamed(context, '/validate');
     } else {
+      // Sign-up failed, show error message
       showDialog(
         context: context,
         builder: (context) => AlertDialog(

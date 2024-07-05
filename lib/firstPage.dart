@@ -676,7 +676,292 @@ class _FirstPageState extends State<FirstPage> {
       },
     );
   }
+  void openChangePasswordDialog(BuildContext context) {
+    final _oldPasswordController = TextEditingController();
+    final _newPasswordController = TextEditingController();
+    final _confirmPasswordController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
 
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        backgroundColor: Color(0xFFEEF5FF);
+        return AlertDialog(
+          title: Text('Change Password'),
+          content: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  controller: _oldPasswordController,
+                  decoration: InputDecoration(labelText: 'Old Password'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your old password';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _newPasswordController,
+                  decoration: InputDecoration(labelText: 'New Password'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your new password';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  decoration: InputDecoration(labelText: 'Confirm New Password'),
+                  obscureText: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your new password';
+                    }
+                    if (value != _newPasswordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('Change Password'),
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  // Handle password change logic here
+                  final oldPassword = _oldPasswordController.text;
+                  final newPassword = _newPasswordController.text;
+                  changePassword(int.parse(userId!), oldPassword, newPassword);
+                  // Close the dialog
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Future<void> changePassword(
+      int id, String oldPassword, String newPassword) async {
+    if (userRole == 'student') {
+      final String url =
+          'https://localhost:7025/api/Student/ChangePassword?id=$id&oldPassword=$oldPassword&newPassword=$newPassword';
+      try {
+        final response = await http.put(
+          Uri.parse(url),
+          headers: {
+            'accept': '*/*',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          print('Password Changed Successfully');
+          // Show success message
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Password Changed Successfully'),
+              content: Text('Your password has been changed successfully'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        } else if (response.statusCode == 400) {
+          print('Failed to change password. Old password is wrong.');
+          // Show error message for wrong old password
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Failed to Change Password'),
+              content: Text('Old password is incorrect. Please try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print('Failed to change password. Status code: ${response.statusCode}');
+          // Handle other errors as needed
+          // Show generic error message
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Failed to Change Password'),
+              content: Text('Failed to change password. Please try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      } catch (e) {
+        print('Error occurred: $e');
+        // Handle the exception as needed
+        // Show exception error message
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('An error occurred: $e'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+    else if(userRole == 'teacher'){
+      final String url =
+          'https://localhost:7025/api/StaffMember/changePassword?id=$id&oldPassword=$oldPassword&newPassword=$newPassword';
+      try {
+        final response = await http.put(
+          Uri.parse(url),
+          headers: {
+            'accept': '*/*',
+          },
+        );
+        if (response.statusCode == 200) {
+          print('Password Changed Successfully');
+          // You can show a success message or handle it as needed
+          //show success message
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(
+                  title: Text('Password Changed Successfully'),
+                  content: Text(response.body),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+          );
+        } else {
+          print(
+              'Failed to change password. Status code: ${response.statusCode}');
+          // Handle the error as needed
+          //show error message
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(
+                  title: Text('Failed to Change Password'),
+                  content: Text('Failed to change password. Please try again'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+          );
+        }
+      } catch (e) {
+        print('Error occurred: $e');
+        // Handle the exception as needed
+      }
+    }
+    else {
+      final String url =
+          'https://localhost:7025/api/concilMember/changePassword?id=$id&oldPassword=$oldPassword&newPassword=$newPassword';
+      try {
+        final response = await http.put(
+          Uri.parse(url),
+          headers: {
+            'accept': '*/*',
+          },
+        );
+        if (response.statusCode == 200) {
+          print('Password Changed Successfully');
+          // You can show a success message or handle it as needed
+          //show success message
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(
+                  title: Text('Password Changed Successfully'),
+                  content: Text('Your password has been changed successfully'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+          );
+        } else {
+          print(
+              'Failed to change password. Status code: ${response.statusCode}');
+          // Handle the error as needed
+          //show error message
+          showDialog(
+            context: context,
+            builder: (context) =>
+                AlertDialog(
+                  title: Text('Failed to Change Password'),
+                  content: Text('Failed to change password. Please try again'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                ),
+          );
+        }
+      } catch (e) {
+        print('Error occurred: $e');
+        // Handle the exception as needed
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final UserData? userData =
@@ -831,10 +1116,9 @@ class _FirstPageState extends State<FirstPage> {
                       ListTile(
                         leading: Icon(Icons.lock),
                         title: Text('Change Password'),
-                        onTap: () =>
-                            Navigator.pushNamed(context, '/changepassword'),
+                        onTap:()=> openChangePasswordDialog(context),
                       ),
-                      ListTile(
+                       ListTile(
                         leading: Icon(Icons.logout),
                         title: Text('Log Out'),
                         onTap: () {
@@ -961,8 +1245,8 @@ class _FirstPageState extends State<FirstPage> {
                         leading: Icon(Icons.lock, color: Colors.black),
                         title: Text('Change Password',
                             style: TextStyle(color: Colors.black)),
-                        onTap: () =>
-                            Navigator.pushNamed(context, '/changepassword'),
+                        onTap:()=> openChangePasswordDialog(context),
+
                       ),
                       ListTile(
                         leading: Icon(Icons.logout, color: Colors.black),
@@ -1073,10 +1357,11 @@ class _FirstPageState extends State<FirstPage> {
                             fontFamily: 'Roboto',
                           ),
                         ),
-                        IconButton(
-                          icon: Icon(Icons.add, color: Color(0xFF176B87)),
-                          onPressed: _showAddNewsDialog,
-                        ),
+                        if(userRole!="teacher"&&userRole!="student"&&userRole!=null)
+                          IconButton(
+                            icon: Icon(Icons.add, color: Color(0xFF176B87)),
+                            onPressed: _showAddNewsDialog,
+                          ),
                       ],
                     ),
                   ),
@@ -1191,11 +1476,13 @@ class _FirstPageState extends State<FirstPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  if(userRole!="teacher"&&userRole!="student"&&userRole!=null)
                   IconButton(
                     icon: Icon(Icons.edit, color: Colors.blue),
                     onPressed: () => _showEditNewsDialog(news, index),
                   ),
-                  IconButton(
+                  if(userRole!="teacher"&&userRole!="student"&&userRole!=null)
+                    IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () => _deleteNews(index),
                   ),

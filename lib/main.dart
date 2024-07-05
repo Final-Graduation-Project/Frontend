@@ -49,11 +49,11 @@ class Mainpage extends StatelessWidget {
         '/aboutus': (context) => const AboutUs(),
         '/signup': (context) => Signup(),
         '/contactus': (context) => const ContactUs(),
-        '/validate': (context) => const Validate(),
+        //'/validate': (context) => const Validate(),
         '/firstPage': (context) => const FirstPage(),
         '/Eve': (context) => EventPage(),
         '/chatbot': (context) => ChatBot(),
-        '/map': (context) => map(),
+        '/map': (context) => MapPage(),
         '/proposal': (context) =>
             Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
         '/course': (context) => CourseSearchScreen(),
