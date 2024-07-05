@@ -16,7 +16,6 @@ class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _universityIDController = TextEditingController();
@@ -111,47 +110,20 @@ class _SignupState extends State<Signup> {
   ];
 
   Future<void> _signUp() async {
-    final name = _firstNameController.text + ' ' + _lastNameController.text;
-    final email = _emailController.text;
-    final major = _selectedMajor;
-    final universityID = _universityIDController.text;
-    final password = _passwordController.text;
-    final confirmPassword = _confirmPasswordController.text;
+    final String name =
+        await _firstNameController.text + ' ' + _lastNameController.text;
+    final String major = await _selectedMajor.toString();
+    final String universityID = await _universityIDController.text;
+    final String email = universityID + "@student.birzeit.edu";
+    final String password = await _passwordController.text;
+    final String confirmPassword = await _confirmPasswordController.text;
 
-    final url = Uri.parse('http://localhost:5050/api/Student/AddStudent');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'id': universityID,
-        'email': email,
-        'password': password,
-        'confpassword': confirmPassword,
-        'name': name,
-        'phone': '591234567',
-        'universityMajor': major,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      // Sign-up successful, navigate to next page
-      Navigator.pushNamed(context, '/validate');
-    } else {
-      // Sign-up failed, show error message
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Sign Up Failed'),
-          content: Text(response.body),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString('name', name);
+    preferences.setString('email', email);
+    preferences.setString('major', major!);
+    preferences.setString('universityID', universityID);
+    preferences.setString('password', password);
   }
 
   @override
@@ -174,6 +146,7 @@ class _SignupState extends State<Signup> {
                 SizedBox(height: 16),
                 buildFirstNameField(),
                 SizedBox(height: 16),
+                //comit
                 buildEmailField(),
                 SizedBox(height: 16),
                 buildMajorField(),
@@ -255,37 +228,6 @@ class _SignupState extends State<Signup> {
           borderRadius: BorderRadius.circular(10),
         ),
         prefixIcon: Icon(Icons.person),
-      ),
-    );
-  }
-
-  TextFormField buildEmailField() {
-    return TextFormField(
-      controller: _emailController,
-      keyboardType: TextInputType.emailAddress,
-      enabled: _emailEnabled,
-      onChanged: (value) {
-        setState(() {
-          _majorEnabled =
-              RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+').hasMatch(value);
-        });
-      },
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "Please enter your email";
-        }
-        if (!RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+')
-            .hasMatch(value)) {
-          return "Please enter a valid email";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Email",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        prefixIcon: Icon(Icons.email),
       ),
     );
   }
@@ -442,7 +384,9 @@ class _SignupState extends State<Signup> {
       child: ElevatedButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            _signUp();
+            // Implement your sign-up logic here
+            // _signUp();
+            Navigator.pushNamed(context, '/validate');
           }
         },
         child: Text("Validate your email !"),
