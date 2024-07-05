@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/Login.dart';
 import 'package:flutter_application_1/course.dart';
-import 'package:flutter_application_1/proposal.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -360,11 +358,19 @@ class _FirstPageState extends State<FirstPage> {
               children: [
                 TextField(
                   controller: titleController,
-                  decoration: InputDecoration(labelText: 'Title'),
+                  decoration: InputDecoration(
+                      labelText: 'Title',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 5.0),
+                      )),
                 ),
                 TextField(
                   controller: descriptionController,
-                  decoration: InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(
+                      labelText: 'Description',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 5.0),
+                      )),
                   maxLines: 3,
                 ),
                 SizedBox(height: 10),
@@ -437,15 +443,27 @@ class _FirstPageState extends State<FirstPage> {
         return AlertDialog(
           title: Text('Edit News'),
           content: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
             child: Column(
               children: [
                 TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(labelText: 'Title'),
+                    controller: titleController,
+                    decoration: InputDecoration(
+                        labelText: 'Title',
+                        hintText: 'Enter Title',
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 2.0),
+                        ))),
+                SizedBox(
+                  height: 12.0,
                 ),
                 TextField(
                   controller: descriptionController,
-                  decoration: InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(
+                      labelText: 'Description',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(width: 2.0),
+                      )),
                   maxLines: 3,
                 ),
                 SizedBox(height: 10),
@@ -542,23 +560,28 @@ class _FirstPageState extends State<FirstPage> {
         }
 
         return Dialog(
-          child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
+            width: MediaQuery.of(context).size.width * 0.5,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (imageBytes != null)
                   Image.memory(imageBytes,
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      width: MediaQuery.of(context).size.width * 0.45,
                       fit: BoxFit.cover)
                 else
                   Icon(Icons.image_not_supported,
                       size: 100, color: Colors.white),
                 SizedBox(height: 10),
-                Padding(
+                Container(
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     news['title'] ?? '',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -566,10 +589,12 @@ class _FirstPageState extends State<FirstPage> {
                     ),
                   ),
                 ),
-                Padding(
+                Container(
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     news['description'] ?? '',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.black,
@@ -605,7 +630,9 @@ class _FirstPageState extends State<FirstPage> {
 
         return Dialog(
           child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 16.0),
             width: 160,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0)),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -621,10 +648,12 @@ class _FirstPageState extends State<FirstPage> {
                   Icon(Icons.image_not_supported,
                       size: 100, color: Colors.black),
                 SizedBox(height: 10),
-                Padding(
+                Container(
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     event.title,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -663,11 +692,21 @@ class _FirstPageState extends State<FirstPage> {
                     ],
                   ),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Close', style: TextStyle(color: Colors.blue)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Close',
+                              style: TextStyle(color: Colors.blue)),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -676,6 +715,7 @@ class _FirstPageState extends State<FirstPage> {
       },
     );
   }
+
   void openChangePasswordDialog(BuildContext context) {
     final _oldPasswordController = TextEditingController();
     final _newPasswordController = TextEditingController();
@@ -685,7 +725,8 @@ class _FirstPageState extends State<FirstPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        backgroundColor: Color(0xFFEEF5FF);
+        backgroundColor:
+        Color(0xFFEEF5FF);
         return AlertDialog(
           title: Text('Change Password'),
           content: Form(
@@ -717,7 +758,8 @@ class _FirstPageState extends State<FirstPage> {
                 ),
                 TextFormField(
                   controller: _confirmPasswordController,
-                  decoration: InputDecoration(labelText: 'Confirm New Password'),
+                  decoration:
+                      InputDecoration(labelText: 'Confirm New Password'),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -757,6 +799,7 @@ class _FirstPageState extends State<FirstPage> {
       },
     );
   }
+
   Future<void> changePassword(
       int id, String oldPassword, String newPassword) async {
     if (userRole == 'student') {
@@ -807,7 +850,8 @@ class _FirstPageState extends State<FirstPage> {
             ),
           );
         } else {
-          print('Failed to change password. Status code: ${response.statusCode}');
+          print(
+              'Failed to change password. Status code: ${response.statusCode}');
           // Handle other errors as needed
           // Show generic error message
           showDialog(
@@ -846,8 +890,7 @@ class _FirstPageState extends State<FirstPage> {
           ),
         );
       }
-    }
-    else if(userRole == 'teacher'){
+    } else if (userRole == 'teacher') {
       final String url =
           'https://localhost:7025/api/StaffMember/changePassword?id=$id&oldPassword=$oldPassword&newPassword=$newPassword';
       try {
@@ -863,19 +906,18 @@ class _FirstPageState extends State<FirstPage> {
           //show success message
           showDialog(
             context: context,
-            builder: (context) =>
-                AlertDialog(
-                  title: Text('Password Changed Successfully'),
-                  content: Text(response.body),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
+            builder: (context) => AlertDialog(
+              title: Text('Password Changed Successfully'),
+              content: Text(response.body),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
                 ),
+              ],
+            ),
           );
         } else {
           print(
@@ -884,27 +926,25 @@ class _FirstPageState extends State<FirstPage> {
           //show error message
           showDialog(
             context: context,
-            builder: (context) =>
-                AlertDialog(
-                  title: Text('Failed to Change Password'),
-                  content: Text('Failed to change password. Please try again'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
+            builder: (context) => AlertDialog(
+              title: Text('Failed to Change Password'),
+              content: Text('Failed to change password. Please try again'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
                 ),
+              ],
+            ),
           );
         }
       } catch (e) {
         print('Error occurred: $e');
         // Handle the exception as needed
       }
-    }
-    else {
+    } else {
       final String url =
           'https://localhost:7025/api/concilMember/changePassword?id=$id&oldPassword=$oldPassword&newPassword=$newPassword';
       try {
@@ -920,19 +960,18 @@ class _FirstPageState extends State<FirstPage> {
           //show success message
           showDialog(
             context: context,
-            builder: (context) =>
-                AlertDialog(
-                  title: Text('Password Changed Successfully'),
-                  content: Text('Your password has been changed successfully'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
+            builder: (context) => AlertDialog(
+              title: Text('Password Changed Successfully'),
+              content: Text('Your password has been changed successfully'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
                 ),
+              ],
+            ),
           );
         } else {
           print(
@@ -941,19 +980,18 @@ class _FirstPageState extends State<FirstPage> {
           //show error message
           showDialog(
             context: context,
-            builder: (context) =>
-                AlertDialog(
-                  title: Text('Failed to Change Password'),
-                  content: Text('Failed to change password. Please try again'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text('OK'),
-                    ),
-                  ],
+            builder: (context) => AlertDialog(
+              title: Text('Failed to Change Password'),
+              content: Text('Failed to change password. Please try again'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
                 ),
+              ],
+            ),
           );
         }
       } catch (e) {
@@ -962,6 +1000,7 @@ class _FirstPageState extends State<FirstPage> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final UserData? userData =
@@ -972,7 +1011,7 @@ class _FirstPageState extends State<FirstPage> {
         Navigator.pushReplacementNamed(context, '/login');
       });
     }
-    isMobile = MediaQuery.of(context).size.width < 600;
+    isMobile = !kIsWeb;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -1116,9 +1155,9 @@ class _FirstPageState extends State<FirstPage> {
                       ListTile(
                         leading: Icon(Icons.lock),
                         title: Text('Change Password'),
-                        onTap:()=> openChangePasswordDialog(context),
+                        onTap: () => openChangePasswordDialog(context),
                       ),
-                       ListTile(
+                      ListTile(
                         leading: Icon(Icons.logout),
                         title: Text('Log Out'),
                         onTap: () {
@@ -1245,8 +1284,7 @@ class _FirstPageState extends State<FirstPage> {
                         leading: Icon(Icons.lock, color: Colors.black),
                         title: Text('Change Password',
                             style: TextStyle(color: Colors.black)),
-                        onTap:()=> openChangePasswordDialog(context),
-
+                        onTap: () => openChangePasswordDialog(context),
                       ),
                       ListTile(
                         leading: Icon(Icons.logout, color: Colors.black),
@@ -1324,21 +1362,34 @@ class _FirstPageState extends State<FirstPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: _currentWeekEvents().map((event) {
-                        return GestureDetector(
-                          onTap: () {
-                            _showEventDetails(event);
-                          },
-                          child: _buildCard(
-                              event.title, event.imagePath ?? '', Icons.event),
-                        );
-                      }).toList(),
-                    ),
-                  ),
+                  _currentWeekEvents().isEmpty
+                      ? Container(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          alignment: Alignment.center,
+                          child: Text(
+                            " No Events For This Week",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF176B87),
+                              fontFamily: 'Roboto',
+                            ),
+                          ))
+                      : Container(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: _currentWeekEvents().map((event) {
+                              return GestureDetector(
+                                onTap: () {
+                                  _showEventDetails(event);
+                                },
+                                child: _buildCard(event.title,
+                                    event.imagePath ?? '', Icons.event),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Divider(color: Color(0xFF176B87)),
@@ -1357,7 +1408,9 @@ class _FirstPageState extends State<FirstPage> {
                             fontFamily: 'Roboto',
                           ),
                         ),
-                        if(userRole!="teacher"&&userRole!="student"&&userRole!=null)
+                        if (userRole != "teacher" &&
+                            userRole != "student" &&
+                            userRole != null)
                           IconButton(
                             icon: Icon(Icons.add, color: Color(0xFF176B87)),
                             onPressed: _showAddNewsDialog,
@@ -1407,10 +1460,11 @@ class _FirstPageState extends State<FirstPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (imageBytes != null)
-              Image.memory(imageBytes,
-                  height: 100,
-                  width: 200,
-                  fit: BoxFit.cover) // Fixed size for image
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.memory(imageBytes,
+                    height: 100, width: 200, fit: BoxFit.fill),
+              ) // Fixed size for image
             else
               Container(
                 height: 100,
@@ -1418,10 +1472,12 @@ class _FirstPageState extends State<FirstPage> {
                 color: Colors.grey,
                 child: Icon(icon, size: 60),
               ),
-            Padding(
+            Container(
+              alignment: Alignment.center,
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 title,
+                textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -1462,30 +1518,41 @@ class _FirstPageState extends State<FirstPage> {
                 color: Colors.grey,
                 child: Icon(Icons.article, size: 60),
               ),
-            Padding(
+            Container(
+              alignment: Alignment.center,
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 news['title']!,
+                textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            Padding(
+            Container(
+              alignment: Alignment.center,
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  if(userRole!="teacher"&&userRole!="student"&&userRole!=null)
-                  IconButton(
-                    icon: Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () => _showEditNewsDialog(news, index),
-                  ),
-                  if(userRole!="teacher"&&userRole!="student"&&userRole!=null)
-                    IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _deleteNews(index),
-                  ),
+                  if (userRole != "teacher" &&
+                      userRole != "student" &&
+                      userRole != null)
+                    Expanded(
+                      child: IconButton(
+                        icon: Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () => _showEditNewsDialog(news, index),
+                      ),
+                    ),
+                  if (userRole != "teacher" &&
+                      userRole != "student" &&
+                      userRole != null)
+                    Expanded(
+                      child: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteNews(index),
+                      ),
+                    ),
                 ],
               ),
             ),

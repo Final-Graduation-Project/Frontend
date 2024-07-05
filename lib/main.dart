@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/EventPage.dart';
 import 'package:flutter_application_1/Login.dart';
@@ -69,7 +70,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isMobile = MediaQuery.of(context).size.width < 600;
+    bool isMobile = !kIsWeb;
 
     return Scaffold(
       appBar: AppBar(

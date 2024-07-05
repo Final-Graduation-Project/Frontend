@@ -460,7 +460,7 @@ class _EventPageState extends State<EventPage> {
                               margin: const EdgeInsets.all(4.0),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: const Color(0xFF86B6F6).withOpacity(0.5),
+                                color: const Color(0xFF176B87).withOpacity(0.5),
                                 shape: BoxShape.circle,
                               ),
                               child: Text(
@@ -505,7 +505,7 @@ class _EventPageState extends State<EventPage> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 16),
                                   child: Card(
-                                    color: const Color(0xFF86B6F6),
+                                    color: const Color(0xFF176B87),
                                     margin: const EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 16),
                                     child: ListTile(
@@ -513,35 +513,37 @@ class _EventPageState extends State<EventPage> {
                                       title: Text(
                                         event.title,
                                         style: const TextStyle(
-                                            color: Colors.black, fontSize: 18),
+                                            color: Colors.white, fontSize: 18),
                                       ),
                                       subtitle: _buildEventSubtitle(event),
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
-                                          if(userRole!="student"&&userRole!=null)
-                                          IconButton(
-                                            icon: const Icon(Icons.edit,
-                                                color: Colors.black),
-                                            onPressed: () {
-                                              _selectedDay = event.date;
-                                              _selectedTime = event.time;
-                                              _showAddEventDialog(
-                                                  isEdit: true,
-                                                  editEvent: event);
-                                            },
-                                          ),
-                                          if(userRole!="student"&&userRole!=null)
+                                          if (userRole != "student" &&
+                                              userRole != null)
                                             IconButton(
-                                            icon: const Icon(Icons.delete,
-                                                color: Colors.black),
-                                            onPressed: () {
-                                              setState(() {
-                                                _events.removeAt(index);
-                                              });
-                                              _saveEvents();
-                                            },
-                                          ),
+                                              icon: const Icon(Icons.edit,
+                                                  color: Colors.black),
+                                              onPressed: () {
+                                                _selectedDay = event.date;
+                                                _selectedTime = event.time;
+                                                _showAddEventDialog(
+                                                    isEdit: true,
+                                                    editEvent: event);
+                                              },
+                                            ),
+                                          if (userRole != "student" &&
+                                              userRole != null)
+                                            IconButton(
+                                              icon: const Icon(Icons.delete,
+                                                  color: Colors.black),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _events.removeAt(index);
+                                                });
+                                                _saveEvents();
+                                              },
+                                            ),
                                         ],
                                       ),
                                     ),
@@ -600,7 +602,7 @@ class _EventPageState extends State<EventPage> {
             Expanded(
               child: Text(
                 'Date: ${event.date.toString().split(' ')[0]}',
-                style: const TextStyle(color: Colors.black, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -613,7 +615,7 @@ class _EventPageState extends State<EventPage> {
             Expanded(
               child: Text(
                 'Time: ${event.time?.format(context) ?? 'Not Set'}',
-                style: const TextStyle(color: Colors.black, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -626,7 +628,7 @@ class _EventPageState extends State<EventPage> {
             Expanded(
               child: Text(
                 'Place: ${event.location ?? 'No location'}',
-                style: const TextStyle(color: Colors.black, fontSize: 16),
+                style: const TextStyle(color: Colors.white, fontSize: 16),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

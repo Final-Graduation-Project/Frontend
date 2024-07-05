@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,6 @@ class _LoginState extends State<Login> {
   Future<void> _login() async {
     final id = int.tryParse(_idController.text);
     final password = _passwordController.text;
-    
 
     final url = Uri.parse('https://localhost:7025/api/Student/login');
     final response = await http.post(
@@ -48,11 +48,11 @@ class _LoginState extends State<Login> {
       String userId = _idController.text;
       // TODO: remove this
       userId = "$id";
-                    Navigator.pushNamed(
-                      context,
-                      '/firstPage',
-                      arguments: UserData(userId),
-                    );
+      Navigator.pushNamed(
+        context,
+        '/firstPage',
+        arguments: UserData(userId),
+      );
     } else {
       // Login failed, show error message
       showDialog(
@@ -71,7 +71,8 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> _storeUserDetailsInSession(Map<String, dynamic> userDetails) async {
+  Future<void> _storeUserDetailsInSession(
+      Map<String, dynamic> userDetails) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // Store user details in shared preferences
     await prefs.setString('userId', userDetails['Id']);
@@ -79,8 +80,8 @@ class _LoginState extends State<Login> {
     await prefs.setString('userEmail', userDetails['Email']);
     await prefs.setString('userPhone', userDetails['Phone']);
     await prefs.setString('userRole', userDetails['Role']);
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,106 +92,125 @@ class _LoginState extends State<Login> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-                    Expanded(child: SizedBox(),flex: 1, ),
-
-        Expanded(child:   Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "images/studentdigitalguidelogo.png",
-                    height: 200,
-                    width: 200,
-                  ),
-                  TextFormField(
-                    controller: _idController,
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Please enter your ID number";
-                      }
-                      if (!RegExp(r'^[0-9]*$').hasMatch(value)) {
-                        return "ID number should only contain numbers";
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: "ID Number",
-                      suffixIcon: Icon(Icons.person),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16), // Adjust the content padding
+          Expanded(
+            child: SizedBox(),
+            flex: 1,
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "images/studentdigitalguidelogo.png",
+                      height: 200,
+                      width: 200,
                     ),
-                  ),
-                  const SizedBox(
-                      height:
-                          16), // Reduce the space between the ID number and password fields
-                  TextFormField(
-                    obscureText: !_isPasswordVisible,
-                    controller: _passwordController,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Please enter your password";
-                      }
-                      if (value.length < 8) {
-                        return "Password must be at least 8 characters";
-                      }
-                      if (!RegExp(
-                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                          .hasMatch(value)) {
-                        return 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      suffixIcon: IconButton(
-                        icon: Icon(_isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off),
-                        onPressed: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
+                    TextFormField(
+                      controller: _idController,
+                      keyboardType: TextInputType.number,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your ID number";
+                        }
+                        if (!RegExp(r'^[0-9]*$').hasMatch(value)) {
+                          return "ID number should only contain numbers";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "ID Number",
+                        suffixIcon: Icon(Icons.person),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16), // Adjust the content padding
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16), // Adjust the content padding
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      TextButton(
+                    const SizedBox(
+                        height:
+                            16), // Reduce the space between the ID number and password fields
+                    TextFormField(
+                      obscureText: !_isPasswordVisible,
+                      controller: _passwordController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter your password";
+                        }
+                        if (value.length < 8) {
+                          return "Password must be at least 8 characters";
+                        }
+                        if (!RegExp(
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                            .hasMatch(value)) {
+                          return 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        suffixIcon: IconButton(
+                          icon: Icon(_isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/forgotpassword');
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
                           },
-                          child: Text("forgot your password?"))
-                    ],
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _login();
-                      }
-                    },
-                    child: Text("Log in"),
-                  ),
-                ],
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16), // Adjust the content padding
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/forgotpassword');
+                            },
+                            child: Text(
+                              "forgot your password?",
+                              style: TextStyle(color: Color(0xFF176B87)),
+                            ))
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CupertinoButton(
+                            color: Color(0xFF176B87),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _login();
+                              }
+                            },
+                            child: Text("Log in"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),flex: 1,),
-          Expanded(child: SizedBox(),flex: 1, )
+            flex: 1,
+          ),
+          Expanded(
+            child: SizedBox(),
+            flex: 1,
+          )
         ],
       ),
     );
