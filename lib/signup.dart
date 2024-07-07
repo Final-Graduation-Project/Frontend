@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -27,7 +25,8 @@ class _SignupState extends State<Signup> {
   bool _universityIDEnabled = false;
   bool _passwordEnabled = false;
   bool _passwordMatch = false;
-  bool _majorEnabled = false;
+  bool _majorEnabled =
+      false; // Define _majorEnabled and set initial value to false
 
   final List<String> majors = [
     "Arabic Language and Literature",
@@ -118,12 +117,21 @@ class _SignupState extends State<Signup> {
     final String password = await _passwordController.text;
     final String confirmPassword = await _confirmPasswordController.text;
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString('name', name);
-    preferences.setString('email', email);
-    preferences.setString('major', major!);
-    preferences.setString('universityID', universityID);
-    preferences.setString('password', password);
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.setString('name', name);
+      await preferences.setString('email', email);
+      await preferences.setString('major', major!);
+      await preferences.setString('universityID', universityID);
+      await preferences.setString('password', password);
+      await preferences.setString('confirmPassword', confirmPassword);
+
+      // Optionally, you can show a success message or navigate to the next screen
+    } catch (e) {
+      // Handle any errors that occur during storage
+      print('Error storing preferences: $e');
+      // Optionally, show an error message to the user
+    }
   }
 
   @override
@@ -147,7 +155,6 @@ class _SignupState extends State<Signup> {
                 buildFirstNameField(),
                 SizedBox(height: 16),
                 //comit
-                buildEmailField(),
                 SizedBox(height: 16),
                 buildMajorField(),
                 SizedBox(height: 16),
@@ -259,7 +266,6 @@ class _SignupState extends State<Signup> {
         return TextFormField(
           controller: fieldController,
           focusNode: fieldFocusNode,
-          enabled: _majorEnabled,
           decoration: InputDecoration(
             labelText: "Major",
             border: OutlineInputBorder(
@@ -385,7 +391,7 @@ class _SignupState extends State<Signup> {
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             // Implement your sign-up logic here
-            // _signUp();
+            _signUp();
             Navigator.pushNamed(context, '/validate');
           }
         },
