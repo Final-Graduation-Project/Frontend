@@ -259,6 +259,8 @@ class _FirstPageState extends State<FirstPage> {
       );
       if (response.statusCode == 201) {
         print('News added successfully');
+        final newsId = json.decode(response.body)['id'];
+        news['id'] = newsId.toString();
         setState(() {
           _newsList.add(news);
         });
@@ -270,18 +272,43 @@ class _FirstPageState extends State<FirstPage> {
     }
   }
 
-  Future<void> _deleteNews(int index) async {
+  Future<void> _deleteNews(int id,int index) async {
     final String url =
-        'https://localhost:7025/api/News/DeleteNews/${_newsList[index]['id']}';
+        'https://localhost:7025/api/News/DeletNews$id';
     try {
       final response = await http.delete(Uri.parse(url));
       if (response.statusCode == 200) {
-        print('News deleted successfully');
-        setState(() {
-          _newsList.removeAt(index);
+        _newsList.removeAt(index);
+        showDialog(context: context, builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('News Deleted'),
+            content: Text('News has been deleted successfully'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
         });
+
       } else {
-        print('Failed to delete news: ${response.body}');
+        showDialog(context: context, builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Failed to Delete News'),
+            content: Text('Failed to delete news. Please try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
+            ],
+        );
+        });
       }
     } catch (e) {
       print('Error occurred while deleting news: $e');
@@ -507,10 +534,10 @@ class _FirstPageState extends State<FirstPage> {
                 }
 
                 final updatedNews = {
+                  'id': news['id']!,
                   'title': titleController.text,
                   'description': descriptionController.text,
                   'imageUrl': imagePath!,
-                  'id': news['id']!,
                 };
 
                 await _updateNews(updatedNews, index);
@@ -526,12 +553,18 @@ class _FirstPageState extends State<FirstPage> {
   }
 
   Future<void> _updateNews(Map<String, String> news, int index) async {
-    final String url = 'https://localhost:7025/api/News/UpdateNews';
+    int id = int.parse(news['id']!);
+    final String url = 'https://localhost:7025/api/News/UpdateNews$id';
     try {
       final response = await http.put(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(news),
+        body: jsonEncode({
+          'id': id,
+          'title': news['title'],
+          'description': news['description'],
+          'imagePath': news['imageUrl'],
+        })
       );
       if (response.statusCode == 200) {
         print('News updated successfully');
@@ -1550,7 +1583,7 @@ class _FirstPageState extends State<FirstPage> {
                     Expanded(
                       child: IconButton(
                         icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => _deleteNews(index),
+                        onPressed: () => _deleteNews(int.parse(news['id']!),index),
                       ),
                     ),
                 ],

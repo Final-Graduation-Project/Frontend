@@ -175,6 +175,48 @@ class _EventPageState extends State<EventPage> {
     await prefs.setString('selectedImagePath', path);
   }
 
+  Future<void> _deleteevent(int id) async{
+    final String url = 'https://localhost:7025/api/EventControllercs/DeleteEvent/$id';
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        setState(() {
+          _events.removeWhere((element) => element.activityID == id);
+        });
+        _saveEvents();
+        showDialog(context: context, builder: (context) => AlertDialog(
+          title: const Text('Delete Event'),
+          content: const Text('Event deleted successfully'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      } else {
+        showDialog(context: context, builder: (context) => AlertDialog(
+          title: const Text('Delete Event'),
+          content: Text('Failed to delete event: ${response.body}'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ));
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
   void _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -251,6 +293,23 @@ class _EventPageState extends State<EventPage> {
     }
   }
 
+  Future<void> _editevent(int id , EventAddEntity event) async {
+    final String url = 'https://localhost:7025/api/EventControllercs/UpdateEvent?id=$id';
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(event.toJson()),
+      );
+      if (response.statusCode == 200) {
+        print('Event edited successfully');
+      } else {
+        print('Failed to edit event: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
   void _showAddEventDialog({bool isEdit = false, Event? editEvent}) {
     final TextEditingController titleController =
         TextEditingController(text: isEdit ? editEvent?.title : '');
@@ -361,16 +420,12 @@ class _EventPageState extends State<EventPage> {
                 imagePath: imagePath, // Use selected image path
               );
 
-              bool success = await addEventToServer(newEvent);
 
-              if (success) {
-                setState(() {
+                setState(()  {
                   if (isEdit && editEvent != null) {
-                    editEvent.title = titleController.text;
-                    editEvent.location = locationController.text;
-                    editEvent.time = _selectedTime;
-                    editEvent.imagePath = imagePath;
+                     _editevent(editEvent.activityID, newEvent);
                   } else {
+                    addEventToServer(newEvent);
                     _events.add(Event(
                       activityID: newEvent.activityID,
                       title: titleController.text,
@@ -386,9 +441,7 @@ class _EventPageState extends State<EventPage> {
                 _saveEvents();
                 _selectedImage = null; // Clear selected image
                 _webImage = null; // Clear web image data
-              } else {
-                print("Failed to add event");
-              }
+
             },
           ),
         ],
@@ -438,7 +491,7 @@ class _EventPageState extends State<EventPage> {
                           _selectedDay = selectedDay;
                           _focusedDay = focusedDay;
                         });
-                        if (userRole == "student" || userRole == null) {
+                        if (userRole == "student" || userRole=="teacher" ||userRole == null) {
                           return;
                         } else {
                           _showAddEventDialog(isEdit: false);
@@ -513,13 +566,14 @@ class _EventPageState extends State<EventPage> {
                                       title: Text(
                                         event.title,
                                         style: const TextStyle(
-                                            color: Colors.white, fontSize: 18),
+                                            color: Colors.white, fontSize: 24),
                                       ),
                                       subtitle: _buildEventSubtitle(event),
                                       trailing: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
                                           if (userRole != "student" &&
+                                              userRole!= "teacher" &&
                                               userRole != null)
                                             IconButton(
                                               icon: const Icon(Icons.edit,
@@ -533,14 +587,13 @@ class _EventPageState extends State<EventPage> {
                                               },
                                             ),
                                           if (userRole != "student" &&
+                                              userRole!= "teacher" &&
                                               userRole != null)
                                             IconButton(
                                               icon: const Icon(Icons.delete,
                                                   color: Colors.black),
                                               onPressed: () {
-                                                setState(() {
-                                                  _events.removeAt(index);
-                                                });
+                                                _deleteevent(event.activityID);
                                                 _saveEvents();
                                               },
                                             ),
