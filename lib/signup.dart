@@ -155,6 +155,7 @@ class _SignupState extends State<Signup> {
                 buildFirstNameField(),
                 SizedBox(height: 16),
                 //comit
+                buildEmailField(),
                 SizedBox(height: 16),
                 buildMajorField(),
                 SizedBox(height: 16),
