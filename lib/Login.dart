@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -59,23 +60,12 @@ class _LoginState extends State<Login> {
       );
     } else {
       // Login failed, show error message
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Login Failed'),
-          content: Text(response.body),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+      _showErrorDialog(context, response.body);
     }
   }
 
-  Future<void> _storeUserDetailsInSession(Map<String, dynamic> userDetails) async {
+  Future<void> _storeUserDetailsInSession(
+      Map<String, dynamic> userDetails) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // Store user details in shared preferences
     await prefs.setString('userId', userDetails['Id']);
@@ -97,10 +87,10 @@ class _LoginState extends State<Login> {
     );
 
     if (response.statusCode != 200) {
-      _showErrorDialog(context, "error sent code \n please try again");
+      _showErrorDialog(context, "Error sending code. Please try again.");
     } else {
-      Navigator.of(context!).pop();
-      _showverifydialog(context);
+      Navigator.of(context).pop();
+      _showVerifyDialog(context);
     }
   }
 
@@ -125,8 +115,8 @@ class _LoginState extends State<Login> {
   void _verifyCode() {
     if (_tokenController.text == _generatedCode) {
       // Code verified
-      Navigator.of(context!).pop();
-      _enterpassword(context);
+      Navigator.of(context).pop();
+      _enterPassword(context);
     } else {
       // Code verification failed
       _showErrorDialog(context, 'Invalid code. Please try again.');
@@ -138,7 +128,13 @@ class _LoginState extends State<Login> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('Message'),
+          title: Row(
+            children: [
+              Icon(Icons.error, color: Colors.red),
+              SizedBox(width: 8),
+              Text('Error', style: TextStyle(color: Colors.red)),
+            ],
+          ),
           content: Text(message),
           actions: <Widget>[
             TextButton(
@@ -166,7 +162,10 @@ class _LoginState extends State<Login> {
                 children: <Widget>[
                   TextField(
                     controller: _idControllers,
-                    decoration: const InputDecoration(labelText: 'Enter your ID'),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Enter your 7-digit ID',
+                    ),
                   ),
                 ],
               );
@@ -184,12 +183,13 @@ class _LoginState extends State<Login> {
       },
     );
   }
-  void _showverifydialog(BuildContext context){
+
+  void _showVerifyDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('confirm code'),
+          title: const Text('Confirm Code'),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Column(
@@ -197,7 +197,10 @@ class _LoginState extends State<Login> {
                 children: <Widget>[
                   TextField(
                     controller: _tokenController,
-                    decoration: const InputDecoration(labelText: 'Enter Token'),
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Enter 5-digit code',
+                    ),
                   ),
                   Text(_message),
                 ],
@@ -216,7 +219,8 @@ class _LoginState extends State<Login> {
       },
     );
   }
-  void _enterpassword(BuildContext context) {
+
+  void _enterPassword(BuildContext context) {
     final _newPasswordController = TextEditingController();
     final _confirmPasswordController = TextEditingController();
     final _passwordFormKey = GlobalKey<FormState>();
@@ -242,7 +246,7 @@ class _LoginState extends State<Login> {
                       return "Password must be at least 8 characters";
                     }
                     if (!RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
                         .hasMatch(value)) {
                       return 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character';
                     }
@@ -253,8 +257,8 @@ class _LoginState extends State<Login> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -275,8 +279,8 @@ class _LoginState extends State<Login> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
                 ),
               ],
@@ -286,7 +290,8 @@ class _LoginState extends State<Login> {
             TextButton(
               onPressed: () {
                 if (_passwordFormKey.currentState!.validate()) {
-                  changepassword(_idControllers.text, _newPasswordController.text);
+                  _changePassword(
+                      _idControllers.text, _newPasswordController.text);
                   Navigator.of(ctx).pop();
                 }
               },
@@ -298,8 +303,9 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void changepassword(String id, String newPassword) async {
-    final url = Uri.parse('https://localhost:7025/api/Student/forgetpassword?id=$id&newPassword=$newPassword');
+  void _changePassword(String id, String newPassword) async {
+    final url = Uri.parse(
+        'https://localhost:7025/api/Student/forgetpassword?id=$id&newPassword=$newPassword');
 
     final response = await http.put(
       url,
@@ -323,10 +329,13 @@ class _LoginState extends State<Login> {
       body: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(child: SizedBox(), flex: 1),
+          Expanded(
+            child: SizedBox(),
+            flex: 1,
+          ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -356,12 +365,13 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16), // Adjust the content padding
+                            vertical: 12,
+                            horizontal: 16), // Adjust the content padding
                       ),
                     ),
                     const SizedBox(
                         height:
-                        16), // Reduce the space between the ID number and password fields
+                            16), // Reduce the space between the ID number and password fields
                     TextFormField(
                       obscureText: !_isPasswordVisible,
                       controller: _passwordController,
@@ -373,7 +383,7 @@ class _LoginState extends State<Login> {
                           return "Password must be at least 8 characters";
                         }
                         if (!RegExp(
-                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
                             .hasMatch(value)) {
                           return 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character';
                         }
@@ -395,7 +405,8 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16), // Adjust the content padding
+                            vertical: 12,
+                            horizontal: 16), // Adjust the content padding
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -405,16 +416,27 @@ class _LoginState extends State<Login> {
                             onPressed: () {
                               _showForgotPasswordDialog(context);
                             },
-                            child: Text("Forgot your password?"))
+                            child: Text(
+                              "forgot your password?",
+                              style: TextStyle(color: Color(0xFF176B87)),
+                            ))
                       ],
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _login();
-                        }
-                      },
-                      child: Text("Log in"),
+                    const SizedBox(height: 14),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CupertinoButton(
+                            color: Color(0xFF176B87),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _login();
+                              }
+                            },
+                            child: Text("Log in"),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -422,7 +444,10 @@ class _LoginState extends State<Login> {
             ),
             flex: 1,
           ),
-          Expanded(child: SizedBox(), flex: 1)
+          Expanded(
+            child: SizedBox(),
+            flex: 1,
+          )
         ],
       ),
     );

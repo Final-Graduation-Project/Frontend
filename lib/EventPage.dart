@@ -128,6 +128,7 @@ class _EventPageState extends State<EventPage> {
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
+        //backend is not working !
         final String responseBody = response.body;
         try {
           // Check if the response body is a valid JSON
