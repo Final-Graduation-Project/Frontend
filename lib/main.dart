@@ -59,7 +59,7 @@ class Mainpage extends StatelessWidget {
             Proposal(onProposalAccepted: (Map<String, dynamic> data) {}),
         '/course': (context) => CourseSearchScreen(),
         '/Chatpage': (context) => ChatPage(),
-        '/propstudent': (context) => proposalstudent(),
+        '/propstudent': (context) => ProposalStudent(),
       },
     );
   }
@@ -75,7 +75,12 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF176B87),
-        title: Text("Student Digital Guide"),
+        title: kIsWeb
+            ? Text("Student Digital Guide")
+            : Image.asset(
+          "images/studentdigitalguidelogo.png",
+          height: 40, // Adjust height as needed
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () {

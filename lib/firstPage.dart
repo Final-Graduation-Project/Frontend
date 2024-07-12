@@ -94,7 +94,7 @@ class _FirstPageState extends State<FirstPage> {
   Future<void> _saveEvents() async {
     final prefs = await SharedPreferences.getInstance();
     final String eventsJson =
-        json.encode(_events.map((e) => e.toJson()).toList());
+    json.encode(_events.map((e) => e.toJson()).toList());
     await prefs.setString('events', eventsJson);
   }
 
@@ -132,7 +132,7 @@ class _FirstPageState extends State<FirstPage> {
         return AlertDialog(
           backgroundColor: Color(0xFFEEF5FF),
           title:
-              Text('User Details', style: TextStyle(color: Color(0xFF176B87))),
+          Text('User Details', style: TextStyle(color: Color(0xFF176B87))),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,7 +176,7 @@ class _FirstPageState extends State<FirstPage> {
 
   Future<void> _editProfilePicture() async {
     final XFile? image =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image != null) {
       final String imagePath = base64Encode(await image.readAsBytes());
       await _saveUserProfilePicture(imagePath);
@@ -218,7 +218,7 @@ class _FirstPageState extends State<FirstPage> {
 
   List<Event> _currentWeekEvents() {
     final startOfWeek =
-        _focusedDay.subtract(Duration(days: _focusedDay.weekday - 1));
+    _focusedDay.subtract(Duration(days: _focusedDay.weekday - 1));
     final endOfWeek = startOfWeek.add(Duration(days: 6));
     return _events.where((event) {
       return event.date.isAfter(startOfWeek) && event.date.isBefore(endOfWeek);
@@ -307,7 +307,7 @@ class _FirstPageState extends State<FirstPage> {
                 child: Text('OK'),
               ),
             ],
-        );
+          );
         });
       }
     } catch (e) {
@@ -323,8 +323,8 @@ class _FirstPageState extends State<FirstPage> {
     if (_selectedOption == 1) {
       _filteredCourses = _courses
           .where((course) =>
-              course.nameOfCourse.toLowerCase() ==
-              _searchController.text.toLowerCase())
+      course.nameOfCourse.toLowerCase() ==
+          _searchController.text.toLowerCase())
           .toList();
     } else {
       _fetchOfficeHours(_searchController.text);
@@ -334,29 +334,8 @@ class _FirstPageState extends State<FirstPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Search Results'),
-          content: _filteredCourses.isNotEmpty
-              ? SingleChildScrollView(
-                  child: Column(
-                    children: _filteredCourses.map((course) {
-                      return Column(
-                        children: [
-                          Text('Section: ${course.sec}',
-                              style: TextStyle(fontSize: 16)),
-                          Text('Instructor: ${course.nameOfInstructor}',
-                              style: TextStyle(fontSize: 16)),
-                          Text('Days: ${course.days}',
-                              style: TextStyle(fontSize: 16)),
-                          Text('Time: ${course.time}',
-                              style: TextStyle(fontSize: 16)),
-                          Text('Place: ${course.place}',
-                              style: TextStyle(fontSize: 16)),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                )
-              : Text('No course found', style: TextStyle(fontSize: 18)),
+          title: Text('Search ${_searchController.text}'),
+          content: _buildSearchResultsTable(),
           actions: [
             TextButton(
               onPressed: () {
@@ -369,6 +348,42 @@ class _FirstPageState extends State<FirstPage> {
       },
     );
   }
+
+  Widget _buildSearchResultsTable() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: DataTable(
+        columnSpacing: 20.0,
+        columns: [
+          DataColumn(label: Text('Section')),
+          DataColumn(label: Text('Instructor')),
+          DataColumn(label: Text('Days')),
+          DataColumn(label: Text('Time')),
+          DataColumn(label: Text('Place / Building')),
+        ],
+        rows: _selectedOption == 1
+            ? _filteredCourses.map((course) {
+          return DataRow(cells: [
+            DataCell(Text('${course.sec}')),
+            DataCell(Text('${course.nameOfInstructor}')),
+            DataCell(Text('${course.days}')),
+            DataCell(Text('${course.time}')),
+            DataCell(Text('${course.place}')),
+          ]);
+        }).toList()
+            : _filteredOfficeHours.map((officeHour) {
+          return DataRow(cells: [
+            DataCell(Text('')),
+            DataCell(Text('${officeHour.teacherId}')),
+            DataCell(Text('${officeHour.teacherFreeDay}')),
+            DataCell(Text('${officeHour.teacherStartFreeTime} - ${officeHour.teacherEndFreeTime}')),
+            DataCell(Text('${officeHour.buildingName}')),
+          ]);
+        }).toList(),
+      ),
+    );
+  }
+
 
   void _showAddNewsDialog() {
     TextEditingController titleController = TextEditingController();
@@ -437,7 +452,7 @@ class _FirstPageState extends State<FirstPage> {
                 }
 
                 final String imagePath =
-                    base64Encode(await selectedImage!.readAsBytes());
+                base64Encode(await selectedImage!.readAsBytes());
 
                 final news = {
                   'title': titleController.text,
@@ -459,9 +474,9 @@ class _FirstPageState extends State<FirstPage> {
 
   void _showEditNewsDialog(Map<String, String> news, int index) {
     TextEditingController titleController =
-        TextEditingController(text: news['title']);
+    TextEditingController(text: news['title']);
     TextEditingController descriptionController =
-        TextEditingController(text: news['description']);
+    TextEditingController(text: news['description']);
     XFile? selectedImage;
 
     showDialog(
@@ -557,14 +572,14 @@ class _FirstPageState extends State<FirstPage> {
     final String url = 'https://localhost:7025/api/News/UpdateNews$id';
     try {
       final response = await http.put(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'id': id,
-          'title': news['title'],
-          'description': news['description'],
-          'imagePath': news['imageUrl'],
-        })
+          Uri.parse(url),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'id': id,
+            'title': news['title'],
+            'description': news['description'],
+            'imagePath': news['imageUrl'],
+          })
       );
       if (response.statusCode == 200) {
         print('News updated successfully');
@@ -792,7 +807,7 @@ class _FirstPageState extends State<FirstPage> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   decoration:
-                      InputDecoration(labelText: 'Confirm New Password'),
+                  InputDecoration(labelText: 'Confirm New Password'),
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -1037,7 +1052,7 @@ class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     final UserData? userData =
-        ModalRoute.of(context)!.settings.arguments as UserData?;
+    ModalRoute.of(context)!.settings.arguments as UserData?;
     if (userData == null) {
       // Navigate to login page if userData is null
       WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -1087,122 +1102,122 @@ class _FirstPageState extends State<FirstPage> {
       ),
       drawer: isMobile
           ? Drawer(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  DrawerHeader(
-                    decoration: BoxDecoration(
-                      color: Color(0xFF176B87),
-                    ),
-                    child: GestureDetector(
-                      onTap: _showUserDetails,
-                      child: Row(
-                        children: [
-                          if (userProfilePicture != null &&
-                              userProfilePicture!.isNotEmpty)
-                            Image.memory(base64Decode(userProfilePicture!),
-                                height: 50, width: 50, fit: BoxFit.cover)
-                          else
-                            CircleAvatar(
-                              backgroundColor: Colors.white,
-                              child: Icon(Icons.person,
-                                  size: 40, color: Colors.black),
-                            ),
-                          SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(userName ?? '',
-                                  style: TextStyle(
-                                      color: const Color.fromARGB(
-                                          255, 255, 254, 254),
-                                      fontSize: 18)),
-                              Text(userRole ?? '',
-                                  style: TextStyle(
-                                      color: const Color.fromARGB(
-                                          255, 255, 252, 252),
-                                      fontSize: 14)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.info),
-                    title: Text('Proposals'),
-                    onTap: () => Navigator.pushNamed(context, '/proposal'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.chat),
-                    title: Text('Chat'),
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      '/Chatpage',
-                      arguments: userData,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.book),
-                    title: Text('Courses'),
-                    onTap: () => Navigator.pushNamed(context, '/course'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.calendar_today),
-                    title: Text('Events'),
-                    onTap: () => Navigator.pushNamed(context, '/Eve'),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.chat),
-                    title: Text('Chatbot'),
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      '/chatbot',
-                      arguments: userData,
-                    ),
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.map),
-                    title: Text('Map'),
-                    onTap: () => Navigator.pushNamed(
-                      context,
-                      '/map',
-                    ),
-                  ),
-                  Divider(color: Color(0xFF176B87)),
-                  ExpansionTile(
-                    leading: Icon(Icons.settings),
-                    title: Text('Settings'),
-                    children: [
-                      ListTile(
-                        leading: Icon(Icons.info),
-                        title: Text('About Us'),
-                        onTap: () => Navigator.pushNamed(context, '/aboutus'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.contact_mail),
-                        title: Text('Contact Us'),
-                        onTap: () => Navigator.pushNamed(context, '/contactus'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.lock),
-                        title: Text('Change Password'),
-                        onTap: () => openChangePasswordDialog(context),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.logout),
-                        title: Text('Log Out'),
-                        onTap: () {
-                          _logout();
-                          Navigator.pushNamed(context, '/');
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xFF176B87),
               ),
-            )
+              child: GestureDetector(
+                onTap: _showUserDetails,
+                child: Row(
+                  children: [
+                    if (userProfilePicture != null &&
+                        userProfilePicture!.isNotEmpty)
+                      Image.memory(base64Decode(userProfilePicture!),
+                          height: 50, width: 50, fit: BoxFit.cover)
+                    else
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.person,
+                            size: 40, color: Colors.black),
+                      ),
+                    SizedBox(width: 10),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(userName ?? '',
+                            style: TextStyle(
+                                color: const Color.fromARGB(
+                                    255, 255, 254, 254),
+                                fontSize: 18)),
+                        Text(userRole ?? '',
+                            style: TextStyle(
+                                color: const Color.fromARGB(
+                                    255, 255, 252, 252),
+                                fontSize: 14)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('Proposals'),
+              onTap: () => Navigator.pushNamed(context, '/proposal'),
+            ),
+            ListTile(
+              leading: Icon(Icons.chat),
+              title: Text('Chat'),
+              onTap: () => Navigator.pushNamed(
+                context,
+                '/Chatpage',
+                arguments: userData,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.book),
+              title: Text('Courses'),
+              onTap: () => Navigator.pushNamed(context, '/course'),
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_today),
+              title: Text('Events'),
+              onTap: () => Navigator.pushNamed(context, '/Eve'),
+            ),
+            ListTile(
+              leading: Icon(Icons.chat),
+              title: Text('Chatbot'),
+              onTap: () => Navigator.pushNamed(
+                context,
+                '/chatbot',
+                arguments: userData,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.map),
+              title: Text('Map'),
+              onTap: () => Navigator.pushNamed(
+                context,
+                '/map',
+              ),
+            ),
+            Divider(color: Color(0xFF176B87)),
+            ExpansionTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              children: [
+                ListTile(
+                  leading: Icon(Icons.info),
+                  title: Text('About Us'),
+                  onTap: () => Navigator.pushNamed(context, '/aboutus'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.contact_mail),
+                  title: Text('Contact Us'),
+                  onTap: () => Navigator.pushNamed(context, '/contactus'),
+                ),
+                ListTile(
+                  leading: Icon(Icons.lock),
+                  title: Text('Change Password'),
+                  onTap: () => openChangePasswordDialog(context),
+                ),
+                ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text('Log Out'),
+                  onTap: () {
+                    _logout();
+                    Navigator.pushNamed(context, '/');
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      )
           : null,
       body: Row(
         children: [
@@ -1268,19 +1283,19 @@ class _FirstPageState extends State<FirstPage> {
                     leading: Icon(Icons.book,
                         color: Color.fromARGB(255, 10, 10, 10)),
                     title:
-                        Text('Courses', style: TextStyle(color: Colors.black)),
+                    Text('Courses', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(context, '/course'),
                   ),
                   ListTile(
                     leading: Icon(Icons.calendar_today, color: Colors.black),
                     title:
-                        Text('Events', style: TextStyle(color: Colors.black)),
+                    Text('Events', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(context, '/Eve'),
                   ),
                   ListTile(
                     leading: Icon(Icons.chat, color: Colors.black),
                     title:
-                        Text('Chatbot', style: TextStyle(color: Colors.black)),
+                    Text('Chatbot', style: TextStyle(color: Colors.black)),
                     onTap: () => Navigator.pushNamed(
                       context,
                       '/chatbot',
@@ -1299,7 +1314,7 @@ class _FirstPageState extends State<FirstPage> {
                   ExpansionTile(
                     leading: Icon(Icons.settings, color: Colors.black),
                     title:
-                        Text('Settings', style: TextStyle(color: Colors.black)),
+                    Text('Settings', style: TextStyle(color: Colors.black)),
                     children: [
                       ListTile(
                         leading: Icon(Icons.info, color: Colors.black),
@@ -1397,32 +1412,32 @@ class _FirstPageState extends State<FirstPage> {
                   ),
                   _currentWeekEvents().isEmpty
                       ? Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          alignment: Alignment.center,
-                          child: Text(
-                            " No Events For This Week",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF176B87),
-                              fontFamily: 'Roboto',
-                            ),
-                          ))
-                      : Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: _currentWeekEvents().map((event) {
-                              return GestureDetector(
-                                onTap: () {
-                                  _showEventDetails(event);
-                                },
-                                child: _buildCard(event.title,
-                                    event.imagePath ?? '', Icons.event),
-                              );
-                            }).toList(),
-                          ),
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      alignment: Alignment.center,
+                      child: Text(
+                        " No Events For This Week",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF176B87),
+                          fontFamily: 'Roboto',
                         ),
+                      ))
+                      : Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: _currentWeekEvents().map((event) {
+                        return GestureDetector(
+                          onTap: () {
+                            _showEventDetails(event);
+                          },
+                          child: _buildCard(event.title,
+                              event.imagePath ?? '', Icons.event),
+                        );
+                      }).toList(),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Divider(color: Color(0xFF176B87)),
@@ -1540,10 +1555,13 @@ class _FirstPageState extends State<FirstPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (imageBytes != null)
-              Image.memory(imageBytes,
-                  height: 100,
-                  width: 200,
-                  fit: BoxFit.cover) // Fixed size for image
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.memory(imageBytes,
+                    height: 86,
+                    width: 200,
+                    fit: BoxFit.fill),
+              ) // Fixed size for image// Fixed size for image
             else
               Container(
                 height: 100,
@@ -1614,14 +1632,14 @@ class Event {
   });
 
   Map<String, dynamic> toJson() => {
-        'activityID': activityID,
-        'date': date.toIso8601String(),
-        'title': title,
-        'location': location,
-        'imagePath': imagePath,
-        'hour': time?.hour,
-        'minute': time?.minute,
-      };
+    'activityID': activityID,
+    'date': date.toIso8601String(),
+    'title': title,
+    'location': location,
+    'imagePath': imagePath,
+    'hour': time?.hour,
+    'minute': time?.minute,
+  };
 
   static Event fromJson(Map<String, dynamic> json) {
     return Event(

@@ -42,6 +42,7 @@ flutter:
     - images/jnn.jpg
     - images/ziad.jpg
     - images/fadi.jpg
+    - images/search.png
     - images/birziet.jpg
     - images/login.jpg
     - files/courses.json

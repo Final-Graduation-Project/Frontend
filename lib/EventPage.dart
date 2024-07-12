@@ -243,9 +243,11 @@ class _EventPageState extends State<EventPage> {
       if (kIsWeb) {
         return Image.memory(
           base64Decode(event.imagePath!),
-          width: 80,
-          height: 80,
-          fit: BoxFit.cover,
+
+              height: 120,
+              width: 120,
+              fit: BoxFit.fill,
+
           errorBuilder:
               (BuildContext context, Object error, StackTrace? stackTrace) {
             return const Center(
@@ -255,9 +257,9 @@ class _EventPageState extends State<EventPage> {
       } else {
         return Image.file(
           File(event.imagePath!),
-          width: 80,
-          height: 80,
-          fit: BoxFit.cover,
+          width: 100,
+          height: 100,
+          fit:BoxFit.fill,
           errorBuilder:
               (BuildContext context, Object error, StackTrace? stackTrace) {
             return const Center(
@@ -267,8 +269,9 @@ class _EventPageState extends State<EventPage> {
       }
     } else {
       return const Text(
-        'You have not yet picked an image.',
-        textAlign: TextAlign.center,
+        '',
+        // 'You have not yet picked an image.',
+        // textAlign: TextAlign.center,
       );
     }
   }
@@ -320,18 +323,27 @@ class _EventPageState extends State<EventPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(isEdit ? "Edit Event" : "Add New Event"),
+          title: Text(
+            isEdit ? "Edit Event" : "Add New Event",
+            style: const TextStyle(color: Colors.white),
+          ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(labelText: "Event Name"),
+                  decoration: const InputDecoration(
+                    labelText: "Event Name",
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
               ),
               TextField(
                 controller: locationController,
-                decoration: const InputDecoration(labelText: "Location"),
+                decoration: const InputDecoration(
+                    labelText: "Location",
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
               ),
               const SizedBox(height: 10),
               ElevatedButton(
@@ -359,38 +371,57 @@ class _EventPageState extends State<EventPage> {
                     });
                   }
                 },
-                child: Text(_selectedTime == null
-                    ? "Select Time"
-                    : 'Time: ${_selectedTime!.format(context)}'),
-              ),
+                child: Text(
+                  _selectedTime == null
+                      ? "Select Time"
+
+                      : 'Time: ${_selectedTime!.format(context)}',
+                  style: TextStyle(
+                    color:  Colors.black,
+                  ),// Change this to the desired color
+                  ),
+                ),
+
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: _pickImage,
-                child: const Text("Add Picture"),
-              ),
+                child: const Text(
+                  "Add Picture",
+                  style: TextStyle(
+                    color:  Colors.black,
+                  ),
+                ),
+                ),
+
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(6.0),
                 child: _selectedImage != null
                     ? _handlePreview(Event(
-                        activityID: 0, // Temporary ID
-                        date: DateTime.now(),
-                        title: '',
-                        imagePath: _selectedImage!.path))
+                    activityID: 0, // Temporary ID
+                    date: DateTime.now(),
+                    title: '',
+                    imagePath: _selectedImage!.path))
                     : const Text(
-                        'You have not yet picked an image.',
-                        textAlign: TextAlign.center,
-                      ),
+                  '',
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text("Cancel"),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () => Navigator.pop(context),
           ),
           TextButton(
-            child: const Text("Save"),
+            child: const Text(
+              "Save",
+              style: TextStyle(color: Colors.white),
+            ),
             onPressed: () async {
               if (userId == null) {
                 print("Failed to get userId");
@@ -446,7 +477,7 @@ class _EventPageState extends State<EventPage> {
             },
           ),
         ],
-        backgroundColor: const Color(0xFF86B6F6),
+        backgroundColor: const Color(0xFF176B87),
       ),
     );
   }
@@ -476,7 +507,7 @@ class _EventPageState extends State<EventPage> {
                   return Container(
                     padding: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey, width: 2),
+                      border: Border.all(color:Color.fromARGB(255, 106, 144, 176), width: 2),
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                     ),
@@ -531,7 +562,7 @@ class _EventPageState extends State<EventPage> {
                 },
               ),
             ),
-            const VerticalDivider(width: 1, color: Colors.grey),
+            const VerticalDivider(width: 1, color: Colors.white10),
             Expanded(
               flex: 3,
               child: Column(
@@ -567,7 +598,7 @@ class _EventPageState extends State<EventPage> {
                                       title: Text(
                                         event.title,
                                         style: const TextStyle(
-                                            color: Colors.white, fontSize: 24),
+                                            color: Colors.white, fontSize: 24,  fontWeight: FontWeight.bold,),
                                       ),
                                       subtitle: _buildEventSubtitle(event),
                                       trailing: Row(

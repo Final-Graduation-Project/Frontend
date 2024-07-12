@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class Proposal extends StatefulWidget {
   final Function(Map<String, dynamic>) onProposalAccepted;
-  final minOptions = 2;
-  final maxOptions = 5;
+  final int minOptions = 2;
+  final int maxOptions = 5;
+
   const Proposal({Key? key, required this.onProposalAccepted})
       : super(key: key);
 
@@ -17,16 +20,24 @@ class _ProposalState extends State<Proposal> {
   final TextEditingController _questionController = TextEditingController();
   late SharedPreferences prefs;
   bool _prefsInitialized = false;
+  String? userID;
+  String? userRole;
+
+  List<Map<String, dynamic>> _proposals = [];
 
   @override
   void initState() {
     super.initState();
-    getPrefs();
+    _fetchUserData().then((_) {
+      _fetchUnacceptedProposals(); // Fetch unaccepted proposals on startup
+    });
   }
 
-  Future<void> getPrefs() async {
+  Future<void> _fetchUserData() async {
     prefs = await SharedPreferences.getInstance();
     setState(() {
+      userID = prefs.getString('userId');
+      userRole = prefs.getString('userRole');
       _prefsInitialized = true;
     });
   }
@@ -38,47 +49,6 @@ class _ProposalState extends State<Proposal> {
   String? _selectedCommittee;
   String? _proposalType;
   String? _selectedVoteOption;
-
-  List<Map<String, dynamic>> _proposals = [
-    {
-      'type': 'Vote',
-      'question': 'What is your favorite color?',
-      'options': ['Red', 'Green', 'Blue'],
-      'committee': 'اللجنة الثقافية',
-      'id': '1202580',
-      'votes': 0,
-      'comments': [],
-      'accepted': false,
-    },
-    {
-      'type': 'Question',
-      'question': 'What is the deadline for the project?',
-      'committee': 'اللجنة الفنية',
-      'id': '1202580',
-      'votes': 0,
-      'comments': [],
-      'accepted': false,
-    },
-    {
-      'type': 'Vote',
-      'question': 'What is your favorite color?',
-      'options': ['Red', 'Green', 'Blue'],
-      'committee': 'اللجنة الثقافية',
-      'id': '1202580',
-      'votes': 0,
-      'comments': [],
-      'accepted': false,
-    },
-    {
-      'type': 'Question',
-      'question': 'What is the deadline for the project?',
-      'committee': 'اللجنة الفنية',
-      'id': '1202580',
-      'votes': 0,
-      'comments': [],
-      'accepted': false,
-    }
-  ];
 
   final List<String> _committees = [
     'رئاسة المجلس',
@@ -105,6 +75,274 @@ class _ProposalState extends State<Proposal> {
     }
     _commentController.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitProposal() async {
+    if (_prefsInitialized &&
+        _selectedCommittee != null &&
+        _questionController.text.isNotEmpty &&
+        _proposalType != null &&
+        userID != null && // تأكد من أن userID ليست null
+        (_proposalType != 'Vote' ||
+            _optionControllers
+                .every((controller) => controller.text.isNotEmpty))) {
+      List<String> options = _proposalType == 'Vote'
+          ? _optionControllers.map((controller) => controller.text).toList()
+          : [];
+      // عند إرسال الاقتراح، أضف نقطة تصحيح هنا للتأكد من أن الاسم موجود
+      Map<String, dynamic> proposal = {
+        'userID': int.parse(userID!), // إضافة userID إلى البيانات المرسلة
+        'm': _questionController.text, // Add missing field 'm'
+        'type': _proposalType!,
+        'question': _questionController.text,
+        'options': options,
+        'committee': _selectedCommittee!,
+        'votes': 0,
+        'comments': [],
+        'accepted': false,
+        'OptionText':
+        options.join(','), // Convert options to a comma-separated string
+        'CommentText': _commentController.text, // Add CommentText field
+        'name': prefs.getString('userName') ?? 'Anonymous',
+      };
+
+      print('Sending proposal: $proposal');
+
+      try {
+        final response = await http.post(
+          Uri.parse('https://localhost:7025/api/Proposal/AddProposal'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(proposal),
+        );
+
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          print('Response data: $responseData');
+
+          setState(() {
+            proposal['id'] = responseData[
+            'proposalID']; // Assuming the backend returns proposalID
+            _proposals.add(proposal);
+            widget.onProposalAccepted(proposal);
+            _questionController.clear();
+            _idController.clear();
+            _selectedCommittee = null;
+            _proposalType = null;
+            _optionControllers.clear();
+            _optionControllers.add(TextEditingController());
+            _optionControllers.add(TextEditingController());
+          });
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Proposal submitted successfully!')),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to submit proposal')),
+          );
+        }
+      } catch (error) {
+        print('Error: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to submit proposal')),
+        );
+      }
+    }
+  }
+
+  Future<void> _fetchUnacceptedProposals() async {
+    if (userID == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User ID is null')),
+      );
+      return;
+    }
+
+    try {
+      final String url;
+      if (userRole != "student") {
+        url =
+        'https://localhost:7025/api/Proposal/GetUnacceptedProposalsByCommittee/$userRole';
+      } else {
+        url =
+        'https://localhost:7025/api/Proposal/GetAcceptedProposalsByUserId/$userID';
+      }
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = jsonDecode(response.body);
+        print('Fetched proposals: $responseData');
+
+        setState(() {
+          _proposals = responseData
+              .map((proposal) => {
+            'id': proposal['proposalID'],
+            'type': proposal['type'],
+            'question': proposal['question'],
+            'committee': proposal['committee'],
+            'options': proposal['optionText']?.split(',') ?? [],
+            'accepted': false,
+            'comments': [],
+            'name': proposal['name'] ?? 'Unknown', // تأكد من وجود الاسم
+          })
+              .toList();
+        });
+      } else {
+        print('Failed to fetch proposals: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+              Text('Failed to fetch proposals: ${response.statusCode}')),
+        );
+      }
+    } catch (error) {
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to fetch proposals')),
+      );
+    }
+  }
+
+  Future<void> _updateProposalAccepted(Map<String, dynamic> proposal) async {
+    try {
+      final response = await http.put(
+        Uri.parse(
+            'https://localhost:7025/api/Proposal/AcceptProposal/${proposal['id']}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      print('Update Response status: ${response.statusCode}');
+      print('Update Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        setState(() {
+          _proposals.removeWhere((p) => p['id'] == proposal['id']);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Proposal accepted successfully!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to accept proposal')),
+        );
+      }
+    } catch (error) {
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to accept proposal')),
+      );
+    }
+  }
+
+  Future<void> _deleteProposal(Map<String, dynamic> proposal) async {
+    try {
+      final response = await http.delete(
+        Uri.parse(
+            'https://localhost:7025/api/Proposal/DeleteProposal/${proposal['id']}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      print('Delete Response status: ${response.statusCode}');
+      print('Delete Response body: ${response.body}');
+
+      if (response.statusCode == 204) {
+        setState(() {
+          _proposals.removeWhere((p) => p['id'] == proposal['id']);
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Proposal deleted successfully!')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete proposal')),
+        );
+      }
+    } catch (error) {
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete proposal')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _prefsInitialized
+        ? Scaffold(
+      backgroundColor: Colors.grey[100],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showProposalDialog(context);
+        },
+        child: Icon(Icons.add),
+      ),
+      appBar: AppBar(
+        backgroundColor: Color(0xFF176B87),
+        elevation: 0,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            Text('Proposals'),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    "Submit your questions or proposals, we are here to help you",
+                    style: TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Spacer(flex: 1),
+                Expanded(
+                  flex: 1,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _proposals.length,
+                    itemBuilder: (context, index) {
+                      return _buildProposalCard(_proposals[index]);
+                    },
+                  ),
+                ),
+                Spacer(flex: 1),
+              ],
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
+    )
+        : Center(child: CircularProgressIndicator());
   }
 
   void _showProposalDialog(BuildContext context) {
@@ -145,7 +383,7 @@ class _ProposalState extends State<Proposal> {
                         border: OutlineInputBorder(),
                       ),
                       items:
-                          ['Vote', 'Question', 'Proposal'].map((String type) {
+                      ['Vote', 'Question', 'Proposal'].map((String type) {
                         return DropdownMenuItem<String>(
                           value: type,
                           child: Text(type),
@@ -244,7 +482,7 @@ class _ProposalState extends State<Proposal> {
         controller: _questionController,
         decoration: InputDecoration(
           labelText:
-              _proposalType == 'Question' ? 'Your Question' : 'Your Proposal',
+          _proposalType == 'Question' ? 'Your Question' : 'Your Proposal',
           hintText: _proposalType == 'Question'
               ? 'Write your question here...'
               : 'Describe your proposal...',
@@ -297,28 +535,34 @@ class _ProposalState extends State<Proposal> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: IconButton(
-                    icon: Icon(Icons.delete),
-                    color: Colors.red,
-                    onPressed: () {
-                      _showDeleteConfirmationDialog(proposal);
-                    },
+                if (userRole != "student" &&
+                    userRole != "teacher" &&
+                    userRole != null)
+                  Expanded(
+                    child: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Colors.red,
+                      onPressed: () {
+                        _showDeleteConfirmationDialog(proposal);
+                      },
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: IconButton(
-                    icon: Icon(Icons.check),
-                    color: Colors.green,
-                    onPressed: () {
-                      setState(() {
-                        proposal['accepted'] = true;
-                        widget.onProposalAccepted(proposal);
-                        _proposals.remove(proposal);
-                      });
-                    },
+                if (userRole != "student" &&
+                    userRole != "teacher" &&
+                    userRole != null)
+                  Expanded(
+                    child: IconButton(
+                      icon: Icon(Icons.check),
+                      color: Colors.green,
+                      onPressed: () {
+                        setState(() {
+                          proposal['accepted'] = true;
+                          widget.onProposalAccepted(proposal);
+                          _proposals.remove(proposal);
+                        });
+                      },
+                    ),
                   ),
-                ),
               ],
             ),
           ],
@@ -363,7 +607,7 @@ class _ProposalState extends State<Proposal> {
         return AlertDialog(
           title: Text('Confirm Submission'),
           content:
-              Text('Are you sure you want to submit this ${_proposalType}?'),
+          Text('Are you sure you want to submit this ${_proposalType}?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -382,113 +626,5 @@ class _ProposalState extends State<Proposal> {
         );
       },
     );
-  }
-
-  void _submitProposal() {
-    if (_prefsInitialized &&
-        _selectedCommittee != null &&
-        _questionController.text.isNotEmpty &&
-        _proposalType != null &&
-        (_proposalType != 'Vote' ||
-            _optionControllers
-                .every((controller) => controller.text.isNotEmpty))) {
-      setState(() {
-        List<String> options = _proposalType == 'Vote'
-            ? _optionControllers.map((controller) => controller.text).toList()
-            : [];
-        Map<String, dynamic> proposal = {
-          'type': _proposalType!,
-          'question': _questionController.text,
-          'options': options,
-          'committee': _selectedCommittee!,
-          'votes': 0,
-          'comments': [],
-          'accepted': false,
-        };
-        _proposals.add(proposal);
-
-        widget.onProposalAccepted(
-            proposal); // Pass the proposal data to the callback
-        _questionController.clear();
-        _idController.clear();
-        _selectedCommittee = null;
-        _proposalType = null;
-        _optionControllers.clear();
-        _optionControllers.add(TextEditingController());
-        _optionControllers.add(TextEditingController());
-      });
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Proposal submitted successfully!')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please complete all fields correctly')),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _prefsInitialized
-        ? Scaffold(
-            backgroundColor: Colors.grey[100],
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                _showProposalDialog(context);
-              },
-              child: Icon(Icons.add),
-            ),
-            appBar: AppBar(
-              backgroundColor: Color(0xFF176B87),
-              elevation: 0,
-              titleSpacing: 0,
-              title: Row(
-                children: [
-                  Text('Proposals'),
-                ],
-              ),
-            ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Submit your questions or proposals, we are here to help you",
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Spacer(flex: 1),
-                      Expanded(
-                        flex: 1,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: _proposals.length,
-                          itemBuilder: (context, index) {
-                            return _buildProposalCard(_proposals[index]);
-                          },
-                        ),
-                      ),
-                      Spacer(flex: 1),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                ],
-              ),
-            ),
-          )
-        : Center(child: CircularProgressIndicator());
   }
 }

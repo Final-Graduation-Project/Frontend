@@ -22,8 +22,8 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final _idControllers = TextEditingController();
-  final _tokenController = TextEditingController();
+  final TextEditingController _idControllers = TextEditingController();
+  final TextEditingController _tokenController = TextEditingController();
   bool _isPasswordVisible = false;
   late String _generatedCode;
   String _message = '';
@@ -32,6 +32,8 @@ class _LoginState extends State<Login> {
   void dispose() {
     _idController.dispose();
     _passwordController.dispose();
+    _idControllers.dispose();
+    _tokenController.dispose();
     super.dispose();
   }
 
@@ -51,16 +53,16 @@ class _LoginState extends State<Login> {
       await _storeUserDetailsInSession(user);
       // Login successful, navigate to next page
       String userId = _idController.text;
-      // TODO: remove this
-      userId = "$id";
       Navigator.pushNamed(
         context,
         '/firstPage',
         arguments: UserData(userId),
       );
     } else {
-      // Login failed, show error message
-      _showErrorDialog(context, response.body);
+      // Login failed, show error message under password field
+      setState(() {
+        _message = 'Invalid ID or password. Please try again.';
+      });
     }
   }
 
@@ -246,7 +248,7 @@ class _LoginState extends State<Login> {
                       return "Password must be at least 8 characters";
                     }
                     if (!RegExp(
-                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
                         .hasMatch(value)) {
                       return 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character';
                     }
@@ -258,7 +260,7 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -280,7 +282,7 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     contentPadding:
-                        EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   ),
                 ),
               ],
@@ -365,13 +367,12 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding: EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 16), // Adjust the content padding
+                            vertical: 12, horizontal: 16), // Adjust the content padding
                       ),
                     ),
                     const SizedBox(
                         height:
-                            16), // Reduce the space between the ID number and password fields
+                        16), // Reduce the space between the ID number and password fields
                     TextFormField(
                       obscureText: !_isPasswordVisible,
                       controller: _passwordController,
@@ -383,7 +384,7 @@ class _LoginState extends State<Login> {
                           return "Password must be at least 8 characters";
                         }
                         if (!RegExp(
-                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
                             .hasMatch(value)) {
                           return 'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character';
                         }
@@ -409,17 +410,24 @@ class _LoginState extends State<Login> {
                             horizontal: 16), // Adjust the content padding
                       ),
                     ),
+                    SizedBox(height: 8),
+                    if (_message.isNotEmpty)
+                      Text(
+                        _message,
+                        style: TextStyle(color: Colors.red),
+                      ),
                     const SizedBox(height: 24),
                     Row(
                       children: [
                         TextButton(
-                            onPressed: () {
-                              _showForgotPasswordDialog(context);
-                            },
-                            child: Text(
-                              "forgot your password?",
-                              style: TextStyle(color: Color(0xFF176B87)),
-                            ))
+                          onPressed: () {
+                            _showForgotPasswordDialog(context);
+                          },
+                          child: Text(
+                            "Forgot your password?",
+                            style: TextStyle(color: Color(0xFF176B87)),
+                          ),
+                        )
                       ],
                     ),
                     const SizedBox(height: 14),
